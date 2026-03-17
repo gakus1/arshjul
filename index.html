@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Årshjul</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: system-ui, sans-serif; background: #f5f4f0; color: #1a1a18; min-height: 100vh; }
+.app { display: flex; flex-direction: column; align-items: center; padding: 24px 16px 80px; gap: 24px; }
+.header { width: 100%; max-width: 960px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+.year-nav { display: flex; align-items: center; gap: 10px; }
+.year-nav button { background: #fff; border: 0.5px solid #c0bfb8; border-radius: 8px; padding: 6px 14px; cursor: pointer; font-size: 15px; }
+.year-nav button:hover { background: #e8e6e0; }
+.btn-primary { background: #1a1a18; color: #f5f4f0; border: none; border-radius: 8px; padding: 9px 18px; font-size: 14px; cursor: pointer; }
+.btn-primary:hover { background: #333; }
+.layout { display: flex; gap: 28px; align-items: flex-start; width: 100%; max-width: 960px; flex-wrap: wrap; justify-content: center; }
+.wheel-wrap { position: relative; width: 500px; height: 500px; flex-shrink: 0; }
+canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
+.center-label { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  width: 110px; height: 110px; border-radius: 50%; background: #f5f4f0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; }
+.center-label span:first-child { font-size: 24px; font-weight: 500; }
+.center-label span:last-child { font-size: 11px; color: #999; }
+.sidebar { flex: 1; min-width: 260px; max-width: 360px; display: flex; flex-direction: column; gap: 12px; }
+.card { background: #fff; border: 0.5px solid #d8d6ce; border-radius: 12px; padding: 16px; }
+.card-title { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .06em; color: #999; margin-bottom: 10px; }
+.evt-list { display: flex; flex-direction: column; gap: 8px; max-height: 320px; overflow-y: auto; }
+.evt-item { border-left: 3px solid #ccc; padding: 8px 10px; border-radius: 0 8px 8px 0; background: #fafaf8; cursor: pointer; }
+.evt-item:hover { background: #f0ede6; }
+.evt-item .en { font-size: 14px; font-weight: 500; }
+.evt-item .ed { font-size: 12px; color: #888; margin-top: 2px; }
+.empty { font-size: 13px; color: #bbb; padding: 4px 0; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px; }
+.leg-item { display: flex; align-items: center; gap: 5px; font-size: 12px; }
+.leg-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+/* Detail */
+.detail-card { background: #fff; border: 0.5px solid #d8d6ce; border-radius: 12px; padding: 20px; width: 100%; max-width: 960px; }
+.detail-card h2 { font-size: 20px; font-weight: 500; margin-bottom: 4px; }
+.detail-dates { font-size: 13px; color: #888; margin-bottom: 14px; }
+.detail-notes { font-size: 14px; line-height: 1.75; white-space: pre-wrap; background: #fafaf8; border-radius: 8px; padding: 14px; border: 0.5px solid #e8e6e0; min-height: 40px; }
+.detail-actions { margin-top: 14px; display: flex; gap: 10px; }
+.btn-sec { border: 0.5px solid #c0bfb8; background: #fff; border-radius: 8px; padding: 7px 14px; font-size: 13px; cursor: pointer; }
+.btn-sec:hover { background: #f0ede6; }
+.btn-del { border: 0.5px solid #e2b0b0; background: #fff; color: #a03030; border-radius: 8px; padding: 7px 14px; font-size: 13px; cursor: pointer; }
+
+/* Modal */
+.modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 200; align-items: center; justify-content: center; }
+.modal-bg.open { display: flex; }
+.modal { background: #fff; border-radius: 16px; padding: 24px; width: 100%; max-width: 460px; max-height: 90vh; overflow-y: auto; }
+.modal h2 { margin-bottom: 16px; font-size: 18px; font-weight: 500; }
+.modal label { font-size: 13px; color: #666; display: block; margin-top: 12px; margin-bottom: 4px; }
+.modal input, .modal textarea, .modal select { width: 100%; border: 0.5px solid #c0bfb8; border-radius: 8px; padding: 8px 10px; font-size: 14px; font-family: inherit; background: #fafaf8; outline: none; }
+.modal input:focus, .modal textarea:focus { border-color: #888; }
+.modal textarea { height: 130px; resize: vertical; }
+.modal .row { display: flex; gap: 12px; }
+.modal .row > div { flex: 1; }
+.modal-actions { display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end; }
+.color-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+.color-swatch { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform .1s; }
+.color-swatch:hover { transform: scale(1.15); }
+.color-swatch.selected { border-color: #1a1a18; }
+.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #1a1a18; color: #fff; padding: 10px 20px; border-radius: 10px; font-size: 14px; z-index: 300; opacity: 0; transition: opacity .3s; pointer-events: none; }
+.toast.show { opacity: 1; }
+.loader { text-align: center; color: #aaa; font-size: 13px; padding: 12px 0; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div style="display:flex;align-items:center;gap:16px">
+      <h1 style="font-size:22px;font-weight:500">Årshjul</h1>
+      <div class="year-nav">
+        <button onclick="changeYear(-1)">←</button>
+        <span id="yr-label" style="font-size:18px;font-weight:500;min-width:48px;text-align:center"></span>
+        <button onclick="changeYear(1)">→</button>
+      </div>
+    </div>
+    <button class="btn-primary" onclick="openModal(null)">+ Nytt arrangement</button>
+  </div>
+
+  <div class="layout">
+    <div class="wheel-wrap">
+      <canvas id="wheel" width="500" height="500"></canvas>
+      <div class="center-label">
+        <span id="center-year"></span>
+        <span>Årshjul</span>
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <div class="card">
+        <div class="card-title">Valgt måned</div>
+        <div style="font-size:18px;font-weight:500" id="sel-month">—</div>
+        <div style="font-size:13px;color:#999;margin-top:2px" id="sel-count"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Arrangementer</div>
+        <div class="evt-list" id="evt-list"><p class="empty">Klikk på en måned</p></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Fargekoder</div>
+        <div class="legend" id="legend"><p class="empty">Ingen arrangementer ennå</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="detail-card" id="detail-card" style="display:none">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+      <div id="det-dot" style="width:12px;height:12px;border-radius:50%;flex-shrink:0"></div>
+      <h2 id="det-name"></h2>
+    </div>
+    <div class="detail-dates" id="det-dates"></div>
+    <div class="detail-notes" id="det-notes"></div>
+    <div class="detail-actions">
+      <button class="btn-sec" onclick="editSelected()">Rediger</button>
+      <button class="btn-del" onclick="deleteSelected()">Slett</button>
+      <button class="btn-sec" onclick="closeDetail()">Lukk</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-bg" id="modal-bg">
+  <div class="modal">
+    <h2 id="modal-title">Nytt arrangement</h2>
+    <label>Arrangementnavn</label>
+    <input id="f-name" type="text" placeholder="f.eks. Tons of Rock">
+    <div class="row">
+      <div><label>Startdato</label><input id="f-start" type="date"></div>
+      <div><label>Sluttdato</label><input id="f-end" type="date"></div>
+    </div>
+    <label>Farge</label>
+    <div class="color-grid" id="color-grid"></div>
+    <label>Notater</label>
+    <textarea id="f-notes" placeholder="Evalueringsmøte: 15. januar&#10;Oppstart planlegging: 1. februar&#10;Påmeldingskjema slippes: 1. mars"></textarea>
+    <div class="modal-actions">
+      <button class="btn-sec" onclick="closeModal()">Avbryt</button>
+      <button class="btn-primary" onclick="saveEvent()">Lagre</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── Supabase config ──
+const SB_URL = 'https://cxqvenjholhtijnrnwau.supabase.co';
+const SB_KEY = 'sb_publishable_pn7_PfMvVPVpI421gQtWmQ_tyDGgmFc';
+const HEADERS = { 'Content-Type': 'application/json', 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY };
+
+async function dbGet() {
+  const r = await fetch(`${SB_URL}/rest/v1/events?order=start_date.asc`, { headers: HEADERS });
+  return r.json();
+}
+async function dbInsert(ev) {
+  const r = await fetch(`${SB_URL}/rest/v1/events`, { method:'POST', headers:{...HEADERS,'Prefer':'return=representation'}, body: JSON.stringify(ev) });
+  return r.json();
+}
+async function dbUpdate(id, ev) {
+  const r = await fetch(`${SB_URL}/rest/v1/events?id=eq.${id}`, { method:'PATCH', headers:{...HEADERS,'Prefer':'return=representation'}, body: JSON.stringify(ev) });
+  return r.json();
+}
+async function dbDelete(id) {
+  await fetch(`${SB_URL}/rest/v1/events?id=eq.${id}`, { method:'DELETE', headers: HEADERS });
+}
+
+// ── State ──
+const MONTHS = ['Januar','Februar','Mars','April','Mai','Juni','Juli','August','September','Oktober','November','Desember'];
+const COLORS = ['#5A7FBB','#4BA87D','#C9624F','#B87BAC','#D4A24C','#5AABB8','#C47A40','#888780','#7B6FBF','#4aab8a','#D4627A','#6B9E3A'];
+let currentYear = new Date().getFullYear();
+let events = [];
+let selectedMonth = null;
+let selectedId = null;
+let editingId = null;
+let selectedColor = COLORS[0];
+
+// ── Init ──
+async function init() {
+  setYear(currentYear);
+  buildColorGrid();
+  await loadEvents();
+}
+
+async function loadEvents() {
+  try {
+    const data = await dbGet();
+    if (Array.isArray(data)) { events = data; drawWheel(); renderSidebar(); renderLegend(); }
+    else { toast('Klarte ikke å koble til databasen. Sjekk at SQL-tabellen er opprettet.'); }
+  } catch(e) { toast('Nettverksfeil – sjekk internettilkobling.'); }
+}
+
+function setYear(y) {
+  currentYear = y;
+  document.getElementById('yr-label').textContent = y;
+  document.getElementById('center-year').textContent = y;
+}
+function changeYear(d) { setYear(currentYear + d); drawWheel(); renderSidebar(); renderLegend(); }
+
+// ── Color grid ──
+function buildColorGrid() {
+  const g = document.getElementById('color-grid');
+  g.innerHTML = COLORS.map(c => `<div class="color-swatch${c===selectedColor?' selected':''}" style="background:${c}" onclick="pickColor('${c}')"></div>`).join('');
+}
+function pickColor(c) {
+  selectedColor = c;
+  document.querySelectorAll('.color-swatch').forEach(s => s.classList.toggle('selected', s.style.background === c || s.style.backgroundColor === c));
+}
+
+// ── Wheel ──
+const canvas = document.getElementById('wheel');
+const ctx = canvas.getContext('2d');
+const CX=250, CY=250, OR=238, IR=95;
+
+function getEventsForMonth(m) {
+  return events.filter(e => {
+    const s = new Date(e.start_date), en = new Date(e.end_date);
+    s.setHours(12); en.setHours(12);
+    for (let d = new Date(s); d <= en; d.setDate(d.getDate()+1))
+      if (d.getFullYear()===currentYear && d.getMonth()===m) return true;
+    return false;
+  });
+}
+
+const RING_COLORS = ['#4a7fb5','#5a9bd4','#3aab7a','#74c476','#a8c43a','#f0c030','#f0a020','#e06040','#c04040','#9050b0','#6050b8','#4a7fb5'];
+
+function drawWheel() {
+  ctx.clearRect(0,0,500,500);
+  for (let m=0; m<12; m++) {
+    const sa = (m/12)*2*Math.PI - Math.PI/2;
+    const ea = ((m+1)/12)*2*Math.PI - Math.PI/2;
+    const evts = getEventsForMonth(m);
+    const isSel = selectedMonth===m;
+
+    ctx.beginPath(); ctx.moveTo(CX,CY); ctx.arc(CX,CY,OR,sa,ea); ctx.closePath();
+    ctx.fillStyle = RING_COLORS[m] + (isSel ? 'ee' : '44');
+    ctx.fill();
+    ctx.strokeStyle='#fff'; ctx.lineWidth=2; ctx.stroke();
+
+    // Event color arcs on outer rim
+    if (evts.length) {
+      const slice = (ea-sa)/evts.length;
+      evts.forEach((ev,i) => {
+        ctx.beginPath();
+        ctx.arc(CX,CY,OR-1,sa+i*slice+.02,sa+(i+1)*slice-.02);
+        ctx.arc(CX,CY,OR-16,sa+(i+1)*slice-.02,sa+i*slice+.02,true);
+        ctx.closePath();
+        ctx.fillStyle = ev.color; ctx.fill();
+      });
+    }
+
+    // Month label
+    const mid = (sa+ea)/2;
+    const lr = (OR+IR)/2;
+    ctx.save();
+    ctx.translate(CX+lr*Math.cos(mid), CY+lr*Math.sin(mid));
+    ctx.rotate(mid+Math.PI/2);
+    ctx.fillStyle = isSel ? '#fff' : '#222';
+    ctx.font = `${isSel?'600':'400'} 13px system-ui`;
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(MONTHS[m].substring(0,3),0,0);
+    if (evts.length) ctx.fillText('●'.repeat(Math.min(evts.length,4)),0,15);
+    ctx.restore();
+  }
+  // Inner circle
+  ctx.beginPath(); ctx.arc(CX,CY,IR,0,2*Math.PI);
+  ctx.fillStyle='#f5f4f0'; ctx.fill();
+  ctx.strokeStyle='#ddd'; ctx.lineWidth=1; ctx.stroke();
+}
+
+canvas.addEventListener('click', e => {
+  const r = canvas.getBoundingClientRect();
+  const x = (e.clientX-r.left)*(500/r.width)-CX;
+  const y = (e.clientY-r.top)*(500/r.height)-CY;
+  const dist = Math.sqrt(x*x+y*y);
+  if (dist<IR||dist>OR) return;
+  let ang = Math.atan2(y,x)+Math.PI/2;
+  if (ang<0) ang+=2*Math.PI;
+  selectedMonth = Math.floor((ang/(2*Math.PI))*12);
+  closeDetail();
+  drawWheel();
+  renderSidebar();
+});
+
+// ── Sidebar ──
+function renderSidebar() {
+  const list = document.getElementById('evt-list');
+  if (selectedMonth===null) { document.getElementById('sel-month').textContent='—'; document.getElementById('sel-count').textContent=''; list.innerHTML='<p class="empty">Klikk på en måned</p>'; return; }
+  const evts = getEventsForMonth(selectedMonth);
+  document.getElementById('sel-month').textContent = MONTHS[selectedMonth]+' '+currentYear;
+  document.getElementById('sel-count').textContent = evts.length ? evts.length+' arrangement'+(evts.length>1?'er':'') : 'Ingen arrangementer';
+  list.innerHTML = evts.length ? evts.map(ev=>`
+    <div class="evt-item" style="border-left-color:${ev.color}" onclick="showDetail('${ev.id}')">
+      <div class="en">${ev.name}</div>
+      <div class="ed">${fmtDate(ev.start_date)} – ${fmtDate(ev.end_date)}</div>
+    </div>`).join('') : '<p class="empty">Ingen arrangementer denne måneden</p>';
+}
+
+function renderLegend() {
+  const seen = {}; events.forEach(e=>{ if(new Date(e.start_date).getFullYear()===currentYear||new Date(e.end_date).getFullYear()===currentYear) seen[e.id]=e; });
+  const items = Object.values(seen);
+  const leg = document.getElementById('legend');
+  leg.innerHTML = items.length ? items.map(e=>`<div class="leg-item"><div class="leg-dot" style="background:${e.color}"></div><span>${e.name}</span></div>`).join('') : '<p class="empty">Ingen arrangementer ennå</p>';
+}
+
+// ── Detail ──
+function showDetail(id) {
+  selectedId = id;
+  const ev = events.find(e=>e.id===id); if(!ev) return;
+  document.getElementById('det-dot').style.background = ev.color;
+  document.getElementById('det-name').textContent = ev.name;
+  document.getElementById('det-dates').textContent = fmtDate(ev.start_date)+' – '+fmtDate(ev.end_date);
+  document.getElementById('det-notes').textContent = ev.notes||'(Ingen notater)';
+  document.getElementById('detail-card').style.display='block';
+  document.getElementById('detail-card').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function closeDetail() { document.getElementById('detail-card').style.display='none'; selectedId=null; }
+function editSelected() { if(selectedId) openModal(selectedId); }
+async function deleteSelected() {
+  if(!selectedId||!confirm('Slett dette arrangementet?')) return;
+  await dbDelete(selectedId);
+  events = events.filter(e=>e.id!==selectedId);
+  closeDetail(); drawWheel(); renderSidebar(); renderLegend();
+  toast('Arrangement slettet');
+}
+
+// ── Modal ──
+function openModal(id) {
+  editingId = id;
+  document.getElementById('modal-title').textContent = id ? 'Rediger arrangement' : 'Nytt arrangement';
+  if (id) {
+    const ev = events.find(e=>e.id===id);
+    document.getElementById('f-name').value = ev.name;
+    document.getElementById('f-start').value = ev.start_date;
+    document.getElementById('f-end').value = ev.end_date;
+    document.getElementById('f-notes').value = ev.notes||'';
+    selectedColor = ev.color;
+    buildColorGrid();
+  } else {
+    document.getElementById('f-name').value='';
+    document.getElementById('f-start').value='';
+    document.getElementById('f-end').value='';
+    document.getElementById('f-notes').value='';
+    selectedColor=COLORS[0]; buildColorGrid();
+  }
+  document.getElementById('modal-bg').classList.add('open');
+}
+function closeModal() { document.getElementById('modal-bg').classList.remove('open'); editingId=null; }
+
+async function saveEvent() {
+  const name = document.getElementById('f-name').value.trim();
+  const start = document.getElementById('f-start').value;
+  const end = document.getElementById('f-end').value;
+  const notes = document.getElementById('f-notes').value.trim();
+  if(!name||!start||!end) { toast('Fyll ut navn og datoer'); return; }
+  if(end<start) { toast('Sluttdato må være etter startdato'); return; }
+
+  const payload = { name, start_date:start, end_date:end, color:selectedColor, notes };
+  if (editingId) {
+    const res = await dbUpdate(editingId, payload);
+    if (Array.isArray(res)) { const idx=events.findIndex(e=>e.id===editingId); events[idx]=res[0]; }
+  } else {
+    const res = await dbInsert(payload);
+    if (Array.isArray(res)) events.push(res[0]);
+  }
+  closeModal(); drawWheel(); renderSidebar(); renderLegend();
+  toast(editingId ? 'Arrangement oppdatert' : 'Arrangement lagt til');
+}
+
+// ── Helpers ──
+function fmtDate(d) {
+  if(!d) return '';
+  const [y,m,day] = d.split('-');
+  return `${parseInt(day)}. ${MONTHS[parseInt(m)-1].toLowerCase()} ${y}`;
+}
+function toast(msg) {
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+init();
+</script>
+</body>
+</html>
