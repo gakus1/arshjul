@@ -779,6 +779,13 @@ async function deleteSelected(){
 }
 
 // Event modal
+function renderHendelseAdd(){
+  const w=cw();
+  const showColor=w?.hendelse_color||false;
+  const wrap=document.getElementById('h-color-wrap');
+  if(wrap) wrap.style.display=showColor?'flex':'none';
+}
+
 function openEventModal(id){
   const w=cw();
   editingId=id;pendingHendelser=[];
