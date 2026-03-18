@@ -264,7 +264,7 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
     <label id="lbl-name">Navn</label>
     <input id="f-name" type="text">
     <div class="row" id="date-row">
-      <div><label>Startdato</label><input id="f-start" type="date" onchange="onStartChange()"></div>
+      <div><label id="lbl-start-date">Startdato</label><input id="f-start" type="date" onchange="onStartChange()"></div>
       <div id="end-date-col"><label>Sluttdato</label><input id="f-end" type="date"></div>
     </div>
     <label>Farge</label>
@@ -312,6 +312,10 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
     </div>
     <div class="modal-section">
       <div class="modal-section-title">Innstillinger</div>
+      <div class="toggle-row">
+        <label>Nedtelling viser neste hendelse</label>
+        <label class="toggle"><input type="checkbox" id="w-countdown-hendelse"><span class="toggle-slider"></span></label>
+      </div>
       <div class="toggle-row">
         <label>Standard visning: Tidslinje</label>
         <label class="toggle"><input type="checkbox" id="w-default-list"><span class="toggle-slider"></span></label>
@@ -437,7 +441,7 @@ function applyFilter(){
 
 function updateCountdown(){
   const w=cw(); const cd=document.getElementById('countdown');
-  const next=nextUpcoming(events);
+  const next=nextUpcoming(filteredEvents);
   if(!next||daysUntil(next.start_date)<0){cd.style.display='none';return;}
   const days=daysUntil(next.start_date);
   cd.style.display='flex';
@@ -497,7 +501,7 @@ function openWheelModal(id){
     document.getElementById('w-item-label').value=w.item_label||'';
     document.getElementById('w-event-label').value=w.event_label||'';
     document.getElementById('w-countdown-label').value=w.countdown_label||'';
-    document.getElementById('w-default-list').checked=w.default_view==='list';
+    document.getElementById('w-countdown-hendelse').checked=w.countdown_hendelse||false;
     document.getElementById('w-single-day').checked=w.single_day||false;
     document.getElementById('w-readonly').checked=w.readonly||false;
     document.getElementById('w-show-hendelser').checked=w.show_hendelser!==false;
@@ -541,6 +545,7 @@ async function saveWheel(){
     item_label:document.getElementById('w-item-label').value.trim()||'Arrangement',
     event_label:document.getElementById('w-event-label').value.trim()||'Hendelse',
     countdown_label:document.getElementById('w-countdown-label').value.trim()||'Neste arrangement',
+    countdown_hendelse:document.getElementById('w-countdown-hendelse').checked,
     default_view:document.getElementById('w-default-list').checked?'list':'wheel',
     single_day:document.getElementById('w-single-day').checked,
     readonly:document.getElementById('w-readonly').checked,
@@ -776,7 +781,9 @@ function openEventModal(id){
   document.getElementById('lbl-hendelse').textContent=w?.event_label||'Hendelser';
   document.getElementById('hendelser-section').style.display=w?.show_hendelser!==false?'block':'none';
   document.getElementById('notes-section').style.display=w?.show_notes!==false?'block':'none';
-  document.getElementById('end-date-col').style.display=w?.single_day?'none':'block';
+  const singleDay = w?.single_day;
+  document.getElementById('lbl-start-date').textContent = singleDay ? 'Dato' : 'Startdato';
+  document.getElementById('end-date-col').style.display = singleDay ? 'none' : 'block';
   if(id){
     const ev=events.find(e=>e.id===id);
     document.getElementById('f-name').value=ev.name;
