@@ -463,9 +463,12 @@ function renderSidebar() {
   list.innerHTML=evts.length?evts.map(ev=>{
     const live=isActiveNow(ev);
     const nh=nextHendelseText(ev);
-    return `<div class="evt-item${live?' active-now':''}" style="border-left-color:${ev.color}" onclick="showDetail('${ev.id}')">
-      <div class="en">${ev.name}${live?'<span class="badge-live">Pågår nå</span>':''}</div>
-      <div class="ed">${fmtDate(ev.start_date)} – ${fmtDate(ev.end_date)}</div>
+    return `<div class="evt-item${live?' active-now':''}" style="border-left-color:${ev.color}">
+      <div class="en" onclick="showDetail('${ev.id}')" style="cursor:pointer;flex:1">
+        ${ev.name}${live?'<span class="badge-live">Pågår nå</span>':''}
+      </div>
+      <button onclick="openModal('${ev.id}')" style="background:none;border:none;cursor:pointer;color:#aaa;font-size:15px;padding:0 2px;line-height:1" title="Rediger">✏️</button>
+      <div class="ed" onclick="showDetail('${ev.id}')" style="cursor:pointer">${fmtDate(ev.start_date)} – ${fmtDate(ev.end_date)}</div>
       ${nh?`<div class="next-h">↑ ${nh}</div>`:''}
     </div>`;
   }).join(''):'<p class="empty">Ingen arrangementer denne måneden</p>';
@@ -493,24 +496,41 @@ function renderTimeline() {
 
   cont.innerHTML = Object.keys(byMonth).sort((a,b)=>a-b).map(m => {
     const monthEvts = byMonth[m].sort((a,b)=>new Date(a.start_date)-new Date(b.start_date));
-    const monthItems = monthEvts.map(ev => {
-      const live = isActiveNow(ev);
-      const hendelser = parseHendelser(ev.hendelser).sort((a,b)=>a.date.localeCompare(b.date));
-      const hRows = hendelser.map(h=>`
-        <div class="tl-h-row">
-          <div class="tl-h-dot"></div>
-          <span class="tl-h-date">${fmtDate(h.date)}</span>
-          <span>${h.name}</span>
-        </div>`).join('');
-      return `<div class="tl-item${live?' active-now':''}" onclick="showDetail('${ev.id}')">
-        <div class="tl-accent" style="background:${ev.color}"></div>
-        <div class="tl-body">
-          <div class="tl-name">${ev.name}${live?'<span class="badge-live-tl">Pågår nå</span>':''}</div>
-          <div class="tl-dates">${fmtDate(ev.start_date)} – ${fmtDate(ev.end_date)}</div>
-          ${hRows?`<div class="tl-hendelser">${hRows}</div>`:''}
-        </div>
-      </div>`;
+
+    // Group overlapping events side by side
+    const rows = [];
+    monthEvts.forEach(ev => {
+      const evStart = new Date(ev.start_date), evEnd = new Date(ev.end_date);
+      let placed = false;
+      for (const row of rows) {
+        const lastEnd = new Date(row[row.length-1].end_date);
+        if (evStart > lastEnd) { row.push(ev); placed=true; break; }
+      }
+      if (!placed) rows.push([ev]);
+    });
+
+    const monthItems = rows.map(row => {
+      const cols = row.map(ev => {
+        const live = isActiveNow(ev);
+        const hendelser = parseHendelser(ev.hendelser).sort((a,b)=>a.date.localeCompare(b.date));
+        const hRows = hendelser.map(h=>`
+          <div class="tl-h-row">
+            <div class="tl-h-dot"></div>
+            <span class="tl-h-date">${fmtDate(h.date)}</span>
+            <span>${h.name}</span>
+          </div>`).join('');
+        return `<div class="tl-item${live?' active-now':''}" style="flex:1;min-width:0" onclick="showDetail('${ev.id}')">
+          <div class="tl-accent" style="background:${ev.color}"></div>
+          <div class="tl-body">
+            <div class="tl-name">${ev.name}${live?'<span class="badge-live-tl">Pågår nå</span>':''}</div>
+            <div class="tl-dates">${fmtDate(ev.start_date)} – ${fmtDate(ev.end_date)}</div>
+            ${hRows?`<div class="tl-hendelser">${hRows}</div>`:''}
+          </div>
+        </div>`;
+      }).join('');
+      return `<div style="display:flex;gap:8px">${cols}</div>`;
     }).join('');
+
     return `<div class="tl-month">
       <div class="tl-month-header">${MONTHS[m]} ${currentYear}</div>
       <div class="tl-items">${monthItems}</div>
