@@ -234,6 +234,11 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
     </div>
     <label>Farge</label>
     <div class="color-grid" id="color-grid"></div>
+    <div style="display:flex;align-items:center;gap:10px;margin-top:10px">
+      <label style="margin:0;font-size:13px;color:#666">Egendefinert:</label>
+      <input type="color" id="custom-color" value="#C9624F" style="width:36px;height:36px;border:0.5px solid #c0bfb8;border-radius:50%;cursor:pointer;padding:2px;background:none;">
+      <span style="font-size:13px;color:#888">Velg en egendefinert farge</span>
+    </div>
     <label>Hendelser</label>
     <div class="hendelse-add">
       <input type="date" id="h-date">
@@ -305,6 +310,14 @@ function daysUntil(dateStr) {
 async function init() {
   setYear(currentYear);
   buildColorGrid();
+  document.getElementById('custom-color').addEventListener('input', e => {
+    selectedColor = e.target.value;
+    document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
+  });
+  document.getElementById('custom-color').addEventListener('change', e => {
+    selectedColor = e.target.value;
+    document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
+  });
   buildMonthFilter();
   try {
     const data = await dbGet();
