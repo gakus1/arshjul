@@ -574,8 +574,9 @@ function showDetail(id) {
   document.getElementById('det-dates').textContent=fmtDate(ev.start_date)+' – '+fmtDate(ev.end_date);
   document.getElementById('det-notes').textContent=ev.notes||'(Ingen notater)';
   renderDetailHendelser(ev);
-  document.getElementById('detail-card').style.display='block';
-  document.getElementById('detail-card').scrollIntoView({behavior:'smooth',block:'nearest'});
+  const card = document.getElementById('detail-card');
+  card.style.display='block';
+  setTimeout(() => card.scrollIntoView({behavior:'smooth',block:'nearest'}), 50);
 }
 function renderDetailHendelser(ev) {
   const hendelser=parseHendelser(ev.hendelser);
