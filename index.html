@@ -419,11 +419,20 @@ function drawWheel() {
       });
     }
     const mid=(sa+ea)/2, lr=(OR+IR)/2;
-    ctx.save(); ctx.translate(CX+lr*Math.cos(mid),CY+lr*Math.sin(mid)); ctx.rotate(mid+Math.PI/2);
+    const tx=CX+lr*Math.cos(mid), ty=CY+lr*Math.sin(mid);
+    ctx.save(); ctx.translate(tx,ty);
+    // Keep text always readable – flip if in bottom half
+    let rot = mid + Math.PI/2;
+    if (mid > Math.PI/2 && mid < 3*Math.PI/2) rot += Math.PI;
+    ctx.rotate(rot);
     ctx.fillStyle=isSel?'#fff':'#222'; ctx.font=`${isSel?'600':'400'} 13px system-ui`;
     ctx.textAlign='center'; ctx.textBaseline='middle';
     ctx.fillText(MONTHS[m].substring(0,3),0,0);
-    if(evts.length) ctx.fillText('●'.repeat(Math.min(evts.length,4)),0,15);
+    if(evts.length) {
+      ctx.font=`500 12px system-ui`;
+      ctx.fillStyle=isSel?'#fff':'#555';
+      ctx.fillText(evts.length,0,16);
+    }
     ctx.restore();
   }
   ctx.beginPath(); ctx.arc(CX,CY,IR,0,2*Math.PI); ctx.fillStyle='#f5f4f0'; ctx.fill();
