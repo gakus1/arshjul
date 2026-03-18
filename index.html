@@ -483,17 +483,10 @@ function renderSidebar() {
   list.innerHTML=evts.length?evts.map(ev=>{
     const live=isActiveNow(ev);
     const nh=nextHendelseText(ev);
-    return `<div class="evt-item${live?' active-now':''}" style="border-left-color:${ev.color}">
-      <div class="en" onclick="showDetail('${ev.id}')" style="cursor:pointer;flex:1">
-        ${ev.name}${live?'<span class="badge-live">Pågår nå</span>':''}
-      </div>
-      <button onclick="openModal('${ev.id}')" style="background:none;border:none;cursor:pointer;color:#bbb;padding:0 2px;line-height:1;flex-shrink:0" title="Rediger">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M9.5 2.5l2 2L4 12H2v-2L9.5 2.5z"/>
-        </svg>
-      </button>
-      <div class="ed" onclick="showDetail('${ev.id}')" style="cursor:pointer">${fmtDate(ev.start_date)} – ${fmtDate(ev.end_date)}</div>
-      ${nh?`<div class="next-h">↑ ${nh}</div>`:''}
+    return `<div class="evt-item${live?' active-now':''}" style="border-left-color:${ev.color};padding:8px 10px;" onclick="showDetail('${ev.id}')">
+        <div class="en">${ev.name}${live?'<span class="badge-live">Pågår nå</span>':''}</div>
+        <div class="ed">${fmtDate(ev.start_date)} – ${fmtDate(ev.end_date)}</div>
+        ${nh?`<div class="next-h">↑ ${nh}</div>`:''}
     </div>`;
   }).join(''):'<p class="empty">Ingen arrangementer denne måneden</p>';
 }
