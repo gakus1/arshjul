@@ -779,13 +779,6 @@ async function deleteSelected(){
 }
 
 // Event modal
-function renderHendelseAdd(){
-  const w=cw();
-  const showColor=w?.hendelse_color||false;
-  const wrap=document.getElementById('h-color-wrap');
-  if(wrap) wrap.style.display=showColor?'flex':'none';
-}
-
 function openEventModal(id){
   const w=cw();
   editingId=id;pendingHendelser=[];
@@ -813,7 +806,10 @@ function openEventModal(id){
     document.getElementById('f-notes').value='';
     selectedColor=COLORS[0];
   }
-  buildColorGrid();renderPendingHendelser();renderHendelseAdd();
+  const showColor=cw()?.hendelse_color||false;
+  const wrap=document.getElementById('h-color-wrap');
+  if(wrap) wrap.style.display=showColor?'flex':'none';
+  buildColorGrid();renderPendingHendelser();
   document.getElementById('event-modal-bg').classList.add('open');
 }
 function closeEventModal(){document.getElementById('event-modal-bg').classList.remove('open');editingId=null;pendingHendelser=[];}
