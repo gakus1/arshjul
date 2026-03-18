@@ -329,6 +329,10 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
         <label class="toggle"><input type="checkbox" id="w-readonly"><span class="toggle-slider"></span></label>
       </div>
       <div class="toggle-row">
+        <label>Egen farge per hendelse</label>
+        <label class="toggle"><input type="checkbox" id="w-hendelse-color"><span class="toggle-slider"></span></label>
+      </div>
+      <div class="toggle-row">
         <label>Vis hendelser</label>
         <label class="toggle"><input type="checkbox" id="w-show-hendelser" checked><span class="toggle-slider"></span></label>
       </div>
@@ -501,7 +505,7 @@ function openWheelModal(id){
     document.getElementById('w-item-label').value=w.item_label||'';
     document.getElementById('w-event-label').value=w.event_label||'';
     document.getElementById('w-countdown-label').value=w.countdown_label||'';
-    document.getElementById('w-countdown-hendelse').checked=w.countdown_hendelse||false;
+    document.getElementById('w-hendelse-color').checked=w.hendelse_color||false;
     document.getElementById('w-single-day').checked=w.single_day||false;
     document.getElementById('w-readonly').checked=w.readonly||false;
     document.getElementById('w-show-hendelser').checked=w.show_hendelser!==false;
@@ -545,6 +549,7 @@ async function saveWheel(){
     item_label:document.getElementById('w-item-label').value.trim()||'Arrangement',
     event_label:document.getElementById('w-event-label').value.trim()||'Hendelse',
     countdown_label:document.getElementById('w-countdown-label').value.trim()||'Neste arrangement',
+    hendelse_color:document.getElementById('w-hendelse-color').checked,
     countdown_hendelse:document.getElementById('w-countdown-hendelse').checked,
     default_view:document.getElementById('w-default-list').checked?'list':'wheel',
     single_day:document.getElementById('w-single-day').checked,
@@ -617,8 +622,9 @@ function drawWheel(){
       if(new Date(h.date).getFullYear()!==currentYear)return;
       const ang=dateToAngle(h.date);
       const dx=CX+HENDELSE_R*Math.cos(ang),dy=CY+HENDELSE_R*Math.sin(ang);
+      const dotColor=h.color||ev.color;
       ctx.beginPath();ctx.arc(dx,dy,HENDELSE_DOT_R,0,2*Math.PI);
-      ctx.fillStyle=ev.color;ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.stroke();
+      ctx.fillStyle=dotColor;ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.stroke();
       tooltipData.push({x:dx,y:dy,r:HENDELSE_DOT_R+4,text:`${ev.name}\n${h.name}\n${fmtDate(h.date)}`});
     });
   });
@@ -800,7 +806,7 @@ function openEventModal(id){
     document.getElementById('f-notes').value='';
     selectedColor=COLORS[0];
   }
-  buildColorGrid();renderPendingHendelser();
+  buildColorGrid();renderPendingHendelser();renderHendelseAdd();
   document.getElementById('event-modal-bg').classList.add('open');
 }
 function closeEventModal(){document.getElementById('event-modal-bg').classList.remove('open');editingId=null;pendingHendelser=[];}
@@ -824,16 +830,29 @@ function onStartChange(){
 function rgbToHex(rgb){const m=rgb.match(/\d+/g);if(!m)return rgb;return '#'+m.slice(0,3).map(x=>parseInt(x).toString(16).padStart(2,'0')).join('');}
 
 function addHendelse(){
+  const w=cw();
   const d=document.getElementById('h-date').value,n=document.getElementById('h-name').value.trim();
   if(!d||!n){toast('Fyll ut dato og navn');return;}
-  pendingHendelser.push({date:d,name:n});
+  const color=w?.hendelse_color?document.getElementById('h-color').value:null;
+  pendingHendelser.push({date:d,name:n,...(color?{color}:{})});
   document.getElementById('h-date').value='';document.getElementById('h-name').value='';
   renderPendingHendelser();
 }
+
+function renderHendelseAdd(){
+  const w=cw();
+  const showColor=w?.hendelse_color;
+  document.getElementById('h-color-wrap').style.display=showColor?'flex':'none';
+}
 function removeHendelse(i){pendingHendelser.splice(i,1);renderPendingHendelser();}
 function renderPendingHendelser(){
+  const w=cw();
   document.getElementById('h-preview').innerHTML=pendingHendelser.map((h,i)=>`
-    <div class="hp-row"><span><b>${fmtDate(h.date)}</b> – ${h.name}</span><button onclick="removeHendelse(${i})">×</button></div>`).join('');
+    <div class="hp-row">
+      ${h.color?`<div style="width:10px;height:10px;border-radius:50%;background:${h.color};flex-shrink:0"></div>`:''}
+      <span><b>${fmtDate(h.date)}</b> – ${h.name}</span>
+      <button onclick="removeHendelse(${i})">×</button>
+    </div>`).join('');
 }
 
 async function saveEvent(){
