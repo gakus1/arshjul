@@ -421,17 +421,15 @@ function drawWheel() {
     const mid=(sa+ea)/2, lr=(OR+IR)/2;
     const tx=CX+lr*Math.cos(mid), ty=CY+lr*Math.sin(mid);
     ctx.save(); ctx.translate(tx,ty);
-    // Keep text always readable – flip if in bottom half
-    let rot = mid + Math.PI/2;
-    if (mid > Math.PI/2 && mid < 3*Math.PI/2) rot += Math.PI;
-    ctx.rotate(rot);
+    const inBottom = mid > Math.PI/2 && mid < 3*Math.PI/2;
+    ctx.rotate(inBottom ? mid - Math.PI/2 : mid + Math.PI/2);
     ctx.fillStyle=isSel?'#fff':'#222'; ctx.font=`${isSel?'600':'400'} 13px system-ui`;
     ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.fillText(MONTHS[m].substring(0,3),0,0);
+    ctx.fillText(MONTHS[m].substring(0,3),0,evts.length?-8:0);
     if(evts.length) {
-      ctx.font=`500 12px system-ui`;
-      ctx.fillStyle=isSel?'#fff':'#555';
-      ctx.fillText(evts.length,0,16);
+      ctx.font=`400 11px system-ui`;
+      ctx.fillStyle=isSel?'rgba(255,255,255,0.85)':'#666';
+      ctx.fillText(evts.length+' arr.',0,8);
     }
     ctx.restore();
   }
@@ -476,7 +474,11 @@ function renderSidebar() {
       <div class="en" onclick="showDetail('${ev.id}')" style="cursor:pointer;flex:1">
         ${ev.name}${live?'<span class="badge-live">Pågår nå</span>':''}
       </div>
-      <button onclick="openModal('${ev.id}')" style="background:none;border:none;cursor:pointer;color:#aaa;font-size:15px;padding:0 2px;line-height:1" title="Rediger">✏️</button>
+      <button onclick="openModal('${ev.id}')" style="background:none;border:none;cursor:pointer;color:#bbb;padding:0 2px;line-height:1;flex-shrink:0" title="Rediger">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9.5 2.5l2 2L4 12H2v-2L9.5 2.5z"/>
+        </svg>
+      </button>
       <div class="ed" onclick="showDetail('${ev.id}')" style="cursor:pointer">${fmtDate(ev.start_date)} – ${fmtDate(ev.end_date)}</div>
       ${nh?`<div class="next-h">↑ ${nh}</div>`:''}
     </div>`;
