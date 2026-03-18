@@ -7,11 +7,11 @@
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: system-ui, sans-serif; background: #f5f4f0; color: #1a1a18; min-height: 100vh; }
-.app { display: flex; flex-direction: column; align-items: center; padding: 24px 16px 80px; gap: 24px; }
+.app { display: flex; flex-direction: column; align-items: center; padding: 24px 16px 80px; gap: 20px; }
 .header { width: 100%; max-width: 960px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
-.header-left { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; gap: 10px; }
-.year-nav { display: flex; align-items: center; gap: 10px; }
-.year-nav button { background: #fff; border: 0.5px solid #c0bfb8; border-radius: 8px; padding: 6px 14px; cursor: pointer; font-size: 15px; }
+.header-left { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.year-nav { display: flex; align-items: center; gap: 8px; }
+.year-nav button { background: #fff; border: 0.5px solid #c0bfb8; border-radius: 8px; padding: 6px 13px; cursor: pointer; font-size: 15px; }
 .year-nav button:hover { background: #e8e6e0; }
 .btn-primary { background: #1a1a18; color: #f5f4f0; border: none; border-radius: 8px; padding: 9px 18px; font-size: 14px; cursor: pointer; }
 .btn-primary:hover { background: #333; }
@@ -19,6 +19,15 @@ body { font-family: system-ui, sans-serif; background: #f5f4f0; color: #1a1a18; 
 .view-toggle { display: flex; border: 0.5px solid #c0bfb8; border-radius: 8px; overflow: hidden; background: #fff; }
 .view-toggle button { background: none; border: none; padding: 7px 14px; cursor: pointer; font-size: 13px; color: #666; }
 .view-toggle button.active { background: #1a1a18; color: #fff; }
+
+/* Countdown banner */
+.countdown { width: 100%; max-width: 960px; background: #fff; border: 0.5px solid #d8d6ce; border-radius: 12px; padding: 14px 20px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.countdown-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.countdown-text { font-size: 14px; color: #555; flex: 1; }
+.countdown-text strong { color: #1a1a18; font-weight: 500; }
+.countdown-days { font-size: 22px; font-weight: 500; color: #1a1a18; }
+.countdown-label { font-size: 11px; color: #999; text-align: center; }
+
 .filter-bar { width: 100%; max-width: 960px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
 .filter-bar input { flex: 1; min-width: 180px; border: 0.5px solid #c0bfb8; border-radius: 8px; padding: 8px 12px; font-size: 14px; background: #fff; font-family: inherit; outline: none; }
 .filter-bar input:focus { border-color: #888; }
@@ -36,24 +45,39 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
 .sidebar { flex: 1; min-width: 260px; max-width: 360px; display: flex; flex-direction: column; gap: 12px; }
 .card { background: #fff; border: 0.5px solid #d8d6ce; border-radius: 12px; padding: 16px; }
 .card-title { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .06em; color: #999; margin-bottom: 10px; }
-.evt-list { display: flex; flex-direction: column; gap: 8px; max-height: 320px; overflow-y: auto; }
-.evt-item { border-left: 3px solid #ccc; padding: 8px 10px; border-radius: 0 8px 8px 0; background: #fafaf8; cursor: pointer; }
+.evt-list { display: flex; flex-direction: column; gap: 8px; max-height: 300px; overflow-y: auto; }
+.evt-item { border-left: 3px solid #ccc; padding: 8px 10px; border-radius: 0 8px 8px 0; background: #fafaf8; cursor: pointer; transition: background .15s; }
 .evt-item:hover { background: #f0ede6; }
-.evt-item .en { font-size: 14px; font-weight: 500; }
+.evt-item.active-now { background: #f0f9f4; border-left-color: #4BA87D; }
+.evt-item .en { font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
 .evt-item .ed { font-size: 12px; color: #888; margin-top: 2px; }
+.evt-item .next-h { font-size: 11px; color: #4BA87D; margin-top: 3px; }
+.badge-live { font-size: 10px; background: #d4f0e4; color: #1a7a4a; border-radius: 4px; padding: 1px 6px; font-weight: 500; }
 .empty { font-size: 13px; color: #bbb; padding: 4px 0; }
 .legend { display: flex; flex-wrap: wrap; gap: 8px; }
 .leg-item { display: flex; align-items: center; gap: 5px; font-size: 12px; }
 .leg-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 
-/* List view */
-.list-view { width: 100%; max-width: 960px; display: flex; flex-direction: column; gap: 10px; }
-.list-item { background: #fff; border: 0.5px solid #d8d6ce; border-radius: 12px; padding: 16px 20px; display: flex; align-items: center; gap: 16px; cursor: pointer; }
-.list-item:hover { background: #fafaf8; }
-.list-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
-.list-name { font-size: 15px; font-weight: 500; flex: 1; }
-.list-dates { font-size: 13px; color: #888; }
-.list-hendelser { font-size: 12px; color: #aaa; margin-top: 2px; }
+/* Timeline */
+.timeline { width: 100%; max-width: 960px; display: flex; flex-direction: column; gap: 0; }
+.tl-month { margin-top: 24px; }
+.tl-month:first-child { margin-top: 0; }
+.tl-month-header { font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: .07em; color: #999; padding: 0 0 10px 20px; display: flex; align-items: center; gap: 10px; }
+.tl-month-header::after { content: ''; flex: 1; height: 0.5px; background: #d8d6ce; }
+.tl-items { display: flex; flex-direction: column; gap: 8px; }
+.tl-item { background: #fff; border: 0.5px solid #d8d6ce; border-radius: 12px; padding: 16px 20px; display: flex; gap: 16px; cursor: pointer; transition: background .15s; position: relative; overflow: hidden; }
+.tl-item:hover { background: #fafaf8; }
+.tl-item.active-now { border-color: #9fdcc0; background: #f6fdf9; }
+.tl-item.active-now::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: #4BA87D; border-radius: 12px 0 0 12px; }
+.tl-accent { width: 4px; border-radius: 4px; flex-shrink: 0; min-height: 40px; }
+.tl-body { flex: 1; }
+.tl-name { font-size: 15px; font-weight: 500; display: flex; align-items: center; gap: 8px; }
+.tl-dates { font-size: 13px; color: #888; margin-top: 2px; }
+.tl-hendelser { margin-top: 8px; display: flex; flex-direction: column; gap: 4px; }
+.tl-h-row { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #666; }
+.tl-h-dot { width: 5px; height: 5px; border-radius: 50%; background: #ccc; flex-shrink: 0; }
+.tl-h-date { font-weight: 500; min-width: 110px; color: #444; }
+.badge-live-tl { font-size: 10px; background: #d4f0e4; color: #1a7a4a; border-radius: 4px; padding: 2px 7px; font-weight: 500; }
 
 /* Detail */
 .detail-card { background: #fff; border: 0.5px solid #d8d6ce; border-radius: 12px; padding: 20px; width: 100%; max-width: 960px; }
@@ -64,11 +88,11 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
 .detail-notes { font-size: 14px; line-height: 1.75; white-space: pre-wrap; background: #fafaf8; border-radius: 8px; padding: 14px; border: 0.5px solid #e8e6e0; min-height: 40px; }
 .hendelse-list { display: flex; flex-direction: column; gap: 6px; }
 .hendelse-row { display: flex; align-items: center; gap: 10px; background: #fafaf8; border-radius: 8px; padding: 8px 12px; border: 0.5px solid #e8e6e0; }
-.hendelse-row .h-date { font-size: 13px; font-weight: 500; min-width: 110px; }
+.hendelse-row .h-date { font-size: 13px; font-weight: 500; min-width: 120px; }
 .hendelse-row .h-name { font-size: 13px; flex: 1; }
-.hendelse-row .h-del { background: none; border: none; color: #bbb; cursor: pointer; font-size: 16px; padding: 0 4px; line-height: 1; }
+.hendelse-row .h-del { background: none; border: none; color: #bbb; cursor: pointer; font-size: 16px; padding: 0 4px; }
 .hendelse-row .h-del:hover { color: #a03030; }
-.detail-actions { margin-top: 14px; display: flex; gap: 10px; }
+.detail-actions { margin-top: 14px; display: flex; gap: 10px; flex-wrap: wrap; }
 .btn-sec { border: 0.5px solid #c0bfb8; background: #fff; border-radius: 8px; padding: 7px 14px; font-size: 13px; cursor: pointer; }
 .btn-sec:hover { background: #f0ede6; }
 .btn-del { border: 0.5px solid #e2b0b0; background: #fff; color: #a03030; border-radius: 8px; padding: 7px 14px; font-size: 13px; cursor: pointer; }
@@ -76,24 +100,26 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
 /* Modal */
 .modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 200; align-items: center; justify-content: center; }
 .modal-bg.open { display: flex; }
-.modal { background: #fff; border-radius: 16px; padding: 24px; width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; }
+.modal { background: #fff; border-radius: 16px; padding: 24px; width: 100%; max-width: 480px; max-height: 92vh; overflow-y: auto; }
 .modal h2 { margin-bottom: 16px; font-size: 18px; font-weight: 500; }
 .modal label { font-size: 13px; color: #666; display: block; margin-top: 12px; margin-bottom: 4px; }
 .modal input[type=text], .modal input[type=date], .modal textarea { width: 100%; border: 0.5px solid #c0bfb8; border-radius: 8px; padding: 8px 10px; font-size: 14px; font-family: inherit; background: #fafaf8; outline: none; }
 .modal input:focus, .modal textarea:focus { border-color: #888; }
-.modal textarea { height: 100px; resize: vertical; }
+.modal textarea { height: 90px; resize: vertical; }
 .modal .row { display: flex; gap: 12px; }
 .modal .row > div { flex: 1; }
 .modal-actions { display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end; }
-.color-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
-.color-swatch { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; transition: transform .1s; outline: 2px solid transparent; outline-offset: 2px; }
-.color-swatch:hover { transform: scale(1.1); }
-.color-swatch.selected { outline: 2px solid #1a1a18; transform: scale(1.1); }
 
-/* Hendelse add row */
-.hendelse-add { display: flex; gap: 8px; margin-top: 8px; align-items: center; }
-.hendelse-add input[type=date] { flex: 0 0 150px; }
-.hendelse-add input[type=text] { flex: 1; }
+/* Color picker */
+.color-grid { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 6px; }
+.color-swatch { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform .1s; outline: 2px solid transparent; outline-offset: 2px; }
+.color-swatch:hover { transform: scale(1.12); }
+.color-swatch.selected { outline: 2.5px solid #1a1a18; transform: scale(1.12); }
+
+/* Hendelse add */
+.hendelse-add { display: flex; gap: 8px; margin-top: 8px; align-items: center; flex-wrap: wrap; }
+.hendelse-add input[type=date] { flex: 0 0 148px; }
+.hendelse-add input[type=text] { flex: 1; min-width: 120px; }
 .hendelse-add button { background: #1a1a18; color: #fff; border: none; border-radius: 8px; padding: 8px 12px; font-size: 13px; cursor: pointer; white-space: nowrap; }
 .hendelse-preview { display: flex; flex-direction: column; gap: 5px; margin-top: 8px; }
 .hp-row { display: flex; align-items: center; gap: 8px; background: #f5f4f0; border-radius: 6px; padding: 6px 10px; font-size: 13px; }
@@ -119,9 +145,19 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
     <div class="header-right">
       <div class="view-toggle">
         <button id="btn-wheel" class="active" onclick="setView('wheel')">Hjul</button>
-        <button id="btn-list" onclick="setView('list')">Liste</button>
+        <button id="btn-list" onclick="setView('list')">Tidslinje</button>
       </div>
       <button class="btn-primary" onclick="openModal(null)">+ Nytt arrangement</button>
+    </div>
+  </div>
+
+  <!-- Countdown -->
+  <div class="countdown" id="countdown" style="display:none">
+    <div class="countdown-dot" id="cd-dot"></div>
+    <div class="countdown-text" id="cd-text"></div>
+    <div style="text-align:center">
+      <div class="countdown-days" id="cd-days"></div>
+      <div class="countdown-label">dager igjen</div>
     </div>
   </div>
 
@@ -158,9 +194,9 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
     </div>
   </div>
 
-  <!-- List view -->
-  <div id="view-list" class="list-view" style="display:none">
-    <div id="list-items"></div>
+  <!-- Timeline view -->
+  <div id="view-list" class="timeline" style="display:none">
+    <div id="timeline-items"></div>
   </div>
 
   <!-- Detail panel -->
@@ -193,7 +229,7 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
     <label>Arrangementnavn</label>
     <input id="f-name" type="text" placeholder="f.eks. Tons of Rock">
     <div class="row">
-      <div><label>Startdato</label><input id="f-start" type="date"></div>
+      <div><label>Startdato</label><input id="f-start" type="date" onchange="onStartChange()"></div>
       <div><label>Sluttdato</label><input id="f-end" type="date"></div>
     </div>
     <label>Farge</label>
@@ -227,18 +263,45 @@ async function dbUpdate(id, ev) { return (await fetch(`${SB_URL}/rest/v1/events?
 async function dbDelete(id) { await fetch(`${SB_URL}/rest/v1/events?id=eq.${id}`, { method:'DELETE', headers: H }); }
 
 const MONTHS = ['Januar','Februar','Mars','April','Mai','Juni','Juli','August','September','Oktober','November','Desember'];
-const COLORS = ['#5A7FBB','#4BA87D','#C9624F','#B87BAC','#D4A24C','#5AABB8','#C47A40','#888780','#7B6FBF','#4aab8a','#D4627A','#6B9E3A'];
+
+// Extended color palette
+const COLORS = [
+  '#C9624F','#D4845A','#D4A24C','#C9B84C','#8FB84C',
+  '#4BA87D','#3a8a6a','#4AABB8','#5A7FBB','#6A6FBB',
+  '#B87BAC','#D4627A','#7B6FBF','#6B9E3A','#4a7fb5',
+  '#C47A40','#888780','#5a5a5a','#A0522D','#2E7D6B'
+];
+
 const RING_COLORS = ['#4a7fb5','#5a9bd4','#3aab7a','#74c476','#a8c43a','#f0c030','#f0a020','#e06040','#c04040','#9050b0','#6050b8','#4a7fb5'];
 
 let currentYear = new Date().getFullYear();
 let events = [], filteredEvents = [];
 let selectedMonth = null, selectedId = null, editingId = null;
 let selectedColor = COLORS[0];
-let pendingHendelser = []; // [{date, name}]
+let pendingHendelser = [];
 let currentView = 'wheel';
-let filterText = '', filterMonth = '';
 
-// Init
+const TODAY = new Date(); TODAY.setHours(0,0,0,0);
+
+function isActiveNow(ev) {
+  const s = new Date(ev.start_date); s.setHours(0,0,0,0);
+  const e = new Date(ev.end_date); e.setHours(23,59,59,0);
+  return TODAY >= s && TODAY <= e;
+}
+
+function nextUpcomingEvent(evList) {
+  const future = evList.filter(e => {
+    const s = new Date(e.start_date); s.setHours(0,0,0,0);
+    return s >= TODAY;
+  }).sort((a,b) => new Date(a.start_date)-new Date(b.start_date));
+  return future[0] || null;
+}
+
+function daysUntil(dateStr) {
+  const d = new Date(dateStr); d.setHours(0,0,0,0);
+  return Math.round((d - TODAY) / 86400000);
+}
+
 async function init() {
   setYear(currentYear);
   buildColorGrid();
@@ -246,8 +309,8 @@ async function init() {
   try {
     const data = await dbGet();
     if (Array.isArray(data)) { events = data; applyFilter(); }
-    else toast('Klarte ikke å koble til databasen. Sjekk at SQL-tabellen er opprettet.');
-  } catch(e) { toast('Nettverksfeil – sjekk internettilkobling.'); }
+    else toast('Klarte ikke å koble til databasen.');
+  } catch(e) { toast('Nettverksfeil.'); }
 }
 
 function setYear(y) {
@@ -262,27 +325,42 @@ function buildMonthFilter() {
   MONTHS.forEach((m,i) => { const o = document.createElement('option'); o.value=i; o.textContent=m; sel.appendChild(o); });
 }
 
-// Filter
 function applyFilter() {
-  filterText = document.getElementById('filter-text').value.toLowerCase();
-  filterMonth = document.getElementById('filter-month').value;
+  const ft = document.getElementById('filter-text').value.toLowerCase();
+  const fm = document.getElementById('filter-month').value;
   filteredEvents = events.filter(e => {
-    const nameMatch = e.name.toLowerCase().includes(filterText);
+    const nameMatch = e.name.toLowerCase().includes(ft);
     const yearMatch = new Date(e.start_date).getFullYear()===currentYear || new Date(e.end_date).getFullYear()===currentYear;
-    const monthMatch = filterMonth==='' || getEventsForMonth(parseInt(filterMonth)).some(ev=>ev.id===e.id);
+    const monthMatch = fm==='' || getEventsForMonth(parseInt(fm), events).some(ev=>ev.id===e.id);
     return nameMatch && yearMatch && monthMatch;
   });
-  drawWheel(); renderSidebar(); renderLegend(); renderListView();
+  updateCountdown();
+  drawWheel(); renderSidebar(); renderLegend(); renderTimeline();
+}
+
+function updateCountdown() {
+  const cd = document.getElementById('countdown');
+  const yearEvents = events.filter(e => new Date(e.start_date).getFullYear()===currentYear || new Date(e.end_date).getFullYear()===currentYear);
+  const next = nextUpcomingEvent(yearEvents);
+  if (!next) { cd.style.display='none'; return; }
+  const days = daysUntil(next.start_date);
+  if (days < 0) { cd.style.display='none'; return; }
+  cd.style.display='flex';
+  document.getElementById('cd-dot').style.background = next.color;
+  document.getElementById('cd-days').textContent = days;
+  document.getElementById('cd-text').innerHTML = days===0
+    ? `<strong>${next.name}</strong> starter i dag!`
+    : `Neste arrangement: <strong>${next.name}</strong> – starter ${fmtDate(next.start_date)}`;
 }
 
 function setView(v) {
   currentView = v;
-  document.getElementById('view-wheel').style.display = v==='wheel' ? 'flex' : 'none';
-  document.getElementById('view-list').style.display = v==='list' ? 'flex' : 'none';
+  document.getElementById('view-wheel').style.display = v==='wheel'?'flex':'none';
+  document.getElementById('view-list').style.display = v==='list'?'flex':'none';
   document.getElementById('btn-wheel').classList.toggle('active', v==='wheel');
   document.getElementById('btn-list').classList.toggle('active', v==='list');
   closeDetail();
-  if (v==='list') renderListView();
+  if (v==='list') renderTimeline();
 }
 
 // Color grid
@@ -294,13 +372,18 @@ function buildColorGrid() {
 function pickColor(c) {
   selectedColor = c;
   document.querySelectorAll('.color-swatch').forEach(s => {
-    const bg = s.style.backgroundColor;
-    const hex = rgbToHex(bg);
-    s.classList.toggle('selected', hex.toLowerCase()===c.toLowerCase());
+    s.classList.remove('selected');
+    if (rgbToHex(s.style.backgroundColor).toLowerCase() === c.toLowerCase()) s.classList.add('selected');
   });
 }
+function onStartChange() {
+  const start = document.getElementById('f-start').value;
+  const endEl = document.getElementById('f-end');
+  endEl.min = start;
+  if (!endEl.value || endEl.value < start) endEl.value = start;
+}
 function rgbToHex(rgb) {
-  const m = rgb.match(/\d+/g); if(!m) return rgb;
+  const m=rgb.match(/\d+/g); if(!m) return rgb;
   return '#'+m.slice(0,3).map(x=>parseInt(x).toString(16).padStart(2,'0')).join('');
 }
 
@@ -309,8 +392,8 @@ const canvas = document.getElementById('wheel');
 const ctx = canvas.getContext('2d');
 const CX=250,CY=250,OR=238,IR=95;
 
-function getEventsForMonth(m) {
-  return filteredEvents.filter(e => {
+function getEventsForMonth(m, src) {
+  return (src||filteredEvents).filter(e => {
     const s=new Date(e.start_date), en=new Date(e.end_date);
     s.setHours(12); en.setHours(12);
     for(let d=new Date(s);d<=en;d.setDate(d.getDate()+1))
@@ -329,7 +412,11 @@ function drawWheel() {
     ctx.strokeStyle='#fff'; ctx.lineWidth=2; ctx.stroke();
     if(evts.length) {
       const slice=(ea-sa)/evts.length;
-      evts.forEach((ev,i)=>{ ctx.beginPath(); ctx.arc(CX,CY,OR-1,sa+i*slice+.02,sa+(i+1)*slice-.02); ctx.arc(CX,CY,OR-16,sa+(i+1)*slice-.02,sa+i*slice+.02,true); ctx.closePath(); ctx.fillStyle=ev.color; ctx.fill(); });
+      evts.forEach((ev,i)=>{
+        ctx.beginPath(); ctx.arc(CX,CY,OR-1,sa+i*slice+.02,sa+(i+1)*slice-.02);
+        ctx.arc(CX,CY,OR-16,sa+(i+1)*slice-.02,sa+i*slice+.02,true);
+        ctx.closePath(); ctx.fillStyle=ev.color; ctx.fill();
+      });
     }
     const mid=(sa+ea)/2, lr=(OR+IR)/2;
     ctx.save(); ctx.translate(CX+lr*Math.cos(mid),CY+lr*Math.sin(mid)); ctx.rotate(mid+Math.PI/2);
@@ -339,7 +426,8 @@ function drawWheel() {
     if(evts.length) ctx.fillText('●'.repeat(Math.min(evts.length,4)),0,15);
     ctx.restore();
   }
-  ctx.beginPath(); ctx.arc(CX,CY,IR,0,2*Math.PI); ctx.fillStyle='#f5f4f0'; ctx.fill(); ctx.strokeStyle='#ddd'; ctx.lineWidth=1; ctx.stroke();
+  ctx.beginPath(); ctx.arc(CX,CY,IR,0,2*Math.PI); ctx.fillStyle='#f5f4f0'; ctx.fill();
+  ctx.strokeStyle='#ddd'; ctx.lineWidth=1; ctx.stroke();
 }
 
 canvas.addEventListener('click', e => {
@@ -352,13 +440,35 @@ canvas.addEventListener('click', e => {
 });
 
 // Sidebar
+function nextHendelseText(ev) {
+  const hendelser = parseHendelser(ev.hendelser);
+  const upcoming = hendelser.filter(h => { const d=new Date(h.date); d.setHours(0,0,0,0); return d>=TODAY; })
+    .sort((a,b)=>a.date.localeCompare(b.date));
+  if(!upcoming.length) return '';
+  const h = upcoming[0];
+  const days = daysUntil(h.date);
+  return days===0 ? `${h.name} i dag` : `${h.name}: ${fmtDate(h.date)}`;
+}
+
 function renderSidebar() {
   const list=document.getElementById('evt-list');
-  if(selectedMonth===null) { document.getElementById('sel-month').textContent='—'; document.getElementById('sel-count').textContent=''; list.innerHTML='<p class="empty">Klikk på en måned</p>'; return; }
+  if(selectedMonth===null) {
+    document.getElementById('sel-month').textContent='—';
+    document.getElementById('sel-count').textContent='';
+    list.innerHTML='<p class="empty">Klikk på en måned</p>'; return;
+  }
   const evts=getEventsForMonth(selectedMonth);
   document.getElementById('sel-month').textContent=MONTHS[selectedMonth]+' '+currentYear;
   document.getElementById('sel-count').textContent=evts.length?evts.length+' arrangement'+(evts.length>1?'er':''):'Ingen arrangementer';
-  list.innerHTML=evts.length?evts.map(ev=>`<div class="evt-item" style="border-left-color:${ev.color}" onclick="showDetail('${ev.id}')"><div class="en">${ev.name}</div><div class="ed">${fmtDate(ev.start_date)} – ${fmtDate(ev.end_date)}</div></div>`).join(''):'<p class="empty">Ingen arrangementer denne måneden</p>';
+  list.innerHTML=evts.length?evts.map(ev=>{
+    const live=isActiveNow(ev);
+    const nh=nextHendelseText(ev);
+    return `<div class="evt-item${live?' active-now':''}" style="border-left-color:${ev.color}" onclick="showDetail('${ev.id}')">
+      <div class="en">${ev.name}${live?'<span class="badge-live">Pågår nå</span>':''}</div>
+      <div class="ed">${fmtDate(ev.start_date)} – ${fmtDate(ev.end_date)}</div>
+      ${nh?`<div class="next-h">↑ ${nh}</div>`:''}
+    </div>`;
+  }).join(''):'<p class="empty">Ingen arrangementer denne måneden</p>';
 }
 
 function renderLegend() {
@@ -367,30 +477,49 @@ function renderLegend() {
   leg.innerHTML=items.length?items.map(e=>`<div class="leg-item"><div class="leg-dot" style="background:${e.color}"></div><span>${e.name}</span></div>`).join(''):'<p class="empty">Ingen arrangementer ennå</p>';
 }
 
-// List view
-function renderListView() {
-  const cont=document.getElementById('list-items');
+// Timeline
+function renderTimeline() {
+  const cont=document.getElementById('timeline-items');
   const items=filteredEvents.filter(e=>new Date(e.start_date).getFullYear()===currentYear||new Date(e.end_date).getFullYear()===currentYear);
   if(!items.length) { cont.innerHTML='<p class="empty" style="padding:16px">Ingen arrangementer funnet</p>'; return; }
-  cont.innerHTML=items.map(ev=>{
-    const hendelser=parseHendelser(ev.hendelser);
-    const hText=hendelser.length?hendelser.map(h=>`${fmtDate(h.date)}: ${h.name}`).join(' · '):'';
-    return `<div class="list-item" onclick="showDetail('${ev.id}')">
-      <div class="list-dot" style="background:${ev.color}"></div>
-      <div style="flex:1">
-        <div class="list-name">${ev.name}</div>
-        <div class="list-dates">${fmtDate(ev.start_date)} – ${fmtDate(ev.end_date)}</div>
-        ${hText?`<div class="list-hendelser">${hText}</div>`:''}
-      </div>
+
+  // Group by start month
+  const byMonth = {};
+  items.forEach(ev => {
+    const m = new Date(ev.start_date).getMonth();
+    if(!byMonth[m]) byMonth[m]=[];
+    byMonth[m].push(ev);
+  });
+
+  cont.innerHTML = Object.keys(byMonth).sort((a,b)=>a-b).map(m => {
+    const monthEvts = byMonth[m].sort((a,b)=>new Date(a.start_date)-new Date(b.start_date));
+    const monthItems = monthEvts.map(ev => {
+      const live = isActiveNow(ev);
+      const hendelser = parseHendelser(ev.hendelser).sort((a,b)=>a.date.localeCompare(b.date));
+      const hRows = hendelser.map(h=>`
+        <div class="tl-h-row">
+          <div class="tl-h-dot"></div>
+          <span class="tl-h-date">${fmtDate(h.date)}</span>
+          <span>${h.name}</span>
+        </div>`).join('');
+      return `<div class="tl-item${live?' active-now':''}" onclick="showDetail('${ev.id}')">
+        <div class="tl-accent" style="background:${ev.color}"></div>
+        <div class="tl-body">
+          <div class="tl-name">${ev.name}${live?'<span class="badge-live-tl">Pågår nå</span>':''}</div>
+          <div class="tl-dates">${fmtDate(ev.start_date)} – ${fmtDate(ev.end_date)}</div>
+          ${hRows?`<div class="tl-hendelser">${hRows}</div>`:''}
+        </div>
+      </div>`;
+    }).join('');
+    return `<div class="tl-month">
+      <div class="tl-month-header">${MONTHS[m]} ${currentYear}</div>
+      <div class="tl-items">${monthItems}</div>
     </div>`;
   }).join('');
 }
 
 // Hendelser helpers
-function parseHendelser(raw) {
-  if(!raw) return [];
-  try { return JSON.parse(raw); } catch{ return []; }
-}
+function parseHendelser(raw) { if(!raw) return []; try { return JSON.parse(raw); } catch{ return []; } }
 
 // Detail
 function showDetail(id) {
@@ -404,7 +533,6 @@ function showDetail(id) {
   document.getElementById('detail-card').style.display='block';
   document.getElementById('detail-card').scrollIntoView({behavior:'smooth',block:'nearest'});
 }
-
 function renderDetailHendelser(ev) {
   const hendelser=parseHendelser(ev.hendelser);
   const cont=document.getElementById('det-hendelser');
@@ -415,45 +543,23 @@ function renderDetailHendelser(ev) {
     <div class="hendelse-row">
       <span class="h-date">${fmtDate(h.date)}</span>
       <span class="h-name">${h.name}</span>
-      <button class="h-del" onclick="deleteHendelse('${ev.id}',${i})" title="Slett hendelse">×</button>
+      <button class="h-del" onclick="deleteHendelse('${ev.id}',${i})">×</button>
     </div>`).join('');
 }
-
 async function deleteHendelse(evId, idx) {
   const ev=events.find(e=>e.id===evId); if(!ev) return;
-  const hendelser=parseHendelser(ev.hendelser);
-  hendelser.splice(idx,1);
-  ev.hendelser=JSON.stringify(hendelser);
+  const h=parseHendelser(ev.hendelser); h.splice(idx,1);
+  ev.hendelser=JSON.stringify(h);
   await dbUpdate(evId,{hendelser:ev.hendelser});
-  renderDetailHendelser(ev);
-  renderListView();
-  toast('Hendelse slettet');
+  renderDetailHendelser(ev); renderTimeline(); toast('Hendelse slettet');
 }
-
 function closeDetail() { document.getElementById('detail-card').style.display='none'; selectedId=null; }
 function editSelected() { if(selectedId) openModal(selectedId); }
 async function deleteSelected() {
   if(!selectedId||!confirm('Slett dette arrangementet?')) return;
   await dbDelete(selectedId);
   events=events.filter(e=>e.id!==selectedId);
-  closeDetail(); applyFilter();
-  toast('Arrangement slettet');
-}
-
-// Modal hendelser
-function addHendelse() {
-  const d=document.getElementById('h-date').value;
-  const n=document.getElementById('h-name').value.trim();
-  if(!d||!n) { toast('Fyll ut dato og navn på hendelsen'); return; }
-  pendingHendelser.push({date:d,name:n});
-  document.getElementById('h-date').value='';
-  document.getElementById('h-name').value='';
-  renderPendingHendelser();
-}
-function removeHendelse(i) { pendingHendelser.splice(i,1); renderPendingHendelser(); }
-function renderPendingHendelser() {
-  document.getElementById('h-preview').innerHTML=pendingHendelser.map((h,i)=>`
-    <div class="hp-row"><span><b>${fmtDate(h.date)}</b> – ${h.name}</span><button onclick="removeHendelse(${i})">×</button></div>`).join('');
+  closeDetail(); applyFilter(); toast('Arrangement slettet');
 }
 
 // Modal
@@ -464,6 +570,7 @@ function openModal(id) {
     const ev=events.find(e=>e.id===id);
     document.getElementById('f-name').value=ev.name;
     document.getElementById('f-start').value=ev.start_date;
+    document.getElementById('f-end').min=ev.start_date;
     document.getElementById('f-end').value=ev.end_date;
     document.getElementById('f-notes').value=ev.notes||'';
     selectedColor=ev.color;
@@ -480,24 +587,49 @@ function openModal(id) {
 }
 function closeModal() { document.getElementById('modal-bg').classList.remove('open'); editingId=null; pendingHendelser=[]; }
 
+function addHendelse() {
+  const d=document.getElementById('h-date').value, n=document.getElementById('h-name').value.trim();
+  if(!d||!n) { toast('Fyll ut dato og navn på hendelsen'); return; }
+  pendingHendelser.push({date:d,name:n});
+  document.getElementById('h-date').value=''; document.getElementById('h-name').value='';
+  renderPendingHendelser();
+}
+function removeHendelse(i) { pendingHendelser.splice(i,1); renderPendingHendelser(); }
+function renderPendingHendelser() {
+  document.getElementById('h-preview').innerHTML=pendingHendelser.map((h,i)=>`
+    <div class="hp-row"><span><b>${fmtDate(h.date)}</b> – ${h.name}</span><button onclick="removeHendelse(${i})">×</button></div>`).join('');
+}
+
 async function saveEvent() {
   const name=document.getElementById('f-name').value.trim();
   const start=document.getElementById('f-start').value;
   const end=document.getElementById('f-end').value;
   const notes=document.getElementById('f-notes').value.trim();
-  if(!name||!start||!end) { toast('Fyll ut navn og datoer'); return; }
+  if(!name) { toast('Fyll ut arrangementnavn'); return; }
+  if(!start||!end) { toast('Fyll ut start- og sluttdato'); return; }
   if(end<start) { toast('Sluttdato må være etter startdato'); return; }
-  const payload={name,start_date:start,end_date:end,color:selectedColor,notes,hendelser:JSON.stringify(pendingHendelser)};
-  if(editingId) {
-    const res=await dbUpdate(editingId,payload);
-    if(Array.isArray(res)) { const idx=events.findIndex(e=>e.id===editingId); events[idx]=res[0]; }
-  } else {
-    const res=await dbInsert(payload);
-    if(Array.isArray(res)) events.push(res[0]);
+  try {
+    const payload={name,start_date:start,end_date:end,color:selectedColor,notes,hendelser:JSON.stringify(pendingHendelser)};
+    if(editingId) {
+      const res=await dbUpdate(editingId,payload);
+      if(Array.isArray(res)&&res[0]) { const idx=events.findIndex(e=>e.id===editingId); if(idx>-1) events[idx]=res[0]; }
+      else { await loadAndRefresh(); }
+    } else {
+      const res=await dbInsert(payload);
+      if(Array.isArray(res)&&res[0]) events.push(res[0]);
+      else { await loadAndRefresh(); }
+    }
+    closeModal(); applyFilter();
+    toast(editingId?'Arrangement oppdatert':'Arrangement lagt til');
+  } catch(e) {
+    toast('Noe gikk galt – prøv igjen');
+    console.error(e);
   }
-  closeModal(); applyFilter();
-  if(selectedId) { const ev=events.find(e=>e.id===selectedId); if(ev) showDetail(ev.id); }
-  toast(editingId?'Arrangement oppdatert':'Arrangement lagt til');
+}
+
+async function loadAndRefresh() {
+  const data=await dbGet();
+  if(Array.isArray(data)) events=data;
 }
 
 function fmtDate(d) {
