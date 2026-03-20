@@ -74,6 +74,7 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
 .legend { display: flex; flex-wrap: wrap; gap: 8px; max-height: 220px; overflow-y: auto; }
 .leg-item { display: flex; align-items: center; gap: 5px; font-size: 12px; }
 .leg-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.readonly-badge { font-size: 11px; background: #f0ede6; color: #888; border-radius: 6px; padding: 2px 8px; }
 
 /* Timeline */
 .timeline { width: 100%; max-width: 960px; display: flex; flex-direction: column; }
@@ -153,8 +154,6 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
 .hp-row button:hover { color: #a03030; }
 .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #1a1a18; color: #fff; padding: 10px 20px; border-radius: 10px; font-size: 14px; z-index: 300; opacity: 0; transition: opacity .3s; pointer-events: none; }
 .toast.show { opacity: 1; }
-.btn-quick-add { background: #f0ede6; border: 0.5px solid #c0bfb8; border-radius: 8px; padding: 8px 14px; font-size: 13px; cursor: pointer; color: #444; text-align: center; width: 100%; margin-top: 10px; }
-.btn-quick-add:hover { background: #e8e6e0; }
 @media (max-width: 680px) { .wheel-wrap { width: 340px; height: 340px; } .below-wheel { grid-template-columns: 1fr; } }
 </style>
 </head>
@@ -185,7 +184,7 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
     <div class="countdown-text" id="cd-text"></div>
     <div style="text-align:center">
       <div class="countdown-days" id="cd-days"></div>
-      <div class="countdown-label">dager igjen</div>
+      <div class="countdown-label" id="cd-label">dager igjen</div>
     </div>
   </div>
 
@@ -209,7 +208,6 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
         <div class="card-title">Valgt måned</div>
         <div style="font-size:18px;font-weight:500" id="sel-month">—</div>
         <div style="font-size:13px;color:#999;margin-top:2px" id="sel-count"></div>
-        <button class="btn-quick-add" id="btn-quick-add" style="display:none" onclick="openQuickHendelseModal()">+ Ny hendelse</button>
       </div>
       <div class="card">
         <div class="card-title" id="panel-evt-title">Elementer</div>
@@ -243,7 +241,11 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
       <div class="detail-section-title">Notater</div>
       <div class="detail-notes" id="det-notes"></div>
     </div>
-    <div class="detail-actions" id="det-actions"></div>
+    <div class="detail-actions" id="det-actions">
+      <button class="btn-sec" onclick="editSelected()">Rediger</button>
+      <button class="btn-del" onclick="deleteSelected()">Slett</button>
+      <button class="btn-sec" onclick="closeDetail()">Lukk</button>
+    </div>
   </div>
 </div>
 
@@ -255,7 +257,7 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
     <h2 id="event-modal-title">Nytt element</h2>
     <label id="lbl-name">Navn</label>
     <input id="f-name" type="text">
-    <div class="row">
+    <div class="row" id="date-row">
       <div><label id="lbl-start-date">Startdato</label><input id="f-start" type="date" onchange="onStartChange()"></div>
       <div id="end-date-col"><label>Sluttdato</label><input id="f-end" type="date"></div>
     </div>
@@ -285,23 +287,6 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
   </div>
 </div>
 
-<!-- Quick Hendelse Modal -->
-<div class="modal-bg" id="quick-modal-bg">
-  <div class="modal">
-    <h2>Ny hendelse</h2>
-    <label>Dato</label>
-    <input id="q-date" type="date">
-    <label>Navn</label>
-    <input id="q-name" type="text" placeholder="f.eks. Aleksander bursdag">
-    <label>Farge</label>
-    <div class="color-grid" id="q-color-grid"></div>
-    <div class="modal-actions">
-      <button class="btn-sec" onclick="closeQuickModal()">Avbryt</button>
-      <button class="btn-primary" onclick="saveQuickHendelse()">Lagre</button>
-    </div>
-  </div>
-</div>
-
 <!-- Wheel Settings Modal -->
 <div class="modal-bg" id="wheel-modal-bg">
   <div class="modal">
@@ -312,15 +297,19 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
     <div class="color-grid" id="wheel-color-grid"></div>
     <div class="modal-section">
       <div class="modal-section-title">Tilpass tekster</div>
-      <label>Hva heter et element?</label>
+      <label>Hva heter et element? (f.eks. Arrangement, Person)</label>
       <input id="w-item-label" type="text" placeholder="Arrangement">
-      <label>Hva heter en hendelse?</label>
+      <label>Hva heter en hendelse? (f.eks. Hendelse, Milepæl)</label>
       <input id="w-event-label" type="text" placeholder="Hendelse">
-      <label>Nedtellingstekst</label>
+      <label>Nedtellingstekst (f.eks. Neste bursdag)</label>
       <input id="w-countdown-label" type="text" placeholder="Neste arrangement">
     </div>
     <div class="modal-section">
       <div class="modal-section-title">Innstillinger</div>
+      <div class="toggle-row">
+        <label>Nedtelling viser neste hendelse</label>
+        <label class="toggle"><input type="checkbox" id="w-countdown-hendelse"><span class="toggle-slider"></span></label>
+      </div>
       <div class="toggle-row">
         <label>Standard visning: Tidslinje</label>
         <label class="toggle"><input type="checkbox" id="w-default-list"><span class="toggle-slider"></span></label>
@@ -330,8 +319,12 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
         <label class="toggle"><input type="checkbox" id="w-single-day"><span class="toggle-slider"></span></label>
       </div>
       <div class="toggle-row">
-        <label>Skrivebeskyttet</label>
+        <label>Skrivebeskyttet (ingen kan redigere)</label>
         <label class="toggle"><input type="checkbox" id="w-readonly"><span class="toggle-slider"></span></label>
+      </div>
+      <div class="toggle-row">
+        <label>Egen farge per hendelse</label>
+        <label class="toggle"><input type="checkbox" id="w-hendelse-color"><span class="toggle-slider"></span></label>
       </div>
       <div class="toggle-row">
         <label>Vis hendelser</label>
@@ -357,15 +350,15 @@ const SB_URL='https://cxqvenjholhtijnrnwau.supabase.co';
 const SB_KEY='sb_publishable_pn7_PfMvVPVpI421gQtWmQ_tyDGgmFc';
 const H={'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY};
 
-const api={
-  getWheels:()=>fetch(`${SB_URL}/rest/v1/wheels?order=created_at.asc`,{headers:H}).then(r=>r.json()),
-  saveWheel:w=>fetch(`${SB_URL}/rest/v1/wheels`,{method:'POST',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify(w)}).then(r=>r.json()),
-  updateWheel:(id,w)=>fetch(`${SB_URL}/rest/v1/wheels?id=eq.${id}`,{method:'PATCH',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify(w)}).then(r=>r.json()),
-  deleteWheel:id=>fetch(`${SB_URL}/rest/v1/wheels?id=eq.${id}`,{method:'DELETE',headers:H}),
-  getEvents:wid=>fetch(`${SB_URL}/rest/v1/events?wheel_id=eq.${wid}&order=start_date.asc`,{headers:H}).then(r=>r.json()),
-  saveEvent:e=>fetch(`${SB_URL}/rest/v1/events`,{method:'POST',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify(e)}).then(r=>r.json()),
-  updateEvent:(id,e)=>fetch(`${SB_URL}/rest/v1/events?id=eq.${id}`,{method:'PATCH',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify(e)}).then(r=>r.json()),
-  deleteEvent:id=>fetch(`${SB_URL}/rest/v1/events?id=eq.${id}`,{method:'DELETE',headers:H}),
+const api = {
+  getWheels: ()=>fetch(`${SB_URL}/rest/v1/wheels?order=created_at.asc`,{headers:H}).then(r=>r.json()),
+  saveWheel: w=>fetch(`${SB_URL}/rest/v1/wheels`,{method:'POST',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify(w)}).then(r=>r.json()),
+  updateWheel: (id,w)=>fetch(`${SB_URL}/rest/v1/wheels?id=eq.${id}`,{method:'PATCH',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify(w)}).then(r=>r.json()),
+  deleteWheel: id=>fetch(`${SB_URL}/rest/v1/wheels?id=eq.${id}`,{method:'DELETE',headers:H}),
+  getEvents: wid=>fetch(`${SB_URL}/rest/v1/events?wheel_id=eq.${wid}&order=start_date.asc`,{headers:H}).then(r=>r.json()),
+  saveEvent: e=>fetch(`${SB_URL}/rest/v1/events`,{method:'POST',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify(e)}).then(r=>r.json()),
+  updateEvent: (id,e)=>fetch(`${SB_URL}/rest/v1/events?id=eq.${id}`,{method:'PATCH',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify(e)}).then(r=>r.json()),
+  deleteEvent: id=>fetch(`${SB_URL}/rest/v1/events?id=eq.${id}`,{method:'DELETE',headers:H}),
 };
 
 const MONTHS=['Januar','Februar','Mars','April','Mai','Juni','Juli','August','September','Oktober','November','Desember'];
@@ -373,27 +366,32 @@ const COLORS=['#C9624F','#D4845A','#D4A24C','#C9B84C','#8FB84C','#4BA87D','#3a8a
 const RING_COLORS=['#4a7fb5','#5a9bd4','#3aab7a','#74c476','#a8c43a','#f0c030','#f0a020','#e06040','#c04040','#9050b0','#6050b8','#4a7fb5'];
 
 let currentYear=new Date().getFullYear();
-let wheels=[],currentWheelId=null,events=[],filteredEvents=[];
-let selectedMonth=null,selectedId=null,editingId=null,editingWheelId=null;
-let selectedColor=COLORS[0],selectedWheelColor=COLORS[0],quickColor=COLORS[0];
-let pendingHendelser=[],currentView='wheel';
-const TODAY=new Date();TODAY.setHours(0,0,0,0);
+let wheels=[], currentWheelId=null, events=[], filteredEvents=[];
+let selectedMonth=null, selectedId=null, editingId=null, editingWheelId=null;
+let selectedColor=COLORS[0], selectedWheelColor=COLORS[0];
+let pendingHendelser=[], currentView='wheel';
+const TODAY=new Date(); TODAY.setHours(0,0,0,0);
 const CX=310,CY=310,OR=295,IR=115,EVENT_ARC_W=20,HENDELSE_R=OR-EVENT_ARC_W-8,HENDELSE_DOT_R=5;
 let tooltipData=[];
 
 function cw(){return wheels.find(w=>w.id===currentWheelId)||null;}
 
 async function init(){
-  setYear(currentYear);buildMonthFilter();setupTooltip();
-  try{
+  setYear(currentYear);
+  buildMonthFilter();
+  setupTooltip();
+  try {
     const ws=await api.getWheels();
-    if(Array.isArray(ws)&&ws.length){wheels=ws;currentWheelId=ws[0].id;}
-    else if(Array.isArray(ws)&&ws.length===0){
+    if(Array.isArray(ws)&&ws.length){
+      wheels=ws;
+      currentWheelId=ws[0].id;
+    } else if(Array.isArray(ws)&&ws.length===0){
       const res=await api.saveWheel({name:'Arrangementer',color:'#5A7FBB',countdown_label:'Neste arrangement',item_label:'Arrangement',event_label:'Hendelse',default_view:'wheel',readonly:false,single_day:false,show_notes:true,show_hendelser:true});
       if(Array.isArray(res)&&res[0]){wheels=[res[0]];currentWheelId=res[0].id;}
     }
-    renderWheelTabs();await loadEvents();
-  }catch(e){toast('Nettverksfeil.');}
+    renderWheelTabs();
+    await loadEvents();
+  } catch(e){toast('Nettverksfeil.');}
 }
 
 function setYear(y){currentYear=y;document.getElementById('yr-label').textContent=y;document.getElementById('center-year').textContent=y;}
@@ -401,18 +399,24 @@ function changeYear(d){setYear(currentYear+d);applyFilter();}
 
 async function loadEvents(){
   if(!currentWheelId)return;
-  try{
+  try {
     const data=await api.getEvents(currentWheelId);
-    if(Array.isArray(data)){events=data;applyWheelSettings();applyFilter();}
-  }catch(e){toast('Klarte ikke laste elementer.');}
+    if(Array.isArray(data)){
+      events=data;
+      applyWheelSettings();
+      applyFilter();
+    }
+  } catch(e){toast('Klarte ikke laste elementer.');}
 }
 
 function applyWheelSettings(){
-  const w=cw();if(!w)return;
-  document.getElementById('btn-new-event').style.display=w.readonly?'none':'flex';
+  const w=cw(); if(!w)return;
+  const ro=w.readonly;
+  document.getElementById('btn-new-event').style.display=ro?'none':'flex';
   document.getElementById('center-name').textContent=w.name;
   document.getElementById('panel-evt-title').textContent=w.item_label||'Elementer';
-  setView(currentView==='wheel'||currentView==='list'?currentView:w.default_view||'wheel');
+  const view=w.default_view||'wheel';
+  setView(currentView==='wheel'||currentView==='list'?currentView:view);
 }
 
 function buildMonthFilter(){
@@ -433,7 +437,7 @@ function applyFilter(){
 }
 
 function updateCountdown(){
-  const w=cw();const cd=document.getElementById('countdown');
+  const w=cw(); const cd=document.getElementById('countdown');
   const next=nextUpcoming(filteredEvents);
   if(!next||daysUntil(next.start_date)<0){cd.style.display='none';return;}
   const days=daysUntil(next.start_date);
@@ -475,49 +479,12 @@ function renderWheelTabs(){
 }
 
 async function switchWheel(id){
-  currentWheelId=id;selectedMonth=null;selectedId=null;
-  closeDetail();renderWheelTabs();await loadEvents();
+  currentWheelId=id; selectedMonth=null; selectedId=null;
+  closeDetail();
+  renderWheelTabs();
+  await loadEvents();
 }
 
-// Quick hendelse modal
-function openQuickHendelseModal(){
-  if(selectedMonth===null)return;
-  const pad=n=>String(n).padStart(2,'0');
-  document.getElementById('q-date').value=`${currentYear}-${pad(selectedMonth+1)}-01`;
-  document.getElementById('q-name').value='';
-  quickColor=COLORS[0];
-  buildQuickColorGrid();
-  document.getElementById('quick-modal-bg').classList.add('open');
-}
-function closeQuickModal(){document.getElementById('quick-modal-bg').classList.remove('open');}
-
-function buildQuickColorGrid(){
-  document.getElementById('q-color-grid').innerHTML=COLORS.map(c=>
-    `<div class="color-swatch${c===quickColor?' selected':''}" style="background:${c}" onclick="pickQuickColor('${c}')"></div>`).join('');
-}
-function pickQuickColor(c){
-  quickColor=c;
-  document.querySelectorAll('#q-color-grid .color-swatch').forEach(s=>{
-    s.classList.remove('selected');
-    if(rgbToHex(s.style.backgroundColor).toLowerCase()===c.toLowerCase())s.classList.add('selected');
-  });
-}
-
-async function saveQuickHendelse(){
-  const date=document.getElementById('q-date').value;
-  const name=document.getElementById('q-name').value.trim();
-  if(!date){toast('Fyll ut dato');return;}
-  if(!name){toast('Fyll ut navn');return;}
-  const payload={name,start_date:date,end_date:date,color:quickColor,notes:'',hendelser:'[]',wheel_id:currentWheelId};
-  try{
-    const res=await api.saveEvent(payload);
-    if(Array.isArray(res)&&res[0])events.push(res[0]);
-    else{const data=await api.getEvents(currentWheelId);if(Array.isArray(data))events=data;}
-    closeQuickModal();applyFilter();toast('Hendelse lagt til');
-  }catch(e){toast('Noe gikk galt');}
-}
-
-// Wheel modal
 let wheelColorSelected='#5A7FBB';
 function openWheelModal(id){
   editingWheelId=id;
@@ -529,12 +496,13 @@ function openWheelModal(id){
     document.getElementById('w-item-label').value=w.item_label||'';
     document.getElementById('w-event-label').value=w.event_label||'';
     document.getElementById('w-countdown-label').value=w.countdown_label||'';
+    document.getElementById('w-hendelse-color').checked=w.hendelse_color||false;
     document.getElementById('w-single-day').checked=w.single_day||false;
     document.getElementById('w-readonly').checked=w.readonly||false;
     document.getElementById('w-show-hendelser').checked=w.show_hendelser!==false;
     document.getElementById('w-show-notes').checked=w.show_notes!==false;
     wheelColorSelected=w.color||'#5A7FBB';
-  }else{
+  } else {
     document.getElementById('w-name').value='';
     document.getElementById('w-item-label').value='';
     document.getElementById('w-event-label').value='';
@@ -553,7 +521,8 @@ function closeWheelModal(){document.getElementById('wheel-modal-bg').classList.r
 
 function buildWheelColorGrid(){
   document.getElementById('wheel-color-grid').innerHTML=COLORS.map(c=>
-    `<div class="color-swatch${c===wheelColorSelected?' selected':''}" style="background:${c}" onclick="pickWheelColor('${c}')"></div>`).join('');
+    `<div class="color-swatch${c===wheelColorSelected?' selected':''}" style="background:${c}" onclick="pickWheelColor('${c}')"></div>`
+  ).join('');
 }
 function pickWheelColor(c){
   wheelColorSelected=c;
@@ -571,6 +540,8 @@ async function saveWheel(){
     item_label:document.getElementById('w-item-label').value.trim()||'Arrangement',
     event_label:document.getElementById('w-event-label').value.trim()||'Hendelse',
     countdown_label:document.getElementById('w-countdown-label').value.trim()||'Neste arrangement',
+    hendelse_color:document.getElementById('w-hendelse-color').checked,
+    countdown_hendelse:document.getElementById('w-countdown-hendelse').checked,
     default_view:document.getElementById('w-default-list').checked?'list':'wheel',
     single_day:document.getElementById('w-single-day').checked,
     readonly:document.getElementById('w-readonly').checked,
@@ -580,7 +551,7 @@ async function saveWheel(){
   if(editingWheelId){
     const res=await api.updateWheel(editingWheelId,payload);
     if(Array.isArray(res)&&res[0]){const i=wheels.findIndex(w=>w.id===editingWheelId);wheels[i]=res[0];}
-  }else{
+  } else {
     const res=await api.saveWheel(payload);
     if(Array.isArray(res)&&res[0]){wheels.push(res[0]);currentWheelId=res[0].id;}
   }
@@ -595,16 +566,15 @@ async function deleteWheel(){
   currentWheelId=wheels[0]?.id||null;
   closeWheelModal();renderWheelTabs();
   if(currentWheelId)await loadEvents();
-  else{events=[];filteredEvents=[];drawWheel();renderSidebar();renderLegend();}
+  else {events=[];filteredEvents=[];drawWheel();renderSidebar();renderLegend();}
   toast('Årshjul slettet');
 }
 
-// Canvas
 const canvas=document.getElementById('wheel');
 const ctx=canvas.getContext('2d');
 
 function getEventsForMonth(m,src){
-  return(src||filteredEvents).filter(e=>{
+  return (src||filteredEvents).filter(e=>{
     const s=new Date(e.start_date),en=new Date(e.end_date);
     s.setHours(12);en.setHours(12);
     for(let d=new Date(s);d<=en;d.setDate(d.getDate()+1))
@@ -642,8 +612,9 @@ function drawWheel(){
       if(new Date(h.date).getFullYear()!==currentYear)return;
       const ang=dateToAngle(h.date);
       const dx=CX+HENDELSE_R*Math.cos(ang),dy=CY+HENDELSE_R*Math.sin(ang);
+      const dotColor=h.color||ev.color;
       ctx.beginPath();ctx.arc(dx,dy,HENDELSE_DOT_R,0,2*Math.PI);
-      ctx.fillStyle=h.color||ev.color;ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.stroke();
+      ctx.fillStyle=dotColor;ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.stroke();
       tooltipData.push({x:dx,y:dy,r:HENDELSE_DOT_R+4,text:`${ev.name}\n${h.name}\n${fmtDate(h.date)}`});
     });
   });
@@ -687,28 +658,20 @@ function setupTooltip(){
 
 function nextHendelseText(ev){
   const up=parseHendelser(ev.hendelser).filter(h=>{const d=new Date(h.date);d.setHours(0,0,0,0);return d>=TODAY;}).sort((a,b)=>a.date.localeCompare(b.date));
-  if(!up.length)return'';
+  if(!up.length)return '';
   const h=up[0],days=daysUntil(h.date);
   return days===0?`${h.name} i dag`:`${h.name}: ${fmtDate(h.date)}`;
 }
 
 function renderSidebar(){
   const w=cw(),list=document.getElementById('evt-list');
-  const qb=document.getElementById('btn-quick-add');
-  if(selectedMonth===null){
-    document.getElementById('sel-month').textContent='—';
-    document.getElementById('sel-count').textContent='';
-    list.innerHTML='<p class="empty">Klikk på en måned</p>';
-    if(qb)qb.style.display='none';
-    return;
-  }
-  if(qb)qb.style.display=w?.readonly?'none':'block';
+  if(selectedMonth===null){document.getElementById('sel-month').textContent='—';document.getElementById('sel-count').textContent='';list.innerHTML='<p class="empty">Klikk på en måned</p>';return;}
   const evts=getEventsForMonth(selectedMonth);
   document.getElementById('sel-month').textContent=MONTHS[selectedMonth]+' '+currentYear;
   document.getElementById('sel-count').textContent=evts.length?evts.length+' '+(w?.item_label||'element')+(evts.length>1?'er':''):'Ingen elementer';
   list.innerHTML=evts.length?evts.map(ev=>{
     const live=isActiveNow(ev),nh=nextHendelseText(ev);
-    return`<div class="evt-item${live?' active-now':''}" style="border-left-color:${ev.color}">
+    return `<div class="evt-item${live?' active-now':''}" style="border-left-color:${ev.color}">
       <div class="evt-item-body" onclick="showDetail('${ev.id}')">
         <div class="en">${ev.name}${live?'<span class="badge-live">Pågår nå</span>':''}</div>
         <div class="ed">${fmtDate(ev.start_date)}${ev.start_date!==ev.end_date?' – '+fmtDate(ev.end_date):''}</div>
@@ -736,29 +699,25 @@ function renderTimeline(){
   const byMonth={};
   items.forEach(ev=>{const m=new Date(ev.start_date).getMonth();if(!byMonth[m])byMonth[m]=[];byMonth[m].push(ev);});
   cont.innerHTML=Object.keys(byMonth).sort((a,b)=>a-b).map(m=>{
-    const evts=byMonth[m].sort((a,b)=>new Date(a.start_date)-new Date(b.start_date));
-    return`<div class="tl-month">
-      <div class="tl-month-header">${MONTHS[m]} ${currentYear}</div>
-      <div class="tl-items" style="position:relative;padding-left:28px">
-        <div style="position:absolute;left:10px;top:0;bottom:0;width:2px;background:#e8e6e0;border-radius:2px"></div>
-        ${evts.map((ev,idx)=>{
-          const live=isActiveNow(ev);
-          const hRows=w?.show_hendelser!==false?parseHendelser(ev.hendelser).sort((a,b)=>a.date.localeCompare(b.date)).map(h=>`
-            <div class="tl-h-row"><div class="tl-h-dot"></div><span class="tl-h-date">${fmtDate(h.date)}</span><span>${h.name}</span></div>`).join(''):'';
-          return`<div style="position:relative;margin-bottom:${idx<evts.length-1?'8':'0'}px">
-            <div style="position:absolute;left:-22px;top:18px;width:12px;height:12px;border-radius:50%;background:${ev.color};border:2px solid #fff;box-shadow:0 0 0 2px ${ev.color}44;z-index:1"></div>
-            <div class="tl-item${live?' active-now':''}" onclick="showDetail('${ev.id}')">
-              <div class="tl-accent" style="background:${ev.color}"></div>
-              <div class="tl-body">
-                <div class="tl-name">${ev.name}${live?'<span class="badge-live-tl">Pågår nå</span>':''}</div>
-                <div class="tl-dates">${fmtDate(ev.start_date)}${ev.start_date!==ev.end_date?' – '+fmtDate(ev.end_date):''}</div>
-                ${hRows?`<div class="tl-hendelser">${hRows}</div>`:''}
-              </div>
-            </div>
-          </div>`;
-        }).join('')}
-      </div>
-    </div>`;
+    const rows=[];
+    byMonth[m].sort((a,b)=>new Date(a.start_date)-new Date(b.start_date)).forEach(ev=>{
+      let placed=false;
+      for(const row of rows){if(new Date(ev.start_date)>new Date(row[row.length-1].end_date)){row.push(ev);placed=true;break;}}
+      if(!placed)rows.push([ev]);
+    });
+    return `<div class="tl-month"><div class="tl-month-header">${MONTHS[m]} ${currentYear}</div><div class="tl-items">${
+      rows.map(row=>`<div style="display:flex;gap:8px">${row.map(ev=>{
+        const live=isActiveNow(ev);
+        const hRows=w?.show_hendelser!==false?parseHendelser(ev.hendelser).sort((a,b)=>a.date.localeCompare(b.date)).map(h=>`<div class="tl-h-row"><div class="tl-h-dot"></div><span class="tl-h-date">${fmtDate(h.date)}</span><span>${h.name}</span></div>`).join(''):'';
+        return `<div class="tl-item${live?' active-now':''}" style="flex:1;min-width:0" onclick="showDetail('${ev.id}')">
+          <div class="tl-accent" style="background:${ev.color}"></div>
+          <div class="tl-body">
+            <div class="tl-name">${ev.name}${live?'<span class="badge-live-tl">Pågår nå</span>':''}</div>
+            <div class="tl-dates">${fmtDate(ev.start_date)}${ev.start_date!==ev.end_date?' – '+fmtDate(ev.end_date):''}</div>
+            ${hRows?`<div class="tl-hendelser">${hRows}</div>`:''}
+          </div></div>`;
+      }).join('')}</div>`).join('')
+    }</div></div>`;
   }).join('');
 }
 
@@ -829,7 +788,7 @@ function openEventModal(id){
     document.getElementById('f-notes').value=ev.notes||'';
     selectedColor=ev.color;
     pendingHendelser=[...parseHendelser(ev.hendelser)];
-  }else{
+  } else {
     document.getElementById('f-name').value='';
     document.getElementById('f-start').value='';
     document.getElementById('f-end').value='';
@@ -857,8 +816,9 @@ function onStartChange(){
   const start=document.getElementById('f-start').value,endEl=document.getElementById('f-end');
   endEl.min=start;if(!endEl.value||endEl.value<start)endEl.value=start;
 }
-function rgbToHex(rgb){const m=rgb.match(/\d+/g);if(!m)return rgb;return'#'+m.slice(0,3).map(x=>parseInt(x).toString(16).padStart(2,'0')).join('');}
+function rgbToHex(rgb){const m=rgb.match(/\d+/g);if(!m)return rgb;return '#'+m.slice(0,3).map(x=>parseInt(x).toString(16).padStart(2,'0')).join('');}
 
+// FIXED: sjekker om h-color finnes før bruk
 function addHendelse(){
   const w=cw();
   const d=document.getElementById('h-date').value,n=document.getElementById('h-name').value.trim();
@@ -894,7 +854,7 @@ async function saveEvent(){
       const res=await api.updateEvent(editingId,payload);
       if(Array.isArray(res)&&res[0]){const i=events.findIndex(e=>e.id===editingId);if(i>-1)events[i]=res[0];}
       else{const data=await api.getEvents(currentWheelId);if(Array.isArray(data))events=data;}
-    }else{
+    } else {
       const res=await api.saveEvent(payload);
       if(Array.isArray(res)&&res[0])events.push(res[0]);
       else{const data=await api.getEvents(currentWheelId);if(Array.isArray(data))events=data;}
