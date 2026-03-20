@@ -177,10 +177,8 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
     </div>
   </div>
 
-  <!-- Wheel tabs -->
   <div class="wheel-tabs" id="wheel-tabs"></div>
 
-  <!-- Countdown -->
   <div class="countdown" id="countdown" style="display:none">
     <div class="countdown-dot" id="cd-dot"></div>
     <div class="countdown-text" id="cd-text"></div>
@@ -190,7 +188,6 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
     </div>
   </div>
 
-  <!-- Filter -->
   <div class="filter-bar">
     <input type="text" id="filter-text" placeholder="Søk..." oninput="applyFilter()">
     <select id="filter-month" onchange="applyFilter()">
@@ -198,7 +195,6 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
     </select>
   </div>
 
-  <!-- Wheel view -->
   <div id="view-wheel" class="wheel-section">
     <div class="wheel-wrap">
       <canvas id="wheel" width="620" height="620"></canvas>
@@ -227,12 +223,10 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
     </div>
   </div>
 
-  <!-- Timeline view -->
   <div id="view-list" class="timeline" style="display:none">
     <div id="timeline-items"></div>
   </div>
 
-  <!-- Detail panel -->
   <div class="detail-card" id="detail-card" style="display:none">
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
       <div id="det-dot" style="width:12px;height:12px;border-radius:50%;flex-shrink:0"></div>
@@ -392,7 +386,6 @@ async function init(){
       wheels=ws;
       currentWheelId=ws[0].id;
     } else if(Array.isArray(ws)&&ws.length===0){
-      // Create default wheel
       const res=await api.saveWheel({name:'Arrangementer',color:'#5A7FBB',countdown_label:'Neste arrangement',item_label:'Arrangement',event_label:'Hendelse',default_view:'wheel',readonly:false,single_day:false,show_notes:true,show_hendelser:true});
       if(Array.isArray(res)&&res[0]){wheels=[res[0]];currentWheelId=res[0].id;}
     }
@@ -474,7 +467,6 @@ function setView(v){
   if(v==='list')renderTimeline();
 }
 
-// Wheel tabs
 function renderWheelTabs(){
   const cont=document.getElementById('wheel-tabs');
   cont.innerHTML=wheels.map(w=>`
@@ -493,7 +485,6 @@ async function switchWheel(id){
   await loadEvents();
 }
 
-// Wheel modal
 let wheelColorSelected='#5A7FBB';
 function openWheelModal(id){
   editingWheelId=id;
@@ -579,7 +570,6 @@ async function deleteWheel(){
   toast('Årshjul slettet');
 }
 
-// Canvas
 const canvas=document.getElementById('wheel');
 const ctx=canvas.getContext('2d');
 
@@ -778,7 +768,6 @@ async function deleteSelected(){
   events=events.filter(e=>e.id!==selectedId);closeDetail();applyFilter();toast('Element slettet');
 }
 
-// Event modal
 function openEventModal(id){
   const w=cw();
   editingId=id;pendingHendelser=[];
@@ -787,9 +776,9 @@ function openEventModal(id){
   document.getElementById('lbl-hendelse').textContent=w?.event_label||'Hendelser';
   document.getElementById('hendelser-section').style.display=w?.show_hendelser!==false?'block':'none';
   document.getElementById('notes-section').style.display=w?.show_notes!==false?'block':'none';
-  const singleDay = w?.single_day;
-  document.getElementById('lbl-start-date').textContent = singleDay ? 'Dato' : 'Startdato';
-  document.getElementById('end-date-col').style.display = singleDay ? 'none' : 'block';
+  const singleDay=w?.single_day;
+  document.getElementById('lbl-start-date').textContent=singleDay?'Dato':'Startdato';
+  document.getElementById('end-date-col').style.display=singleDay?'none':'block';
   if(id){
     const ev=events.find(e=>e.id===id);
     document.getElementById('f-name').value=ev.name;
@@ -806,9 +795,6 @@ function openEventModal(id){
     document.getElementById('f-notes').value='';
     selectedColor=COLORS[0];
   }
-  const showColor=cw()?.hendelse_color||false;
-  const wrap=document.getElementById('h-color-wrap');
-  if(wrap) wrap.style.display=showColor?'flex':'none';
   buildColorGrid();renderPendingHendelser();
   document.getElementById('event-modal-bg').classList.add('open');
 }
@@ -832,24 +818,20 @@ function onStartChange(){
 }
 function rgbToHex(rgb){const m=rgb.match(/\d+/g);if(!m)return rgb;return '#'+m.slice(0,3).map(x=>parseInt(x).toString(16).padStart(2,'0')).join('');}
 
+// FIXED: sjekker om h-color finnes før bruk
 function addHendelse(){
   const w=cw();
   const d=document.getElementById('h-date').value,n=document.getElementById('h-name').value.trim();
   if(!d||!n){toast('Fyll ut dato og navn');return;}
-  const color=w?.hendelse_color?document.getElementById('h-color').value:null;
+  const colorEl=document.getElementById('h-color');
+  const color=w?.hendelse_color&&colorEl?colorEl.value:null;
   pendingHendelser.push({date:d,name:n,...(color?{color}:{})});
   document.getElementById('h-date').value='';document.getElementById('h-name').value='';
   renderPendingHendelser();
 }
 
-function renderHendelseAdd(){
-  const w=cw();
-  const showColor=w?.hendelse_color;
-  document.getElementById('h-color-wrap').style.display=showColor?'flex':'none';
-}
 function removeHendelse(i){pendingHendelser.splice(i,1);renderPendingHendelser();}
 function renderPendingHendelser(){
-  const w=cw();
   document.getElementById('h-preview').innerHTML=pendingHendelser.map((h,i)=>`
     <div class="hp-row">
       ${h.color?`<div style="width:10px;height:10px;border-radius:50%;background:${h.color};flex-shrink:0"></div>`:''}
