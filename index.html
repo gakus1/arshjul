@@ -154,6 +154,8 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
 .hp-row button:hover { color: #a03030; }
 .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #1a1a18; color: #fff; padding: 10px 20px; border-radius: 10px; font-size: 14px; z-index: 300; opacity: 0; transition: opacity .3s; pointer-events: none; }
 .toast.show { opacity: 1; }
+.btn-quick-add { background: #f0ede6; border: 0.5px solid #c0bfb8; border-radius: 8px; padding: 8px 14px; font-size: 13px; cursor: pointer; color: #444; text-align: center; }
+.btn-quick-add:hover { background: #e8e6e0; }
 @media (max-width: 680px) { .wheel-wrap { width: 340px; height: 340px; } .below-wheel { grid-template-columns: 1fr; } }
 </style>
 </head>
@@ -211,7 +213,8 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
       </div>
       <div class="card">
         <div class="card-title" id="panel-evt-title">Elementer</div>
-        <div class="evt-list" id="evt-list"><p class="empty">Klikk på en måned</p></div>
+        <div class="evt-list" id="evt-list">      <p class="empty">Klikk på en måned</p></div>
+      <button class="btn-quick-add" id="btn-quick-add" style="display:none;margin-top:10px;width:100%" onclick="quickAddEvent()">+ Ny hendelse</button>
       </div>
       <div class="card">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0">
@@ -665,7 +668,9 @@ function nextHendelseText(ev){
 
 function renderSidebar(){
   const w=cw(),list=document.getElementById('evt-list');
-  if(selectedMonth===null){document.getElementById('sel-month').textContent='—';document.getElementById('sel-count').textContent='';list.innerHTML='<p class="empty">Klikk på en måned</p>';return;}
+  const qb=document.getElementById('btn-quick-add');
+  if(selectedMonth===null){document.getElementById('sel-month').textContent='—';document.getElementById('sel-count').textContent='';list.innerHTML='<p class="empty">Klikk på en måned</p>';if(qb)qb.style.display='none';return;}
+  if(qb)qb.style.display=w?.readonly?'none':'block';
   const evts=getEventsForMonth(selectedMonth);
   document.getElementById('sel-month').textContent=MONTHS[selectedMonth]+' '+currentYear;
   document.getElementById('sel-count').textContent=evts.length?evts.length+' '+(w?.item_label||'element')+(evts.length>1?'er':''):'Ingen elementer';
@@ -768,7 +773,7 @@ async function deleteSelected(){
   events=events.filter(e=>e.id!==selectedId);closeDetail();applyFilter();toast('Element slettet');
 }
 
-function openEventModal(id){
+function openEventModal(id, prefillDate){
   const w=cw();
   editingId=id;pendingHendelser=[];
   document.getElementById('event-modal-title').textContent=id?`Rediger ${w?.item_label||'element'}`:`Nytt ${w?.item_label||'element'}`;
@@ -790,8 +795,8 @@ function openEventModal(id){
     pendingHendelser=[...parseHendelser(ev.hendelser)];
   } else {
     document.getElementById('f-name').value='';
-    document.getElementById('f-start').value='';
-    document.getElementById('f-end').value='';
+    document.getElementById('f-start').value=prefillDate||'';
+    document.getElementById('f-end').value=prefillDate||'';
     document.getElementById('f-notes').value='';
     selectedColor=COLORS[0];
   }
@@ -799,6 +804,13 @@ function openEventModal(id){
   document.getElementById('event-modal-bg').classList.add('open');
 }
 function closeEventModal(){document.getElementById('event-modal-bg').classList.remove('open');editingId=null;pendingHendelser=[];}
+
+function quickAddEvent(){
+  if(selectedMonth===null)return;
+  const pad=n=>String(n).padStart(2,'0');
+  const prefill=`${currentYear}-${pad(selectedMonth+1)}-01`;
+  openEventModal(null, prefill);
+}
 
 function buildColorGrid(){
   document.getElementById('color-grid').innerHTML=COLORS.map(c=>
