@@ -4,155 +4,163 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Årshjul</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: system-ui, sans-serif; background: #f5f4f0; color: #1a1a18; min-height: 100vh; }
-.app { display: flex; flex-direction: column; align-items: center; padding: 24px 16px 80px; gap: 20px; }
+body { font-family: 'Inter', system-ui, sans-serif; background: #f7f5f0; color: #1a1a18; min-height: 100vh; }
+.app { display: flex; flex-direction: column; align-items: center; padding: 32px 20px 100px; gap: 24px; }
 
 /* Top bar */
-.topbar { width: 100%; max-width: 960px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
-.year-nav { display: flex; align-items: center; gap: 8px; }
-.year-nav button { background: #fff; border: 0.5px solid #c0bfb8; border-radius: 8px; padding: 6px 13px; cursor: pointer; font-size: 15px; }
-.year-nav button:hover { background: #e8e6e0; }
-.btn-primary { background: #1a1a18; color: #f5f4f0; border: none; border-radius: 8px; padding: 9px 18px; font-size: 14px; cursor: pointer; }
-.btn-primary:hover { background: #333; }
+.topbar { width: 100%; max-width: 980px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+.topbar h1 { font-size: 20px; font-weight: 600; letter-spacing: -0.3px; color: #1a1a18; }
+.year-nav { display: flex; align-items: center; gap: 6px; }
+.year-nav button { background: #fff; border: 1px solid #e4e1d8; border-radius: 8px; padding: 5px 12px; cursor: pointer; font-size: 14px; color: #666; transition: all .15s; }
+.year-nav button:hover { background: #f0ede6; border-color: #ccc; }
+.year-nav span { font-size: 17px; font-weight: 600; min-width: 52px; text-align: center; letter-spacing: -0.3px; }
+.btn-primary { background: #2c2c28; color: #f7f5f0; border: none; border-radius: 10px; padding: 9px 18px; font-size: 13px; font-weight: 500; cursor: pointer; font-family: inherit; letter-spacing: 0.1px; transition: background .15s; }
+.btn-primary:hover { background: #3d3d38; }
 .topbar-right { display: flex; align-items: center; gap: 10px; }
-.view-toggle { display: flex; border: 0.5px solid #c0bfb8; border-radius: 8px; overflow: hidden; background: #fff; }
-.view-toggle button { background: none; border: none; padding: 7px 14px; cursor: pointer; font-size: 13px; color: #666; }
-.view-toggle button.active { background: #1a1a18; color: #fff; }
+.view-toggle { display: flex; border: 1px solid #e4e1d8; border-radius: 10px; overflow: hidden; background: #fff; }
+.view-toggle button { background: none; border: none; padding: 7px 16px; cursor: pointer; font-size: 13px; font-weight: 500; color: #888; font-family: inherit; transition: all .15s; }
+.view-toggle button.active { background: #2c2c28; color: #f7f5f0; }
 
 /* Wheel tabs */
-.wheel-tabs { width: 100%; max-width: 960px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.wheel-tab { display: flex; align-items: center; gap: 7px; padding: 8px 16px; border-radius: 10px; border: 0.5px solid #d8d6ce; background: #fff; cursor: pointer; font-size: 14px; transition: all .15s; }
-.wheel-tab:hover { background: #f0ede6; }
-.wheel-tab.active { background: #1a1a18; color: #fff; border-color: #1a1a18; }
-.wheel-tab .tab-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-.wheel-tab .tab-settings { background: none; border: none; cursor: pointer; opacity: .5; font-size: 14px; padding: 0 0 0 4px; color: inherit; }
+.wheel-tabs { width: 100%; max-width: 980px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.wheel-tab { display: flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 10px; border: 1px solid #e4e1d8; background: #fff; cursor: pointer; font-size: 13px; font-weight: 500; transition: all .15s; }
+.wheel-tab:hover { background: #f5f2ea; border-color: #ccc; }
+.wheel-tab.active { background: #2c2c28; color: #f7f5f0; border-color: #2c2c28; }
+.wheel-tab .tab-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.wheel-tab .tab-settings { background: none; border: none; cursor: pointer; opacity: .45; font-size: 13px; padding: 0 0 0 2px; color: inherit; transition: opacity .15s; }
 .wheel-tab .tab-settings:hover { opacity: 1; }
-.btn-add-wheel { padding: 8px 14px; border-radius: 10px; border: 0.5px dashed #c0bfb8; background: #fff; cursor: pointer; font-size: 14px; color: #888; }
-.btn-add-wheel:hover { background: #f0ede6; color: #444; }
+.btn-add-wheel { padding: 8px 14px; border-radius: 10px; border: 1px dashed #ccc; background: transparent; cursor: pointer; font-size: 13px; font-weight: 500; color: #999; font-family: inherit; transition: all .15s; }
+.btn-add-wheel:hover { background: #f5f2ea; color: #555; border-color: #aaa; }
 
 /* Countdown */
-.countdown { width: 100%; max-width: 960px; background: #fff; border: 0.5px solid #d8d6ce; border-radius: 12px; padding: 14px 20px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.countdown { width: 100%; max-width: 980px; background: linear-gradient(135deg, #2c2c28 0%, #3d3d38 100%); border-radius: 16px; padding: 18px 24px; display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
 .countdown-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-.countdown-text { font-size: 14px; color: #555; flex: 1; }
-.countdown-text strong { color: #1a1a18; font-weight: 500; }
-.countdown-days { font-size: 22px; font-weight: 500; color: #1a1a18; }
-.countdown-label { font-size: 11px; color: #999; text-align: center; }
+.countdown-text { font-size: 14px; color: rgba(247,245,240,0.75); flex: 1; }
+.countdown-text strong { color: #f7f5f0; font-weight: 600; }
+.countdown-days { font-size: 28px; font-weight: 600; color: #f7f5f0; letter-spacing: -1px; }
+.countdown-label { font-size: 11px; color: rgba(247,245,240,0.5); text-align: center; font-weight: 500; text-transform: uppercase; letter-spacing: .06em; }
 
 /* Filter */
-.filter-bar { width: 100%; max-width: 960px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-.filter-bar input { flex: 1; min-width: 180px; border: 0.5px solid #c0bfb8; border-radius: 8px; padding: 8px 12px; font-size: 14px; background: #fff; font-family: inherit; outline: none; }
-.filter-bar input:focus { border-color: #888; }
-.filter-bar select { border: 0.5px solid #c0bfb8; border-radius: 8px; padding: 8px 12px; font-size: 14px; background: #fff; font-family: inherit; outline: none; cursor: pointer; }
+.filter-bar { width: 100%; max-width: 980px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.filter-bar input { flex: 1; min-width: 180px; border: 1px solid #e4e1d8; border-radius: 10px; padding: 9px 14px; font-size: 13px; background: #fff; font-family: inherit; outline: none; color: #1a1a18; transition: border .15s; }
+.filter-bar input:focus { border-color: #aaa; }
+.filter-bar select { border: 1px solid #e4e1d8; border-radius: 10px; padding: 9px 14px; font-size: 13px; background: #fff; font-family: inherit; outline: none; cursor: pointer; color: #1a1a18; }
 
 /* Wheel */
-.wheel-section { display: flex; flex-direction: column; align-items: center; gap: 16px; width: 100%; }
-.wheel-wrap { position: relative; width: 620px; height: 620px; flex-shrink: 0; }
+.wheel-section { display: flex; flex-direction: column; align-items: center; gap: 20px; width: 100%; }
+.wheel-wrap { position: relative; width: 620px; height: 620px; flex-shrink: 0; filter: drop-shadow(0 8px 32px rgba(0,0,0,0.10)); }
 canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
 .center-label { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
-  width: 130px; height: 130px; border-radius: 50%; background: #f5f4f0;
-  display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; text-align: center; padding: 8px; }
-.center-label span:first-child { font-size: 22px; font-weight: 500; }
-.center-label span:last-child { font-size: 10px; color: #999; margin-top: 2px; }
-.tooltip { position: fixed; background: #1a1a18; color: #fff; padding: 7px 12px; border-radius: 8px; font-size: 13px; pointer-events: none; z-index: 500; display: none; max-width: 220px; line-height: 1.5; }
+  width: 132px; height: 132px; border-radius: 50%; background: #f7f5f0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  pointer-events: none; text-align: center; padding: 10px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+.center-label span:first-child { font-size: 24px; font-weight: 700; letter-spacing: -1px; }
+.center-label span:last-child { font-size: 10px; color: #aaa; margin-top: 3px; font-weight: 500; text-transform: uppercase; letter-spacing: .06em; }
+.tooltip { position: fixed; background: #2c2c28; color: #f7f5f0; padding: 8px 13px; border-radius: 10px; font-size: 12px; font-weight: 500; pointer-events: none; z-index: 500; display: none; max-width: 220px; line-height: 1.6; box-shadow: 0 4px 16px rgba(0,0,0,0.18); }
 
 /* Below wheel */
-.below-wheel { width: 100%; max-width: 960px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
-.card { background: #fff; border: 0.5px solid #d8d6ce; border-radius: 12px; padding: 16px; }
-.card-title { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .06em; color: #999; margin-bottom: 10px; }
+.below-wheel { width: 100%; max-width: 980px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+.card { background: #fff; border: 1px solid #ece9e1; border-radius: 16px; padding: 18px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
+.card-title { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: #aaa; margin-bottom: 12px; }
 .evt-list { display: flex; flex-direction: column; gap: 6px; max-height: 220px; overflow-y: auto; }
-.evt-item { border-left: 3px solid #ccc; border-radius: 0 8px 8px 0; background: #fafaf8; cursor: pointer; transition: background .15s; }
-.evt-item:hover { background: #f0ede6; }
-.evt-item.active-now { background: #f0f9f4; }
-.evt-item-body { padding: 7px 10px; }
-.evt-item .en { font-size: 13px; font-weight: 500; }
-.evt-item .ed { font-size: 11px; color: #888; margin-top: 1px; }
-.evt-item .next-h { font-size: 10px; color: #4BA87D; margin-top: 2px; }
-.badge-live { font-size: 9px; background: #d4f0e4; color: #1a7a4a; border-radius: 4px; padding: 1px 5px; font-weight: 500; margin-left: 4px; }
-.empty { font-size: 13px; color: #bbb; padding: 4px 0; }
+.evt-item { border-left: 3px solid #ccc; border-radius: 0 10px 10px 0; background: #faf9f6; cursor: pointer; transition: background .15s; }
+.evt-item:hover { background: #f2efe7; }
+.evt-item.active-now { background: #f0faf5; }
+.evt-item-body { padding: 8px 11px; }
+.evt-item .en { font-size: 13px; font-weight: 600; }
+.evt-item .ed { font-size: 11px; color: #999; margin-top: 2px; }
+.evt-item .next-h { font-size: 10px; color: #4BA87D; margin-top: 3px; font-weight: 500; }
+.badge-live { font-size: 9px; background: #d4f0e4; color: #1a7a4a; border-radius: 5px; padding: 2px 6px; font-weight: 600; margin-left: 5px; }
+.empty { font-size: 13px; color: #ccc; padding: 4px 0; }
 .legend { display: flex; flex-wrap: wrap; gap: 8px; max-height: 220px; overflow-y: auto; }
-.leg-item { display: flex; align-items: center; gap: 5px; font-size: 12px; }
-.leg-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-.readonly-badge { font-size: 11px; background: #f0ede6; color: #888; border-radius: 6px; padding: 2px 8px; }
+.leg-item { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 500; }
+.leg-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
 
 /* Timeline */
-.timeline { width: 100%; max-width: 960px; display: flex; flex-direction: column; }
-.tl-month { margin-top: 24px; }
+.timeline { width: 100%; max-width: 980px; display: flex; flex-direction: column; }
+.tl-month { margin-top: 28px; }
 .tl-month:first-child { margin-top: 0; }
-.tl-month-header { font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: .07em; color: #999; padding: 0 0 10px 20px; display: flex; align-items: center; gap: 10px; }
-.tl-month-header::after { content: ''; flex: 1; height: 0.5px; background: #d8d6ce; }
+.tl-month-header { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: #bbb; padding: 0 0 12px 0; display: flex; align-items: center; gap: 12px; }
+.tl-month-header::after { content: ''; flex: 1; height: 1px; background: #ece9e1; }
 .tl-items { display: flex; flex-direction: column; gap: 8px; }
-.tl-item { background: #fff; border: 0.5px solid #d8d6ce; border-radius: 12px; padding: 16px 20px; display: flex; gap: 16px; cursor: pointer; transition: background .15s; position: relative; overflow: hidden; }
-.tl-item:hover { background: #fafaf8; }
-.tl-item.active-now { border-color: #9fdcc0; background: #f6fdf9; }
-.tl-item.active-now::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: #4BA87D; border-radius: 12px 0 0 12px; }
+.tl-item { background: #fff; border: 1px solid #ece9e1; border-radius: 14px; padding: 16px 20px; display: flex; gap: 14px; cursor: pointer; transition: all .15s; position: relative; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+.tl-item:hover { background: #faf9f6; box-shadow: 0 2px 8px rgba(0,0,0,0.07); transform: translateY(-1px); }
+.tl-item.active-now { border-color: #9fdcc0; background: #f4fdf8; }
+.tl-item.active-now::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: #4BA87D; border-radius: 14px 0 0 14px; }
 .tl-accent { width: 4px; border-radius: 4px; flex-shrink: 0; min-height: 40px; }
 .tl-body { flex: 1; }
-.tl-name { font-size: 15px; font-weight: 500; display: flex; align-items: center; gap: 8px; }
-.tl-dates { font-size: 13px; color: #888; margin-top: 2px; }
-.tl-hendelser { margin-top: 8px; display: flex; flex-direction: column; gap: 4px; }
-.tl-h-row { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #666; }
-.tl-h-dot { width: 5px; height: 5px; border-radius: 50%; background: #ccc; flex-shrink: 0; }
-.tl-h-date { font-weight: 500; min-width: 110px; color: #444; }
-.badge-live-tl { font-size: 10px; background: #d4f0e4; color: #1a7a4a; border-radius: 4px; padding: 2px 7px; font-weight: 500; }
+.tl-name { font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; letter-spacing: -0.2px; }
+.tl-dates { font-size: 12px; color: #aaa; margin-top: 3px; font-weight: 500; }
+.tl-hendelser { margin-top: 10px; display: flex; flex-direction: column; gap: 5px; }
+.tl-h-row { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #777; }
+.tl-h-dot { width: 5px; height: 5px; border-radius: 50%; background: #ddd; flex-shrink: 0; }
+.tl-h-date { font-weight: 600; min-width: 110px; color: #555; }
+.badge-live-tl { font-size: 10px; background: #d4f0e4; color: #1a7a4a; border-radius: 5px; padding: 2px 7px; font-weight: 600; }
 
 /* Detail */
-.detail-card { background: #fff; border: 0.5px solid #d8d6ce; border-radius: 12px; padding: 20px; width: 100%; max-width: 960px; }
-.detail-card h2 { font-size: 20px; font-weight: 500; margin-bottom: 4px; }
-.detail-dates { font-size: 13px; color: #888; margin-bottom: 14px; }
-.detail-section { margin-bottom: 14px; }
-.detail-section-title { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .06em; color: #999; margin-bottom: 8px; }
-.detail-notes { font-size: 14px; line-height: 1.75; white-space: pre-wrap; background: #fafaf8; border-radius: 8px; padding: 14px; border: 0.5px solid #e8e6e0; min-height: 40px; }
+.detail-card { background: #fff; border: 1px solid #ece9e1; border-radius: 16px; padding: 24px; width: 100%; max-width: 980px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+.detail-card h2 { font-size: 22px; font-weight: 700; margin-bottom: 4px; letter-spacing: -0.4px; }
+.detail-dates { font-size: 13px; color: #aaa; margin-bottom: 18px; font-weight: 500; }
+.detail-section { margin-bottom: 16px; }
+.detail-section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #bbb; margin-bottom: 10px; }
+.detail-notes { font-size: 14px; line-height: 1.8; white-space: pre-wrap; background: #faf9f6; border-radius: 10px; padding: 14px 16px; border: 1px solid #ece9e1; min-height: 40px; color: #444; }
 .hendelse-list { display: flex; flex-direction: column; gap: 6px; }
-.hendelse-row { display: flex; align-items: center; gap: 10px; background: #fafaf8; border-radius: 8px; padding: 8px 12px; border: 0.5px solid #e8e6e0; }
-.hendelse-row .h-date { font-size: 13px; font-weight: 500; min-width: 120px; }
-.hendelse-row .h-name { font-size: 13px; flex: 1; }
-.hendelse-row .h-del { background: none; border: none; color: #bbb; cursor: pointer; font-size: 16px; padding: 0 4px; }
-.hendelse-row .h-del:hover { color: #a03030; }
-.detail-actions { margin-top: 14px; display: flex; gap: 10px; flex-wrap: wrap; }
-.btn-sec { border: 0.5px solid #c0bfb8; background: #fff; border-radius: 8px; padding: 7px 14px; font-size: 13px; cursor: pointer; }
-.btn-sec:hover { background: #f0ede6; }
-.btn-del { border: 0.5px solid #e2b0b0; background: #fff; color: #a03030; border-radius: 8px; padding: 7px 14px; font-size: 13px; cursor: pointer; }
+.hendelse-row { display: flex; align-items: center; gap: 12px; background: #faf9f6; border-radius: 10px; padding: 9px 14px; border: 1px solid #ece9e1; }
+.hendelse-row .h-date { font-size: 13px; font-weight: 600; min-width: 130px; color: #444; }
+.hendelse-row .h-name { font-size: 13px; flex: 1; color: #555; }
+.hendelse-row .h-del { background: none; border: none; color: #ccc; cursor: pointer; font-size: 16px; padding: 0 4px; transition: color .15s; }
+.hendelse-row .h-del:hover { color: #c04040; }
+.detail-actions { margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap; }
+.btn-sec { border: 1px solid #e4e1d8; background: #fff; border-radius: 10px; padding: 8px 16px; font-size: 13px; font-weight: 500; cursor: pointer; font-family: inherit; transition: all .15s; }
+.btn-sec:hover { background: #f5f2ea; border-color: #ccc; }
+.btn-del { border: 1px solid #f0c8c8; background: #fff; color: #b03030; border-radius: 10px; padding: 8px 16px; font-size: 13px; font-weight: 500; cursor: pointer; font-family: inherit; transition: all .15s; }
+.btn-del:hover { background: #fdf0f0; }
 
-/* Modal shared */
-.modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 200; align-items: center; justify-content: center; }
+/* Modal */
+.modal-bg { display: none; position: fixed; inset: 0; background: rgba(20,18,14,.45); z-index: 200; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
 .modal-bg.open { display: flex; }
-.modal { background: #fff; border-radius: 16px; padding: 24px; width: 100%; max-width: 480px; max-height: 92vh; overflow-y: auto; }
-.modal h2 { margin-bottom: 16px; font-size: 18px; font-weight: 500; }
-.modal label { font-size: 13px; color: #666; display: block; margin-top: 12px; margin-bottom: 4px; }
-.modal input[type=text], .modal input[type=date], .modal textarea { width: 100%; border: 0.5px solid #c0bfb8; border-radius: 8px; padding: 8px 10px; font-size: 14px; font-family: inherit; background: #fafaf8; outline: none; }
-.modal input:focus, .modal textarea:focus { border-color: #888; }
+.modal { background: #fff; border-radius: 20px; padding: 28px; width: 100%; max-width: 490px; max-height: 92vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.18); }
+.modal h2 { margin-bottom: 20px; font-size: 19px; font-weight: 700; letter-spacing: -0.3px; }
+.modal label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .07em; color: #aaa; display: block; margin-top: 16px; margin-bottom: 5px; }
+.modal input[type=text], .modal input[type=date], .modal textarea {
+  width: 100%; border: 1px solid #e4e1d8; border-radius: 10px; padding: 10px 12px;
+  font-size: 14px; font-family: inherit; background: #faf9f6; outline: none; color: #1a1a18; transition: border .15s; }
+.modal input:focus, .modal textarea:focus { border-color: #aaa; background: #fff; }
 .modal textarea { height: 90px; resize: vertical; }
 .modal .row { display: flex; gap: 12px; }
 .modal .row > div { flex: 1; }
-.modal-actions { display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end; }
-.modal-section { border-top: 0.5px solid #e8e6e0; margin-top: 16px; padding-top: 16px; }
-.modal-section-title { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .06em; color: #999; margin-bottom: 12px; }
-.toggle-row { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
-.toggle-row label { font-size: 13px; color: #444; margin: 0; }
+.modal-actions { display: flex; gap: 10px; margin-top: 24px; justify-content: flex-end; }
+.modal-section { border-top: 1px solid #ece9e1; margin-top: 20px; padding-top: 20px; }
+.modal-section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #bbb; margin-bottom: 14px; }
+.toggle-row { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; }
+.toggle-row label { font-size: 13px; color: #555; margin: 0; font-weight: 400; text-transform: none; letter-spacing: 0; }
 .toggle { position: relative; width: 36px; height: 20px; }
 .toggle input { opacity: 0; width: 0; height: 0; }
-.toggle-slider { position: absolute; inset: 0; background: #d8d6ce; border-radius: 20px; cursor: pointer; transition: .2s; }
-.toggle-slider:before { content: ''; position: absolute; width: 14px; height: 14px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: .2s; }
-.toggle input:checked + .toggle-slider { background: #1a1a18; }
+.toggle-slider { position: absolute; inset: 0; background: #ddd; border-radius: 20px; cursor: pointer; transition: .2s; }
+.toggle-slider:before { content: ''; position: absolute; width: 14px; height: 14px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: .2s; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+.toggle input:checked + .toggle-slider { background: #2c2c28; }
 .toggle input:checked + .toggle-slider:before { transform: translateX(16px); }
 
 /* Color picker */
-.color-grid { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 6px; }
-.color-swatch { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform .1s; outline: 2px solid transparent; outline-offset: 2px; }
-.color-swatch:hover { transform: scale(1.12); }
-.color-swatch.selected { outline: 2.5px solid #1a1a18; transform: scale(1.12); }
+.color-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.color-swatch { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform .12s; outline: 2.5px solid transparent; outline-offset: 2px; }
+.color-swatch:hover { transform: scale(1.15); }
+.color-swatch.selected { outline: 2.5px solid #2c2c28; transform: scale(1.15); }
 .hendelse-add { display: flex; gap: 8px; margin-top: 8px; align-items: center; flex-wrap: wrap; }
 .hendelse-add input[type=date] { flex: 0 0 148px; }
 .hendelse-add input[type=text] { flex: 1; min-width: 120px; }
-.hendelse-add button { background: #1a1a18; color: #fff; border: none; border-radius: 8px; padding: 8px 12px; font-size: 13px; cursor: pointer; white-space: nowrap; }
+.hendelse-add button { background: #2c2c28; color: #f7f5f0; border: none; border-radius: 10px; padding: 9px 14px; font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap; font-family: inherit; transition: background .15s; }
+.hendelse-add button:hover { background: #3d3d38; }
 .hendelse-preview { display: flex; flex-direction: column; gap: 5px; margin-top: 8px; }
-.hp-row { display: flex; align-items: center; gap: 8px; background: #f5f4f0; border-radius: 6px; padding: 6px 10px; font-size: 13px; }
+.hp-row { display: flex; align-items: center; gap: 8px; background: #faf9f6; border-radius: 8px; padding: 7px 11px; font-size: 13px; border: 1px solid #ece9e1; }
 .hp-row span { flex: 1; }
-.hp-row button { background: none; border: none; color: #bbb; cursor: pointer; font-size: 15px; }
-.hp-row button:hover { color: #a03030; }
-.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #1a1a18; color: #fff; padding: 10px 20px; border-radius: 10px; font-size: 14px; z-index: 300; opacity: 0; transition: opacity .3s; pointer-events: none; }
+.hp-row button { background: none; border: none; color: #ccc; cursor: pointer; font-size: 15px; transition: color .15s; }
+.hp-row button:hover { color: #c04040; }
+.toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); background: #2c2c28; color: #f7f5f0; padding: 11px 22px; border-radius: 12px; font-size: 13px; font-weight: 500; z-index: 300; opacity: 0; transition: opacity .3s; pointer-events: none; box-shadow: 0 4px 20px rgba(0,0,0,0.18); }
 .toast.show { opacity: 1; }
 @media (max-width: 680px) { .wheel-wrap { width: 340px; height: 340px; } .below-wheel { grid-template-columns: 1fr; } }
 </style>
@@ -160,11 +168,11 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
 <body>
 <div class="app">
   <div class="topbar">
-    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-      <h1 style="font-size:22px;font-weight:500">Årshjul</h1>
+    <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+      <h1>Årshjul</h1>
       <div class="year-nav">
         <button onclick="changeYear(-1)">←</button>
-        <span id="yr-label" style="font-size:18px;font-weight:500;min-width:48px;text-align:center"></span>
+        <span id="yr-label"></span>
         <button onclick="changeYear(1)">→</button>
       </div>
     </div>
@@ -184,12 +192,12 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
     <div class="countdown-text" id="cd-text"></div>
     <div style="text-align:center">
       <div class="countdown-days" id="cd-days"></div>
-      <div class="countdown-label" id="cd-label">dager igjen</div>
+      <div class="countdown-label">dager igjen</div>
     </div>
   </div>
 
   <div class="filter-bar">
-    <input type="text" id="filter-text" placeholder="Søk..." oninput="applyFilter()">
+    <input type="text" id="filter-text" placeholder="Søk etter elementer…" oninput="applyFilter()">
     <select id="filter-month" onchange="applyFilter()">
       <option value="">Alle måneder</option>
     </select>
@@ -206,8 +214,8 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
     <div class="below-wheel">
       <div class="card">
         <div class="card-title">Valgt måned</div>
-        <div style="font-size:18px;font-weight:500" id="sel-month">—</div>
-        <div style="font-size:13px;color:#999;margin-top:2px" id="sel-count"></div>
+        <div style="font-size:20px;font-weight:700;letter-spacing:-0.3px" id="sel-month">—</div>
+        <div style="font-size:12px;color:#aaa;margin-top:4px;font-weight:500" id="sel-count"></div>
       </div>
       <div class="card">
         <div class="card-title" id="panel-evt-title">Elementer</div>
@@ -216,9 +224,9 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
       <div class="card">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0">
           <div class="card-title" style="margin-bottom:0">Fargekoder</div>
-          <button onclick="toggleLegend()" id="legend-btn" style="background:none;border:0.5px solid #c0bfb8;border-radius:6px;padding:3px 10px;font-size:12px;cursor:pointer;color:#666">Vis</button>
+          <button onclick="toggleLegend()" id="legend-btn" style="background:none;border:1px solid #e4e1d8;border-radius:7px;padding:3px 10px;font-size:11px;font-weight:600;cursor:pointer;color:#888;font-family:inherit">Vis</button>
         </div>
-        <div class="legend" id="legend" style="display:none;margin-top:10px"><p class="empty">Ingen elementer ennå</p></div>
+        <div class="legend" id="legend" style="display:none;margin-top:12px"><p class="empty">Ingen elementer ennå</p></div>
       </div>
     </div>
   </div>
@@ -228,8 +236,8 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
   </div>
 
   <div class="detail-card" id="detail-card" style="display:none">
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
-      <div id="det-dot" style="width:12px;height:12px;border-radius:50%;flex-shrink:0"></div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:5px">
+      <div id="det-dot" style="width:13px;height:13px;border-radius:50%;flex-shrink:0"></div>
       <h2 id="det-name"></h2>
     </div>
     <div class="detail-dates" id="det-dates"></div>
@@ -263,9 +271,9 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
     </div>
     <label>Farge</label>
     <div class="color-grid" id="color-grid"></div>
-    <div style="display:flex;align-items:center;gap:10px;margin-top:10px">
-      <label style="margin:0;font-size:13px;color:#666">Egendefinert:</label>
-      <input type="color" id="custom-color" style="width:36px;height:36px;border:0.5px solid #c0bfb8;border-radius:50%;cursor:pointer;padding:2px;background:none;">
+    <div style="display:flex;align-items:center;gap:10px;margin-top:12px">
+      <label style="margin:0;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:#aaa">Egendefinert</label>
+      <input type="color" id="custom-color" style="width:34px;height:34px;border:1px solid #e4e1d8;border-radius:50%;cursor:pointer;padding:2px;background:none;">
     </div>
     <div id="hendelser-section">
       <label id="lbl-hendelse">Hendelser</label>
@@ -297,11 +305,11 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
     <div class="color-grid" id="wheel-color-grid"></div>
     <div class="modal-section">
       <div class="modal-section-title">Tilpass tekster</div>
-      <label>Hva heter et element? (f.eks. Arrangement, Person)</label>
+      <label>Hva heter et element?</label>
       <input id="w-item-label" type="text" placeholder="Arrangement">
-      <label>Hva heter en hendelse? (f.eks. Hendelse, Milepæl)</label>
+      <label>Hva heter en hendelse?</label>
       <input id="w-event-label" type="text" placeholder="Hendelse">
-      <label>Nedtellingstekst (f.eks. Neste bursdag)</label>
+      <label>Nedtellingstekst</label>
       <input id="w-countdown-label" type="text" placeholder="Neste arrangement">
     </div>
     <div class="modal-section">
@@ -319,7 +327,7 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
         <label class="toggle"><input type="checkbox" id="w-single-day"><span class="toggle-slider"></span></label>
       </div>
       <div class="toggle-row">
-        <label>Skrivebeskyttet (ingen kan redigere)</label>
+        <label>Skrivebeskyttet</label>
         <label class="toggle"><input type="checkbox" id="w-readonly"><span class="toggle-slider"></span></label>
       </div>
       <div class="toggle-row">
@@ -350,48 +358,43 @@ const SB_URL='https://cxqvenjholhtijnrnwau.supabase.co';
 const SB_KEY='sb_publishable_pn7_PfMvVPVpI421gQtWmQ_tyDGgmFc';
 const H={'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY};
 
-const api = {
-  getWheels: ()=>fetch(`${SB_URL}/rest/v1/wheels?order=created_at.asc`,{headers:H}).then(r=>r.json()),
-  saveWheel: w=>fetch(`${SB_URL}/rest/v1/wheels`,{method:'POST',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify(w)}).then(r=>r.json()),
-  updateWheel: (id,w)=>fetch(`${SB_URL}/rest/v1/wheels?id=eq.${id}`,{method:'PATCH',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify(w)}).then(r=>r.json()),
-  deleteWheel: id=>fetch(`${SB_URL}/rest/v1/wheels?id=eq.${id}`,{method:'DELETE',headers:H}),
-  getEvents: wid=>fetch(`${SB_URL}/rest/v1/events?wheel_id=eq.${wid}&order=start_date.asc`,{headers:H}).then(r=>r.json()),
-  saveEvent: e=>fetch(`${SB_URL}/rest/v1/events`,{method:'POST',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify(e)}).then(r=>r.json()),
-  updateEvent: (id,e)=>fetch(`${SB_URL}/rest/v1/events?id=eq.${id}`,{method:'PATCH',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify(e)}).then(r=>r.json()),
-  deleteEvent: id=>fetch(`${SB_URL}/rest/v1/events?id=eq.${id}`,{method:'DELETE',headers:H}),
+const api={
+  getWheels:()=>fetch(`${SB_URL}/rest/v1/wheels?order=created_at.asc`,{headers:H}).then(r=>r.json()),
+  saveWheel:w=>fetch(`${SB_URL}/rest/v1/wheels`,{method:'POST',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify(w)}).then(r=>r.json()),
+  updateWheel:(id,w)=>fetch(`${SB_URL}/rest/v1/wheels?id=eq.${id}`,{method:'PATCH',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify(w)}).then(r=>r.json()),
+  deleteWheel:id=>fetch(`${SB_URL}/rest/v1/wheels?id=eq.${id}`,{method:'DELETE',headers:H}),
+  getEvents:wid=>fetch(`${SB_URL}/rest/v1/events?wheel_id=eq.${wid}&order=start_date.asc`,{headers:H}).then(r=>r.json()),
+  saveEvent:e=>fetch(`${SB_URL}/rest/v1/events`,{method:'POST',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify(e)}).then(r=>r.json()),
+  updateEvent:(id,e)=>fetch(`${SB_URL}/rest/v1/events?id=eq.${id}`,{method:'PATCH',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify(e)}).then(r=>r.json()),
+  deleteEvent:id=>fetch(`${SB_URL}/rest/v1/events?id=eq.${id}`,{method:'DELETE',headers:H}),
 };
 
 const MONTHS=['Januar','Februar','Mars','April','Mai','Juni','Juli','August','September','Oktober','November','Desember'];
 const COLORS=['#C9624F','#D4845A','#D4A24C','#C9B84C','#8FB84C','#4BA87D','#3a8a6a','#4AABB8','#5A7FBB','#6A6FBB','#B87BAC','#D4627A','#7B6FBF','#6B9E3A','#4a7fb5','#C47A40','#888780','#5a5a5a','#A0522D','#2E7D6B'];
-const RING_COLORS=['#4a7fb5','#5a9bd4','#3aab7a','#74c476','#a8c43a','#f0c030','#f0a020','#e06040','#c04040','#9050b0','#6050b8','#4a7fb5'];
+const RING_COLORS=['#c8d8f0','#b8d0ee','#b8e4d0','#c8eac8','#ddf0a0','#fce87c','#fcd070','#f8b090','#f09090','#d4a0d8','#b8a8e0','#c8d8f0'];
 
 let currentYear=new Date().getFullYear();
-let wheels=[], currentWheelId=null, events=[], filteredEvents=[];
-let selectedMonth=null, selectedId=null, editingId=null, editingWheelId=null;
-let selectedColor=COLORS[0], selectedWheelColor=COLORS[0];
-let pendingHendelser=[], currentView='wheel';
-const TODAY=new Date(); TODAY.setHours(0,0,0,0);
-const CX=310,CY=310,OR=295,IR=115,EVENT_ARC_W=20,HENDELSE_R=OR-EVENT_ARC_W-8,HENDELSE_DOT_R=5;
+let wheels=[],currentWheelId=null,events=[],filteredEvents=[];
+let selectedMonth=null,selectedId=null,editingId=null,editingWheelId=null;
+let selectedColor=COLORS[0],selectedWheelColor=COLORS[0];
+let pendingHendelser=[],currentView='wheel';
+const TODAY=new Date();TODAY.setHours(0,0,0,0);
+const CX=310,CY=310,OR=295,IR=118,EVENT_ARC_W=22,HENDELSE_R=OR-EVENT_ARC_W-8,HENDELSE_DOT_R=5;
 let tooltipData=[];
 
 function cw(){return wheels.find(w=>w.id===currentWheelId)||null;}
 
 async function init(){
-  setYear(currentYear);
-  buildMonthFilter();
-  setupTooltip();
-  try {
+  setYear(currentYear);buildMonthFilter();setupTooltip();
+  try{
     const ws=await api.getWheels();
-    if(Array.isArray(ws)&&ws.length){
-      wheels=ws;
-      currentWheelId=ws[0].id;
-    } else if(Array.isArray(ws)&&ws.length===0){
+    if(Array.isArray(ws)&&ws.length){wheels=ws;currentWheelId=ws[0].id;}
+    else if(Array.isArray(ws)&&ws.length===0){
       const res=await api.saveWheel({name:'Arrangementer',color:'#5A7FBB',countdown_label:'Neste arrangement',item_label:'Arrangement',event_label:'Hendelse',default_view:'wheel',readonly:false,single_day:false,show_notes:true,show_hendelser:true});
       if(Array.isArray(res)&&res[0]){wheels=[res[0]];currentWheelId=res[0].id;}
     }
-    renderWheelTabs();
-    await loadEvents();
-  } catch(e){toast('Nettverksfeil.');}
+    renderWheelTabs();await loadEvents();
+  }catch(e){toast('Nettverksfeil.');}
 }
 
 function setYear(y){currentYear=y;document.getElementById('yr-label').textContent=y;document.getElementById('center-year').textContent=y;}
@@ -399,24 +402,18 @@ function changeYear(d){setYear(currentYear+d);applyFilter();}
 
 async function loadEvents(){
   if(!currentWheelId)return;
-  try {
+  try{
     const data=await api.getEvents(currentWheelId);
-    if(Array.isArray(data)){
-      events=data;
-      applyWheelSettings();
-      applyFilter();
-    }
-  } catch(e){toast('Klarte ikke laste elementer.');}
+    if(Array.isArray(data)){events=data;applyWheelSettings();applyFilter();}
+  }catch(e){toast('Klarte ikke laste elementer.');}
 }
 
 function applyWheelSettings(){
-  const w=cw(); if(!w)return;
-  const ro=w.readonly;
-  document.getElementById('btn-new-event').style.display=ro?'none':'flex';
+  const w=cw();if(!w)return;
+  document.getElementById('btn-new-event').style.display=w.readonly?'none':'flex';
   document.getElementById('center-name').textContent=w.name;
   document.getElementById('panel-evt-title').textContent=w.item_label||'Elementer';
-  const view=w.default_view||'wheel';
-  setView(currentView==='wheel'||currentView==='list'?currentView:view);
+  setView(currentView==='wheel'||currentView==='list'?currentView:w.default_view||'wheel');
 }
 
 function buildMonthFilter(){
@@ -437,7 +434,7 @@ function applyFilter(){
 }
 
 function updateCountdown(){
-  const w=cw(); const cd=document.getElementById('countdown');
+  const w=cw();const cd=document.getElementById('countdown');
   const next=nextUpcoming(filteredEvents);
   if(!next||daysUntil(next.start_date)<0){cd.style.display='none';return;}
   const days=daysUntil(next.start_date);
@@ -479,10 +476,8 @@ function renderWheelTabs(){
 }
 
 async function switchWheel(id){
-  currentWheelId=id; selectedMonth=null; selectedId=null;
-  closeDetail();
-  renderWheelTabs();
-  await loadEvents();
+  currentWheelId=id;selectedMonth=null;selectedId=null;
+  closeDetail();renderWheelTabs();await loadEvents();
 }
 
 let wheelColorSelected='#5A7FBB';
@@ -502,7 +497,7 @@ function openWheelModal(id){
     document.getElementById('w-show-hendelser').checked=w.show_hendelser!==false;
     document.getElementById('w-show-notes').checked=w.show_notes!==false;
     wheelColorSelected=w.color||'#5A7FBB';
-  } else {
+  }else{
     document.getElementById('w-name').value='';
     document.getElementById('w-item-label').value='';
     document.getElementById('w-event-label').value='';
@@ -521,8 +516,7 @@ function closeWheelModal(){document.getElementById('wheel-modal-bg').classList.r
 
 function buildWheelColorGrid(){
   document.getElementById('wheel-color-grid').innerHTML=COLORS.map(c=>
-    `<div class="color-swatch${c===wheelColorSelected?' selected':''}" style="background:${c}" onclick="pickWheelColor('${c}')"></div>`
-  ).join('');
+    `<div class="color-swatch${c===wheelColorSelected?' selected':''}" style="background:${c}" onclick="pickWheelColor('${c}')"></div>`).join('');
 }
 function pickWheelColor(c){
   wheelColorSelected=c;
@@ -551,7 +545,7 @@ async function saveWheel(){
   if(editingWheelId){
     const res=await api.updateWheel(editingWheelId,payload);
     if(Array.isArray(res)&&res[0]){const i=wheels.findIndex(w=>w.id===editingWheelId);wheels[i]=res[0];}
-  } else {
+  }else{
     const res=await api.saveWheel(payload);
     if(Array.isArray(res)&&res[0]){wheels.push(res[0]);currentWheelId=res[0].id;}
   }
@@ -566,7 +560,7 @@ async function deleteWheel(){
   currentWheelId=wheels[0]?.id||null;
   closeWheelModal();renderWheelTabs();
   if(currentWheelId)await loadEvents();
-  else {events=[];filteredEvents=[];drawWheel();renderSidebar();renderLegend();}
+  else{events=[];filteredEvents=[];drawWheel();renderSidebar();renderLegend();}
   toast('Årshjul slettet');
 }
 
@@ -574,7 +568,7 @@ const canvas=document.getElementById('wheel');
 const ctx=canvas.getContext('2d');
 
 function getEventsForMonth(m,src){
-  return (src||filteredEvents).filter(e=>{
+  return(src||filteredEvents).filter(e=>{
     const s=new Date(e.start_date),en=new Date(e.end_date);
     s.setHours(12);en.setHours(12);
     for(let d=new Date(s);d<=en;d.setDate(d.getDate()+1))
@@ -591,12 +585,20 @@ function dateToAngle(ds){
 
 function drawWheel(){
   ctx.clearRect(0,0,620,620);tooltipData=[];
+
+  // Background circle
+  ctx.beginPath();ctx.arc(CX,CY,OR+2,0,2*Math.PI);
+  ctx.fillStyle='#f7f5f0';ctx.fill();
+
   for(let m=0;m<12;m++){
     const sa=(m/12)*2*Math.PI-Math.PI/2,ea=((m+1)/12)*2*Math.PI-Math.PI/2,isSel=selectedMonth===m;
     ctx.beginPath();ctx.moveTo(CX,CY);ctx.arc(CX,CY,OR,sa,ea);ctx.closePath();
-    ctx.fillStyle=RING_COLORS[m]+(isSel?'ee':'44');ctx.fill();
-    ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();
+    ctx.fillStyle=isSel?RING_COLORS[m]+'ff':RING_COLORS[m]+'aa';
+    ctx.fill();
+    ctx.strokeStyle='#f7f5f0';ctx.lineWidth=2.5;ctx.stroke();
   }
+
+  // Event arcs
   filteredEvents.forEach(ev=>{
     const s=new Date(ev.start_date),e=new Date(ev.end_date);
     if(s.getFullYear()>currentYear||e.getFullYear()<currentYear)return;
@@ -605,34 +607,50 @@ function drawWheel(){
     const sa=dateToAngle(cs.toISOString().split('T')[0]);
     const ea=dateToAngle(ce.toISOString().split('T')[0]);
     ctx.beginPath();ctx.arc(CX,CY,OR-1,sa,ea);ctx.arc(CX,CY,OR-EVENT_ARC_W,ea,sa,true);
-    ctx.closePath();ctx.fillStyle=ev.color;ctx.fill();
+    ctx.closePath();ctx.fillStyle=ev.color+'ee';ctx.fill();
+    // subtle stroke
+    ctx.strokeStyle=ev.color;ctx.lineWidth=0.5;ctx.stroke();
   });
+
+  // Hendelse dots
   filteredEvents.forEach(ev=>{
     parseHendelser(ev.hendelser).forEach(h=>{
       if(new Date(h.date).getFullYear()!==currentYear)return;
       const ang=dateToAngle(h.date);
       const dx=CX+HENDELSE_R*Math.cos(ang),dy=CY+HENDELSE_R*Math.sin(ang);
-      const dotColor=h.color||ev.color;
+      ctx.beginPath();ctx.arc(dx,dy,HENDELSE_DOT_R+1,0,2*Math.PI);
+      ctx.fillStyle='#fff';ctx.fill();
       ctx.beginPath();ctx.arc(dx,dy,HENDELSE_DOT_R,0,2*Math.PI);
-      ctx.fillStyle=dotColor;ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.stroke();
-      tooltipData.push({x:dx,y:dy,r:HENDELSE_DOT_R+4,text:`${ev.name}\n${h.name}\n${fmtDate(h.date)}`});
+      ctx.fillStyle=h.color||ev.color;ctx.fill();
+      tooltipData.push({x:dx,y:dy,r:HENDELSE_DOT_R+5,text:`${ev.name}\n${h.name}\n${fmtDate(h.date)}`});
     });
   });
+
+  // Month labels
   for(let m=0;m<12;m++){
     const sa=(m/12)*2*Math.PI-Math.PI/2,ea=((m+1)/12)*2*Math.PI-Math.PI/2;
     const evts=getEventsForMonth(m),isSel=selectedMonth===m;
-    const mid=(sa+ea)/2,lr=(OR+IR)/2-10;
+    const mid=(sa+ea)/2,lr=(OR+IR)/2-8;
     const tx=CX+lr*Math.cos(mid),ty=CY+lr*Math.sin(mid);
     ctx.save();ctx.translate(tx,ty);
     const inBottom=mid>Math.PI/2&&mid<3*Math.PI/2;
     ctx.rotate(inBottom?mid-Math.PI/2:mid+Math.PI/2);
-    ctx.fillStyle=isSel?'#fff':'#222';ctx.font=`${isSel?'600':'400'} 13px system-ui`;
+    ctx.fillStyle=isSel?'#2c2c28':'#444';
+    ctx.font=`${isSel?'700':'500'} 13px Inter,system-ui`;
     ctx.textAlign='center';ctx.textBaseline='middle';
     ctx.fillText(MONTHS[m].substring(0,3),0,evts.length?-8:0);
-    if(evts.length){ctx.font='400 11px system-ui';ctx.fillStyle=isSel?'rgba(255,255,255,0.85)':'#666';ctx.fillText(evts.length+' arr.',0,8);}
+    if(evts.length){
+      ctx.font=`500 10px Inter,system-ui`;
+      ctx.fillStyle=isSel?'#2c2c28':'#888';
+      ctx.fillText(evts.length+' arr.',0,8);
+    }
     ctx.restore();
   }
-  ctx.beginPath();ctx.arc(CX,CY,IR,0,2*Math.PI);ctx.fillStyle='#f5f4f0';ctx.fill();ctx.strokeStyle='#ddd';ctx.lineWidth=1;ctx.stroke();
+
+  // Inner circle
+  ctx.beginPath();ctx.arc(CX,CY,IR,0,2*Math.PI);
+  ctx.fillStyle='#f7f5f0';ctx.fill();
+  ctx.strokeStyle='#e8e4dc';ctx.lineWidth=1.5;ctx.stroke();
 }
 
 canvas.addEventListener('click',e=>{
@@ -658,20 +676,24 @@ function setupTooltip(){
 
 function nextHendelseText(ev){
   const up=parseHendelser(ev.hendelser).filter(h=>{const d=new Date(h.date);d.setHours(0,0,0,0);return d>=TODAY;}).sort((a,b)=>a.date.localeCompare(b.date));
-  if(!up.length)return '';
+  if(!up.length)return'';
   const h=up[0],days=daysUntil(h.date);
   return days===0?`${h.name} i dag`:`${h.name}: ${fmtDate(h.date)}`;
 }
 
 function renderSidebar(){
   const w=cw(),list=document.getElementById('evt-list');
-  if(selectedMonth===null){document.getElementById('sel-month').textContent='—';document.getElementById('sel-count').textContent='';list.innerHTML='<p class="empty">Klikk på en måned</p>';return;}
+  if(selectedMonth===null){
+    document.getElementById('sel-month').textContent='—';
+    document.getElementById('sel-count').textContent='';
+    list.innerHTML='<p class="empty">Klikk på en måned</p>';return;
+  }
   const evts=getEventsForMonth(selectedMonth);
-  document.getElementById('sel-month').textContent=MONTHS[selectedMonth]+' '+currentYear;
+  document.getElementById('sel-month').textContent=MONTHS[selectedMonth];
   document.getElementById('sel-count').textContent=evts.length?evts.length+' '+(w?.item_label||'element')+(evts.length>1?'er':''):'Ingen elementer';
   list.innerHTML=evts.length?evts.map(ev=>{
     const live=isActiveNow(ev),nh=nextHendelseText(ev);
-    return `<div class="evt-item${live?' active-now':''}" style="border-left-color:${ev.color}">
+    return`<div class="evt-item${live?' active-now':''}" style="border-left-color:${ev.color}">
       <div class="evt-item-body" onclick="showDetail('${ev.id}')">
         <div class="en">${ev.name}${live?'<span class="badge-live">Pågår nå</span>':''}</div>
         <div class="ed">${fmtDate(ev.start_date)}${ev.start_date!==ev.end_date?' – '+fmtDate(ev.end_date):''}</div>
@@ -695,7 +717,7 @@ function toggleLegend(){
 function renderTimeline(){
   const w=cw(),cont=document.getElementById('timeline-items');
   const items=filteredEvents.filter(e=>new Date(e.start_date).getFullYear()===currentYear||new Date(e.end_date).getFullYear()===currentYear);
-  if(!items.length){cont.innerHTML='<p class="empty" style="padding:16px">Ingen elementer funnet</p>';return;}
+  if(!items.length){cont.innerHTML='<p class="empty" style="padding:20px">Ingen elementer funnet</p>';return;}
   const byMonth={};
   items.forEach(ev=>{const m=new Date(ev.start_date).getMonth();if(!byMonth[m])byMonth[m]=[];byMonth[m].push(ev);});
   cont.innerHTML=Object.keys(byMonth).sort((a,b)=>a-b).map(m=>{
@@ -705,11 +727,12 @@ function renderTimeline(){
       for(const row of rows){if(new Date(ev.start_date)>new Date(row[row.length-1].end_date)){row.push(ev);placed=true;break;}}
       if(!placed)rows.push([ev]);
     });
-    return `<div class="tl-month"><div class="tl-month-header">${MONTHS[m]} ${currentYear}</div><div class="tl-items">${
+    return`<div class="tl-month"><div class="tl-month-header">${MONTHS[m]} ${currentYear}</div><div class="tl-items">${
       rows.map(row=>`<div style="display:flex;gap:8px">${row.map(ev=>{
         const live=isActiveNow(ev);
-        const hRows=w?.show_hendelser!==false?parseHendelser(ev.hendelser).sort((a,b)=>a.date.localeCompare(b.date)).map(h=>`<div class="tl-h-row"><div class="tl-h-dot"></div><span class="tl-h-date">${fmtDate(h.date)}</span><span>${h.name}</span></div>`).join(''):'';
-        return `<div class="tl-item${live?' active-now':''}" style="flex:1;min-width:0" onclick="showDetail('${ev.id}')">
+        const hRows=w?.show_hendelser!==false?parseHendelser(ev.hendelser).sort((a,b)=>a.date.localeCompare(b.date)).map(h=>`
+          <div class="tl-h-row"><div class="tl-h-dot"></div><span class="tl-h-date">${fmtDate(h.date)}</span><span>${h.name}</span></div>`).join(''):'';
+        return`<div class="tl-item${live?' active-now':''}" style="flex:1;min-width:0" onclick="showDetail('${ev.id}')">
           <div class="tl-accent" style="background:${ev.color}"></div>
           <div class="tl-body">
             <div class="tl-name">${ev.name}${live?'<span class="badge-live-tl">Pågår nå</span>':''}</div>
@@ -788,7 +811,7 @@ function openEventModal(id){
     document.getElementById('f-notes').value=ev.notes||'';
     selectedColor=ev.color;
     pendingHendelser=[...parseHendelser(ev.hendelser)];
-  } else {
+  }else{
     document.getElementById('f-name').value='';
     document.getElementById('f-start').value='';
     document.getElementById('f-end').value='';
@@ -816,9 +839,8 @@ function onStartChange(){
   const start=document.getElementById('f-start').value,endEl=document.getElementById('f-end');
   endEl.min=start;if(!endEl.value||endEl.value<start)endEl.value=start;
 }
-function rgbToHex(rgb){const m=rgb.match(/\d+/g);if(!m)return rgb;return '#'+m.slice(0,3).map(x=>parseInt(x).toString(16).padStart(2,'0')).join('');}
+function rgbToHex(rgb){const m=rgb.match(/\d+/g);if(!m)return rgb;return'#'+m.slice(0,3).map(x=>parseInt(x).toString(16).padStart(2,'0')).join('');}
 
-// FIXED: sjekker om h-color finnes før bruk
 function addHendelse(){
   const w=cw();
   const d=document.getElementById('h-date').value,n=document.getElementById('h-name').value.trim();
@@ -834,7 +856,7 @@ function removeHendelse(i){pendingHendelser.splice(i,1);renderPendingHendelser()
 function renderPendingHendelser(){
   document.getElementById('h-preview').innerHTML=pendingHendelser.map((h,i)=>`
     <div class="hp-row">
-      ${h.color?`<div style="width:10px;height:10px;border-radius:50%;background:${h.color};flex-shrink:0"></div>`:''}
+      ${h.color?`<div style="width:9px;height:9px;border-radius:50%;background:${h.color};flex-shrink:0"></div>`:''}
       <span><b>${fmtDate(h.date)}</b> – ${h.name}</span>
       <button onclick="removeHendelse(${i})">×</button>
     </div>`).join('');
@@ -854,7 +876,7 @@ async function saveEvent(){
       const res=await api.updateEvent(editingId,payload);
       if(Array.isArray(res)&&res[0]){const i=events.findIndex(e=>e.id===editingId);if(i>-1)events[i]=res[0];}
       else{const data=await api.getEvents(currentWheelId);if(Array.isArray(data))events=data;}
-    } else {
+    }else{
       const res=await api.saveEvent(payload);
       if(Array.isArray(res)&&res[0])events.push(res[0]);
       else{const data=await api.getEvents(currentWheelId);if(Array.isArray(data))events=data;}
