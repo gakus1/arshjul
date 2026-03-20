@@ -323,10 +323,6 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
         <label class="toggle"><input type="checkbox" id="w-default-list"><span class="toggle-slider"></span></label>
       </div>
       <div class="toggle-row">
-        <label>Enkeltdags-modus (kun én dato)</label>
-        <label class="toggle"><input type="checkbox" id="w-single-day"><span class="toggle-slider"></span></label>
-      </div>
-      <div class="toggle-row">
         <label>Skrivebeskyttet</label>
         <label class="toggle"><input type="checkbox" id="w-readonly"><span class="toggle-slider"></span></label>
       </div>
@@ -634,7 +630,7 @@ function drawWheel(){
     const tx=CX+lr*Math.cos(mid),ty=CY+lr*Math.sin(mid);
     ctx.save();ctx.translate(tx,ty);
     const inBottom=mid>Math.PI/2&&mid<3*Math.PI/2;
-    ctx.rotate(inBottom?mid-Math.PI/2:mid+Math.PI/2);
+    ctx.rotate(inBottom?mid+Math.PI/2:mid-Math.PI/2);
     ctx.fillStyle=isSel?'#2c2c28':'#444';
     ctx.font=`${isSel?'700':'500'} 13px Inter,system-ui`;
     ctx.textAlign='center';ctx.textBaseline='middle';
@@ -799,9 +795,8 @@ function openEventModal(id){
   document.getElementById('lbl-hendelse').textContent=w?.event_label||'Hendelser';
   document.getElementById('hendelser-section').style.display=w?.show_hendelser!==false?'block':'none';
   document.getElementById('notes-section').style.display=w?.show_notes!==false?'block':'none';
-  const singleDay=w?.single_day;
-  document.getElementById('lbl-start-date').textContent=singleDay?'Dato':'Startdato';
-  document.getElementById('end-date-col').style.display=singleDay?'none':'block';
+  document.getElementById('lbl-start-date').textContent='Startdato';
+  document.getElementById('end-date-col').style.display='block';
   if(id){
     const ev=events.find(e=>e.id===id);
     document.getElementById('f-name').value=ev.name;
@@ -866,7 +861,7 @@ async function saveEvent(){
   const w=cw();
   const name=document.getElementById('f-name').value.trim();
   const start=document.getElementById('f-start').value;
-  const end=w?.single_day?start:document.getElementById('f-end').value;
+  const end=document.getElementById('f-end').value;
   const notes=document.getElementById('f-notes').value.trim();
   if(!name){toast('Fyll ut navn');return;}
   if(!start){toast('Fyll ut dato');return;}
