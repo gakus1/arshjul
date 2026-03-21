@@ -487,9 +487,10 @@ function openWheelModal(id){
     document.getElementById('w-item-label').value=w.item_label||'';
     document.getElementById('w-event-label').value=w.event_label||'';
     document.getElementById('w-countdown-label').value=w.countdown_label||'';
-    document.getElementById('w-hendelse-color').checked=w.hendelse_color||false;
-    document.getElementById('w-single-day').checked=w.single_day||false;
+    document.getElementById('w-countdown-hendelse').checked=w.countdown_hendelse||false;
+    document.getElementById('w-default-list').checked=w.default_view==='list';
     document.getElementById('w-readonly').checked=w.readonly||false;
+    document.getElementById('w-hendelse-color').checked=w.hendelse_color||false;
     document.getElementById('w-show-hendelser').checked=w.show_hendelser!==false;
     document.getElementById('w-show-notes').checked=w.show_notes!==false;
     wheelColorSelected=w.color||'#5A7FBB';
@@ -498,9 +499,10 @@ function openWheelModal(id){
     document.getElementById('w-item-label').value='';
     document.getElementById('w-event-label').value='';
     document.getElementById('w-countdown-label').value='';
+    document.getElementById('w-countdown-hendelse').checked=false;
     document.getElementById('w-default-list').checked=false;
-    document.getElementById('w-single-day').checked=false;
     document.getElementById('w-readonly').checked=false;
+    document.getElementById('w-hendelse-color').checked=false;
     document.getElementById('w-show-hendelser').checked=true;
     document.getElementById('w-show-notes').checked=true;
     wheelColorSelected=COLORS[0];
@@ -531,7 +533,7 @@ async function saveWheel(){
     event_label:document.getElementById('w-event-label').value.trim()||'Hendelse',
     countdown_label:document.getElementById('w-countdown-label').value.trim()||'Neste arrangement',
     hendelse_color:document.getElementById('w-hendelse-color').checked,
-    countdown_hendelse:document.getElementById('w-countdown-hendelse').checked,
+    countdown_hendelse:document.getElementById('w-countdown-hendelse')?.checked||false,
     default_view:document.getElementById('w-default-list').checked?'list':'wheel',
     single_day:false,
     readonly:document.getElementById('w-readonly').checked,
