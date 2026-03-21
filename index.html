@@ -629,7 +629,8 @@ function drawWheel(){
     const mid=(sa+ea)/2,lr=(OR+IR)/2-8;
     const tx=CX+lr*Math.cos(mid),ty=CY+lr*Math.sin(mid);
     ctx.save();ctx.translate(tx,ty);
-    const inBottom=mid>Math.PI/2&&mid<3*Math.PI/2;
+    const normMid=((mid+Math.PI/2)%(2*Math.PI)+2*Math.PI)%(2*Math.PI);
+    const inBottom=normMid>Math.PI/2&&normMid<3*Math.PI/2;
     ctx.rotate(inBottom?mid+Math.PI/2:mid-Math.PI/2);
     ctx.fillStyle=isSel?'#2c2c28':'#444';
     ctx.font=`${isSel?'700':'500'} 13px Inter,system-ui`;
