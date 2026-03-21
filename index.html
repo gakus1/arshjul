@@ -629,9 +629,11 @@ function drawWheel(){
     const mid=(sa+ea)/2,lr=(OR+IR)/2-8;
     const tx=CX+lr*Math.cos(mid),ty=CY+lr*Math.sin(mid);
     ctx.save();ctx.translate(tx,ty);
-    // mid er vinkel fra kl.12, går med klokken. Høyre halvdel: mid i [0, PI], venstre: [PI, 2PI]
-    const inRight=mid>=-Math.PI/2&&mid<Math.PI/2;
-    ctx.rotate(inRight?mid+Math.PI/2:mid-Math.PI/2);
+    // Normaliser mid til [0, 2PI]
+    const a=((mid+2*Math.PI)%(2*Math.PI));
+    // Tekst skal peke utover: høyre side (kl.12 til kl.6) = roter slik tekst leser nedover, venstre = oppover
+    const flipText=a>Math.PI;
+    ctx.rotate(flipText?mid+Math.PI/2:mid-Math.PI/2);
     ctx.fillStyle=isSel?'#2c2c28':'#444';
     ctx.font=`${isSel?'700':'500'} 13px Inter,system-ui`;
     ctx.textAlign='center';ctx.textBaseline='middle';
