@@ -594,21 +594,81 @@ function drawWheel(){
     ctx.strokeStyle='#f7f5f0';ctx.lineWidth=2.5;ctx.stroke();
   }
 
-  // Event arcs
-  filteredEvents.forEach(ev=>{
+  // Event arcs — maks 3 lag, tynnere arcs med mellomrom
+  const ARC_H=10, ARC_GAP=3, MAX_LAYERS=3;
+  // Grupper overlappende events i lag
+  const layers=[];
+  const yearEvs=filteredEvents.filter(ev=>{
     const s=new Date(ev.start_date),e=new Date(ev.end_date);
-    if(s.getFullYear()>currentYear||e.getFullYear()<currentYear)return;
-    const cs=new Date(Math.max(s,new Date(currentYear,0,1)));
-    const ce=new Date(Math.min(e,new Date(currentYear,11,31)));
-    const sa=dateToAngle(cs.toISOString().split('T')[0]);
-    const ea=dateToAngle(ce.toISOString().split('T')[0]);
-    ctx.beginPath();ctx.arc(CX,CY,OR-1,sa,ea);ctx.arc(CX,CY,OR-EVENT_ARC_W,ea,sa,true);
-    ctx.closePath();ctx.fillStyle=ev.color+'ee';ctx.fill();
-    // subtle stroke
-    ctx.strokeStyle=ev.color;ctx.lineWidth=0.5;ctx.stroke();
+    return!(s.getFullYear()>currentYear||e.getFullYear()<currentYear);
+  });
+  yearEvs.forEach(ev=>{
+    let placed=false;
+    for(let i=0;i<layers.length&&i<MAX_LAYERS;i++){
+      const overlap=layers[i].some(e2=>{
+        const s1=new Date(ev.start_date),e1=new Date(ev.end_date);
+        const s2=new Date(e2.start_date),e2e=new Date(e2.end_date);
+        return s1<=e2e&&e1>=s2;
+      });
+      if(!overlap){layers[i].push(ev);placed=true;break;}
+    }
+    if(!placed&&layers.length<MAX_LAYERS){layers.push([ev]);placed=true;}
+    if(!placed){
+      // Tell opp skjulte per måned
+      if(!ev._hidden)ev._hidden=true;
+    }
   });
 
-  // Hendelse dots
+  // Tegn arcs lagvis
+  layers.forEach((layer,li)=>{
+    const outerR=OR-1-(li*(ARC_H+ARC_GAP));
+    const innerR=outerR-ARC_H;
+    layer.forEach(ev=>{
+      const s=new Date(ev.start_date),e=new Date(ev.end_date);
+      const cs=new Date(Math.max(s,new Date(currentYear,0,1)));
+      const ce=new Date(Math.min(e,new Date(currentYear,11,31)));
+      const sa=dateToAngle(cs.toISOString().split('T')[0]);
+      const ea=dateToAngle(ce.toISOString().split('T')[0]);
+      ctx.beginPath();ctx.arc(CX,CY,outerR,sa,ea);ctx.arc(CX,CY,innerR,ea,sa,true);
+      ctx.closePath();ctx.fillStyle=ev.color+'ee';ctx.fill();
+      ctx.strokeStyle='#f7f5f0';ctx.lineWidth=1;ctx.stroke();
+    });
+  });
+
+  // Vis "+ N til" per måned hvis flere enn MAX_LAYERS lag
+  if(yearEvs.length>0){
+    for(let m=0;m<12;m++){
+      const mEvs=getEventsForMonth(m,yearEvs);
+      const sa=(m/12)*2*Math.PI-Math.PI/2,ea=((m+1)/12)*2*Math.PI-Math.PI/2;
+      const mid=(sa+ea)/2;
+      // Tell hvor mange som ikke fikk plass
+      const layerIds=layers.flat().map(e=>e.id);
+      const hidden=mEvs.filter(e=>!layerIds.includes(e.id));
+      if(hidden.length>0){
+        const r=OR-1-(MAX_LAYERS*(ARC_H+ARC_GAP))-8;
+        const tx=CX+r*Math.cos(mid),ty=CY+r*Math.sin(mid);
+        ctx.save();ctx.translate(tx,ty);
+        ctx.font='600 9px Inter,system-ui';ctx.fillStyle='#888';
+        ctx.textAlign='center';ctx.textBaseline='middle';
+        ctx.fillText(`+${hidden.length}`,0,0);
+        ctx.restore();
+      }
+    }
+  }
+
+  // Hover-data for arrangement-arcs
+  layers.forEach((layer,li)=>{
+    const outerR=OR-1-(li*(ARC_H+ARC_GAP));
+    const innerR=outerR-ARC_H;
+    layer.forEach(ev=>{
+      const s=new Date(ev.start_date),e=new Date(ev.end_date);
+      const cs=new Date(Math.max(s,new Date(currentYear,0,1)));
+      const ce=new Date(Math.min(e,new Date(currentYear,11,31)));
+      const sa=dateToAngle(cs.toISOString().split('T')[0]);
+      const ea=dateToAngle(ce.toISOString().split('T')[0]);
+      tooltipData.push({type:'arc',sa,ea,innerR,outerR,text:`${ev.name}\n${fmtDate(ev.start_date)}${ev.start_date!==ev.end_date?' – '+fmtDate(ev.end_date):''}`,id:ev.id});
+    });
+  });
   filteredEvents.forEach(ev=>{
     parseHendelser(ev.hendelser).forEach(h=>{
       if(new Date(h.date).getFullYear()!==currentYear)return;
@@ -666,7 +726,23 @@ function setupTooltip(){
   canvas.addEventListener('mousemove',e=>{
     const r=canvas.getBoundingClientRect();
     const mx=(e.clientX-r.left)*(620/r.width),my=(e.clientY-r.top)*(620/r.height);
-    const found=tooltipData.find(td=>{const dx=mx-td.x,dy=my-td.y;return Math.sqrt(dx*dx+dy*dy)<=td.r;});
+    const dx=mx-CX,dy=my-CY,dist=Math.sqrt(dx*dx+dy*dy);
+    let ang=Math.atan2(dy,dx);
+    // Normaliser vinkel til samme system som dateToAngle
+    let found=tooltipData.find(td=>{
+      if(td.type==='arc'){
+        if(dist<td.innerR||dist>td.outerR)return false;
+        // Sjekk om vinkel er innenfor arc
+        let a=ang,sa=td.sa,ea=td.ea;
+        // Normaliser til [-PI, PI] sammenligning
+        const norm=v=>((v+3*Math.PI)%(2*Math.PI))-Math.PI;
+        a=norm(a);sa=norm(sa);ea=norm(ea);
+        if(sa<=ea)return a>=sa&&a<=ea;
+        return a>=sa||a<=ea;
+      }
+      const ddx=mx-td.x,ddy=my-td.y;
+      return Math.sqrt(ddx*ddx+ddy*ddy)<=td.r;
+    });
     if(found){tip.style.display='block';tip.innerHTML=found.text.replace(/\n/g,'<br>');tip.style.left=(e.clientX+14)+'px';tip.style.top=(e.clientY-10)+'px';}
     else tip.style.display='none';
   });
