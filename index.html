@@ -724,7 +724,7 @@ function launchConfetti(){
 
 function toggleCake(idx){
   persons[idx].cake=!persons[idx].cake;
-  savePersons();renderBursdagView();
+  renderBursdagView();
   toast(persons[idx].cake?`${persons[idx].name} – kake registrert!`:`${persons[idx].name} – kake fjernet`);
 }
 
