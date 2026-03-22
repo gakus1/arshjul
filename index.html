@@ -321,6 +321,21 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
 
   <!-- BURSDAG VIEW -->
   <div id="view-bursdag" class="bursdag-view" style="display:none">
+    <div id="bursdag-today-banner" style="display:none;background:linear-gradient(135deg,#6b2fa0,#9b4fd0);border-radius:16px;padding:18px 24px;align-items:center;gap:18px;flex-wrap:wrap;position:relative;overflow:hidden;">
+      <canvas id="confetti-canvas" style="position:absolute;inset:0;pointer-events:none;width:100%;height:100%"></canvas>
+      <div style="font-size:28px">🎂</div>
+      <div style="font-size:15px;color:#fff;flex:1;" id="today-banner-text"></div>
+    </div>
+
+    <div id="bursdag-soon-banner" style="display:none;background:#fff;border:1px solid #e4d4f8;border-radius:16px;padding:16px 24px;align-items:center;gap:14px;flex-wrap:wrap;">
+      <div style="width:10px;height:10px;border-radius:50%;background:#a855f7;flex-shrink:0"></div>
+      <div style="font-size:14px;color:#555;flex:1;" id="soon-banner-text"></div>
+      <div style="text-align:center">
+        <div style="font-size:26px;font-weight:700;color:#6b2fa0;letter-spacing:-1px" id="soon-banner-days"></div>
+        <div style="font-size:11px;color:#aaa;font-weight:500;text-transform:uppercase;letter-spacing:.06em">dager igjen</div>
+      </div>
+    </div>
+
     <div id="bursdag-next-banner" style="display:none" class="bursdag-next-banner">
       <div style="font-size:22px">🎂</div>
       <div class="bn-text" id="bn-text"></div>
@@ -357,7 +372,7 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
         <div id="bursdag-list"><p class="no-persons">Ingen kollegaer lagt til ennå</p></div>
       </div>
       <div class="bursdag-panel">
-        <div class="bursdag-panel-title"><span>Kakestatistikk</span></div>
+        <div class="bursdag-panel-title"><span>Kakerangering 🏆</span></div>
         <div id="cake-list"><p class="no-persons">Ingen data ennå</p></div>
       </div>
     </div>
@@ -593,6 +608,8 @@ function getBadge(dateStr){
   return['badge-upcoming',`${days} dager`];
 }
 
+const WARN_DAYS=7;
+
 function renderBursdagView(){
   if(!bursdagViewActive)return;
   const sorted=[...persons].map((p,i)=>({...p,_idx:i})).sort((a,b)=>{
@@ -610,28 +627,48 @@ function renderBursdagView(){
   document.getElementById('bstat-cake').textContent=cakeYes;
   document.getElementById('bstat-owe').textContent=cakeNo;
 
-  // Next banner
-  const upcoming=sorted.filter(p=>!bursdagPassed(p.date));
-  const banner=document.getElementById('bursdag-next-banner');
+  // Today banner (konfetti)
+  const todayPeople=persons.filter(p=>daysUntilBursdag(p.date)===0);
+  const todayBanner=document.getElementById('bursdag-today-banner');
+  if(todayPeople.length){
+    todayBanner.style.display='flex';
+    document.getElementById('today-banner-text').innerHTML=
+      `<strong style="font-size:17px">${todayPeople.map(p=>p.name).join(' & ')}</strong> har bursdag i dag! 🎉`;
+    launchConfetti();
+  } else todayBanner.style.display='none';
+
+  // Soon banner (X dager igjen)
+  const upcoming=sorted.filter(p=>!bursdagPassed(p.date)&&daysUntilBursdag(p.date)>0);
+  const soonBanner=document.getElementById('bursdag-soon-banner');
+  const nextBanner=document.getElementById('bursdag-next-banner');
   if(upcoming.length){
     const next=upcoming[0];
     const days=daysUntilBursdag(next.date);
-    banner.style.display='flex';
-    document.getElementById('bn-days').textContent=days;
-    document.getElementById('bn-text').innerHTML=days===0
-      ?`<strong>${next.name}</strong> har bursdag i dag!`
-      :`Neste bursdag: <strong>${next.name}</strong> – ${fmtBursdag(next.date)}`;
-  } else banner.style.display='none';
+    nextBanner.style.display='none';
+    if(days<=WARN_DAYS){
+      soonBanner.style.display='flex';
+      document.getElementById('soon-banner-text').innerHTML=
+        `Husk: <strong>${next.name}</strong> har bursdag ${fmtBursdag(next.date)} – hvem tar med kake?`;
+      document.getElementById('soon-banner-days').textContent=days;
+    } else {
+      soonBanner.style.display='none';
+      nextBanner.style.display='flex';
+      document.getElementById('bn-days').textContent=days;
+      document.getElementById('bn-text').innerHTML=
+        `Neste bursdag: <strong>${next.name}</strong> – ${fmtBursdag(next.date)}`;
+    }
+  } else { soonBanner.style.display='none'; nextBanner.style.display='none'; }
 
   // Person list
   const listEl=document.getElementById('bursdag-list');
   if(!persons.length){listEl.innerHTML='<p class="no-persons">Ingen kollegaer lagt til ennå</p>';return;}
-  listEl.innerHTML=sorted.map((p,si)=>{
+  listEl.innerHTML=sorted.map((p)=>{
     const [badgeClass,badgeText]=getBadge(p.date);
-    return`<div class="b-person">
+    const isToday=daysUntilBursdag(p.date)===0;
+    return`<div class="b-person"${isToday?' style="background:#fdf4ff;border-radius:10px;padding:6px 8px;margin:-6px -8px"':''}>
       <div class="b-avatar" style="${avatarStyle(p._idx)}">${getInitials(p.name)}</div>
       <div class="b-info">
-        <div class="b-name">${p.name}</div>
+        <div class="b-name">${p.name}${isToday?' 🎂':''}</div>
         <div class="b-date">${fmtBursdag(p.date)}</div>
       </div>
       <span class="b-badge ${badgeClass}">${badgeText}</span>
@@ -639,22 +676,50 @@ function renderBursdagView(){
     </div>`;
   }).join('');
 
-  // Cake list
+  // Cake ranking
   const cakeEl=document.getElementById('cake-list');
-  const withBd=persons.filter(p=>bursdagPassed(p.date)||p.cake);
-  if(!withBd.length&&!persons.length){cakeEl.innerHTML='<p class="no-persons">Ingen data ennå</p>';return;}
-  cakeEl.innerHTML=persons.map((p,i)=>{
+  if(!persons.length){cakeEl.innerHTML='<p class="no-persons">Ingen data ennå</p>';return;}
+  const ranked=[...persons].map((p,i)=>({...p,_idx:i})).sort((a,b)=>{
+    if(b.cake!==a.cake)return(b.cake?1:0)-(a.cake?1:0);
+    return a.name.localeCompare(b.name);
+  });
+  const medals=['🥇','🥈','🥉'];
+  cakeEl.innerHTML=ranked.map((p,ri)=>{
     const passed=bursdagPassed(p.date);
-    const barColor=p.cake?'#4BA87D':'#e0ddd8';
-    const barW=p.cake?'100%':'100%';
-    const statusColor=p.cake?'#4BA87D':'#ccc';
+    const medal=p.cake&&ri<3?medals[ri]:'';
     return`<div class="cake-row">
+      <span style="width:22px;font-size:15px;text-align:center;flex-shrink:0">${medal||`<span style="font-size:12px;color:#ccc">${ri+1}</span>`}</span>
       <span class="cake-name-col">${p.name.split(' ')[0]}</span>
-      <div class="cake-bar-wrap"><div class="cake-bar" style="width:${barW};background:${barColor}"></div></div>
-      <span class="cake-status" style="color:${statusColor}">${p.cake?'✓':'✗'}</span>
-      ${passed||p.cake?`<button class="cake-toggle" onclick="toggleCake(${i})">${p.cake?'Fjern':'Levert'}</button>`:'<span style="font-size:11px;color:#ccc;width:52px;text-align:right">—</span>'}
+      <div class="cake-bar-wrap"><div class="cake-bar" style="width:100%;background:${p.cake?'#4BA87D':'#eee'}"></div></div>
+      <span class="cake-status" style="color:${p.cake?'#4BA87D':'#ccc'}">${p.cake?'✓':'✗'}</span>
+      ${passed||p.cake?`<button class="cake-toggle" onclick="toggleCake(${p._idx})">${p.cake?'Fjern':'Levert'}</button>`:'<span style="font-size:11px;color:#ccc;width:52px;text-align:right">—</span>'}
     </div>`;
   }).join('');
+}
+
+function launchConfetti(){
+  const canvas=document.getElementById('confetti-canvas');
+  const ctx=canvas.getContext('2d');
+  canvas.width=canvas.offsetWidth;canvas.height=canvas.offsetHeight;
+  const pieces=Array.from({length:80},()=>({
+    x:Math.random()*canvas.width,y:Math.random()*canvas.height-canvas.height,
+    w:6+Math.random()*6,h:10+Math.random()*8,
+    color:['#fff','#f0e8ff','#d4a8ff','#ffec8b','#ffd0f0'][Math.floor(Math.random()*5)],
+    rot:Math.random()*360,speed:1.5+Math.random()*2,spin:2+Math.random()*3
+  }));
+  let frame=0;
+  function draw(){
+    if(frame>180)return;frame++;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pieces.forEach(p=>{
+      p.y+=p.speed;p.rot+=p.spin;
+      ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot*Math.PI/180);
+      ctx.fillStyle=p.color;ctx.globalAlpha=Math.max(0,1-frame/160);
+      ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.restore();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
 }
 
 function toggleCake(idx){
