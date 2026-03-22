@@ -880,6 +880,19 @@ function drawWheel(){
     ctx.restore();
   }
 
+  // Dagens dato-linje
+  const todayAngle=dateToAngle(TODAY.toISOString().split('T')[0]);
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(CX+IR*Math.cos(todayAngle),CY+IR*Math.sin(todayAngle));
+  ctx.lineTo(CX+(OR+2)*Math.cos(todayAngle),CY+(OR+2)*Math.sin(todayAngle));
+  ctx.strokeStyle='#2c2c28';ctx.lineWidth=2;ctx.globalAlpha=0.5;
+  ctx.setLineDash([4,3]);ctx.stroke();
+  ctx.restore();
+  // Liten prikk på kanten
+  ctx.beginPath();ctx.arc(CX+(OR-4)*Math.cos(todayAngle),CY+(OR-4)*Math.sin(todayAngle),4,0,2*Math.PI);
+  ctx.fillStyle='#2c2c28';ctx.globalAlpha=0.7;ctx.fill();ctx.globalAlpha=1;
+
   ctx.beginPath();ctx.arc(CX,CY,IR,0,2*Math.PI);ctx.fillStyle='#f7f5f0';ctx.fill();
   ctx.strokeStyle='#e8e4dc';ctx.lineWidth=1.5;ctx.stroke();
 }
