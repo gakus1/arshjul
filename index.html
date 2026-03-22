@@ -664,9 +664,10 @@ function cw(){return wheels.find(w=>w.id===currentWheelId)||null;}
 
 async function init(){
   showLoading(true);
-  await loadPersons();
-  setYear(currentYear);buildMonthFilter();setupTooltip();
+  const safetyTimer=setTimeout(()=>showLoading(false),8000);
   try{
+    await loadPersons();
+    setYear(currentYear);buildMonthFilter();setupTooltip();
     const ws=await api.getWheels();
     if(Array.isArray(ws)&&ws.length){wheels=ws;currentWheelId=ws[0].id;}
     else if(Array.isArray(ws)&&ws.length===0){
@@ -674,8 +675,8 @@ async function init(){
       if(Array.isArray(res)&&res[0]){wheels=[res[0]];currentWheelId=res[0].id;}
     }
     renderWheelTabs();await loadEvents();
-  }catch(e){toast('Nettverksfeil.');}
-  finally{showLoading(false);}
+  }catch(e){toast('Nettverksfeil: '+e.message);}
+  finally{clearTimeout(safetyTimer);showLoading(false);}
 }
 
 function setYear(y){currentYear=y;document.getElementById('yr-label').textContent=y;document.getElementById('center-year').textContent=y;}
