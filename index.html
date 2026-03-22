@@ -24,6 +24,12 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #f7f5f0; color: 
 .view-toggle button { background: none; border: none; padding: 7px 16px; cursor: pointer; font-size: 13px; font-weight: 500; color: #888; font-family: inherit; transition: all .15s; }
 .view-toggle button.active { background: #2c2c28; color: #f7f5f0; }
 
+/* Bursdag knapp */
+.btn-bursdag { background: #fff; border: 1px solid #e4e1d8; border-radius: 10px; padding: 8px 16px; font-size: 13px; font-weight: 500; cursor: pointer; font-family: inherit; color: #555; transition: all .15s; display: flex; align-items: center; gap: 7px; }
+.btn-bursdag:hover { background: #fdf6ff; border-color: #c9a8e0; color: #7a3fa0; }
+.btn-bursdag.active { background: #f3e8ff; border-color: #b07fd0; color: #6b2fa0; }
+.bursdag-dot { width: 8px; height: 8px; border-radius: 50%; background: #a855f7; }
+
 /* Wheel tabs */
 .wheel-tabs { width: 100%; max-width: 980px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .wheel-tab { display: flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 10px; border: 1px solid #e4e1d8; background: #fff; cursor: pointer; font-size: 13px; font-weight: 500; transition: all .15s; }
@@ -162,7 +168,60 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
 .hp-row button:hover { color: #c04040; }
 .toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); background: #2c2c28; color: #f7f5f0; padding: 11px 22px; border-radius: 12px; font-size: 13px; font-weight: 500; z-index: 300; opacity: 0; transition: opacity .3s; pointer-events: none; box-shadow: 0 4px 20px rgba(0,0,0,0.18); }
 .toast.show { opacity: 1; }
-@media (max-width: 680px) { .wheel-wrap { width: 340px; height: 340px; } .below-wheel { grid-template-columns: 1fr; } }
+
+/* ===== BURSDAG VIEW ===== */
+.bursdag-view { width: 100%; max-width: 980px; display: flex; flex-direction: column; gap: 20px; }
+.bursdag-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.bstat { background: #fff; border: 1px solid #ece9e1; border-radius: 16px; padding: 18px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
+.bstat-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: #aaa; margin-bottom: 8px; }
+.bstat-val { font-size: 28px; font-weight: 700; letter-spacing: -1px; color: #1a1a18; }
+.bstat-sub { font-size: 12px; color: #aaa; margin-top: 4px; font-weight: 500; }
+.bursdag-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.bursdag-panel { background: #fff; border: 1px solid #ece9e1; border-radius: 16px; padding: 18px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
+.bursdag-panel-title { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: #aaa; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; }
+.b-person { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #f0ede6; }
+.b-person:last-child { border-bottom: none; padding-bottom: 0; }
+.b-avatar { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0; }
+.b-info { flex: 1; }
+.b-name { font-size: 14px; font-weight: 600; color: #1a1a18; }
+.b-date { font-size: 12px; color: #aaa; margin-top: 2px; }
+.b-badge { font-size: 11px; padding: 3px 10px; border-radius: 8px; font-weight: 600; white-space: nowrap; }
+.badge-today { background: #f0e8ff; color: #6b2fa0; }
+.badge-soon { background: #fff4e0; color: #8a5a00; }
+.badge-upcoming { background: #e8f5ee; color: #1a6640; }
+.badge-passed { background: #f0f0ee; color: #888; }
+.cake-row { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid #f0ede6; }
+.cake-row:last-child { border-bottom: none; }
+.cake-name-col { width: 100px; font-size: 13px; color: #1a1a18; font-weight: 500; flex-shrink: 0; }
+.cake-bar-wrap { flex: 1; height: 7px; background: #f0ede6; border-radius: 4px; overflow: hidden; }
+.cake-bar { height: 100%; border-radius: 4px; }
+.cake-status { font-size: 12px; font-weight: 600; width: 28px; text-align: right; flex-shrink: 0; }
+.cake-toggle { background: none; border: 1px solid #e4e1d8; border-radius: 8px; padding: 3px 10px; font-size: 11px; cursor: pointer; font-family: inherit; color: #888; transition: all .15s; flex-shrink: 0; }
+.cake-toggle:hover { background: #f5f2ea; }
+.btn-add-person { background: #2c2c28; color: #f7f5f0; border: none; border-radius: 10px; padding: 7px 14px; font-size: 12px; font-weight: 500; cursor: pointer; font-family: inherit; }
+.btn-add-person:hover { background: #3d3d38; }
+.b-del-btn { background: none; border: none; color: #ddd; cursor: pointer; font-size: 16px; padding: 0 4px; transition: color .15s; }
+.b-del-btn:hover { color: #c04040; }
+.bursdag-next-banner { background: linear-gradient(135deg, #6b2fa0 0%, #9b4fd0 100%); border-radius: 16px; padding: 18px 24px; display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.bursdag-next-banner .bn-text { font-size: 14px; color: rgba(255,255,255,0.8); flex: 1; }
+.bursdag-next-banner .bn-text strong { color: #fff; font-weight: 600; }
+.bn-days { font-size: 28px; font-weight: 700; color: #fff; letter-spacing: -1px; }
+.bn-label { font-size: 11px; color: rgba(255,255,255,0.5); text-align: center; font-weight: 500; text-transform: uppercase; letter-spacing: .06em; }
+.no-persons { font-size: 13px; color: #ccc; padding: 8px 0; }
+
+/* Bursdag modal */
+.bmodal { background: #fff; border-radius: 20px; padding: 28px; width: 100%; max-width: 420px; max-height: 92vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.18); }
+.bmodal h2 { margin-bottom: 20px; font-size: 19px; font-weight: 700; }
+.bmodal label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .07em; color: #aaa; display: block; margin-top: 16px; margin-bottom: 5px; }
+.bmodal input { width: 100%; border: 1px solid #e4e1d8; border-radius: 10px; padding: 10px 12px; font-size: 14px; font-family: inherit; background: #faf9f6; outline: none; color: #1a1a18; }
+.bmodal input:focus { border-color: #aaa; background: #fff; }
+
+@media (max-width: 680px) {
+  .wheel-wrap { width: 340px; height: 340px; }
+  .below-wheel { grid-template-columns: 1fr; }
+  .bursdag-stats { grid-template-columns: 1fr 1fr; }
+  .bursdag-grid { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
@@ -170,14 +229,18 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
   <div class="topbar">
     <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
       <h1>Årshjul</h1>
-      <div class="year-nav">
+      <div class="year-nav" id="year-nav-wrap">
         <button onclick="changeYear(-1)">←</button>
         <span id="yr-label"></span>
         <button onclick="changeYear(1)">→</button>
       </div>
     </div>
     <div class="topbar-right">
-      <div class="view-toggle">
+      <button class="btn-bursdag" id="btn-bursdag-toggle" onclick="toggleBursdagView()">
+        <div class="bursdag-dot"></div>
+        Bursdager
+      </button>
+      <div class="view-toggle" id="main-view-toggle">
         <button id="btn-wheel" class="active" onclick="setView('wheel')">Hjul</button>
         <button id="btn-list" onclick="setView('list')">Tidslinje</button>
       </div>
@@ -196,7 +259,7 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
     </div>
   </div>
 
-  <div class="filter-bar">
+  <div class="filter-bar" id="filter-bar">
     <input type="text" id="filter-text" placeholder="Søk etter elementer…" oninput="applyFilter()">
     <select id="filter-month" onchange="applyFilter()">
       <option value="">Alle måneder</option>
@@ -253,6 +316,50 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
       <button class="btn-sec" onclick="editSelected()">Rediger</button>
       <button class="btn-del" onclick="deleteSelected()">Slett</button>
       <button class="btn-sec" onclick="closeDetail()">Lukk</button>
+    </div>
+  </div>
+
+  <!-- BURSDAG VIEW -->
+  <div id="view-bursdag" class="bursdag-view" style="display:none">
+    <div id="bursdag-next-banner" style="display:none" class="bursdag-next-banner">
+      <div style="font-size:22px">🎂</div>
+      <div class="bn-text" id="bn-text"></div>
+      <div style="text-align:center">
+        <div class="bn-days" id="bn-days"></div>
+        <div class="bn-label">dager igjen</div>
+      </div>
+    </div>
+
+    <div class="bursdag-stats">
+      <div class="bstat">
+        <div class="bstat-label">Kollegaer</div>
+        <div class="bstat-val" id="bstat-total">0</div>
+        <div class="bstat-sub">registrert</div>
+      </div>
+      <div class="bstat">
+        <div class="bstat-label">Kaker levert</div>
+        <div class="bstat-val" id="bstat-cake">0</div>
+        <div class="bstat-sub" id="bstat-cake-sub">i år</div>
+      </div>
+      <div class="bstat">
+        <div class="bstat-label">Skyldes kake</div>
+        <div class="bstat-val" id="bstat-owe" style="color:#b03030">0</div>
+        <div class="bstat-sub">har ikke tatt med</div>
+      </div>
+    </div>
+
+    <div class="bursdag-grid">
+      <div class="bursdag-panel">
+        <div class="bursdag-panel-title">
+          <span>Bursdager</span>
+          <button class="btn-add-person" onclick="openBursdagModal(null)">+ Legg til</button>
+        </div>
+        <div id="bursdag-list"><p class="no-persons">Ingen kollegaer lagt til ennå</p></div>
+      </div>
+      <div class="bursdag-panel">
+        <div class="bursdag-panel-title"><span>Kakestatistikk</span></div>
+        <div id="cake-list"><p class="no-persons">Ingen data ennå</p></div>
+      </div>
     </div>
   </div>
 </div>
@@ -347,6 +454,22 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
   </div>
 </div>
 
+<!-- Bursdag Modal -->
+<div class="modal-bg" id="bursdag-modal-bg">
+  <div class="bmodal">
+    <h2 id="bmodal-title">Legg til kollega</h2>
+    <label>Navn</label>
+    <input type="text" id="b-name" placeholder="f.eks. Linn Hansen">
+    <label>Bursdag</label>
+    <input type="date" id="b-date">
+    <div class="modal-actions">
+      <button class="btn-del" id="b-delete-btn" style="display:none;margin-right:auto" onclick="deletePerson()">Slett</button>
+      <button class="btn-sec" onclick="closeBursdagModal()">Avbryt</button>
+      <button class="btn-primary" onclick="savePerson()">Lagre</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -368,6 +491,8 @@ const api={
 const MONTHS=['Januar','Februar','Mars','April','Mai','Juni','Juli','August','September','Oktober','November','Desember'];
 const COLORS=['#C9624F','#D4845A','#D4A24C','#C9B84C','#8FB84C','#4BA87D','#3a8a6a','#4AABB8','#5A7FBB','#6A6FBB','#B87BAC','#D4627A','#7B6FBF','#6B9E3A','#4a7fb5','#C47A40','#888780','#5a5a5a','#A0522D','#2E7D6B'];
 const RING_COLORS=['#c8d8f0','#b8d0ee','#b8e4d0','#c8eac8','#ddf0a0','#fce87c','#fcd070','#f8b090','#f09090','#d4a0d8','#b8a8e0','#c8d8f0'];
+const AVATAR_COLORS=['#f0e8ff','#e8f0ff','#e8fff4','#fff4e8','#ffe8f0','#f0ffe8','#e8f8ff'];
+const AVATAR_TEXT=['#6b2fa0','#2f4fa0','#2fa06b','#a07a2f','#a02f6b','#4aa02f','#2f8aa0'];
 
 let currentYear=new Date().getFullYear();
 let wheels=[],currentWheelId=null,events=[],filteredEvents=[];
@@ -378,9 +503,247 @@ const TODAY=new Date();TODAY.setHours(0,0,0,0);
 const CX=310,CY=310,OR=295,IR=118,EVENT_ARC_W=22,HENDELSE_R=OR-EVENT_ARC_W-8,HENDELSE_DOT_R=5;
 let tooltipData=[];
 
+// ===== BURSDAG DATA (Supabase) =====
+let persons=[];
+let editingPersonIdx=null;
+let bursdagViewActive=false;
+
+async function loadPersons(){
+  try{
+    const data=await fetch(`${SB_URL}/rest/v1/persons?order=date.asc`,{headers:H}).then(r=>r.json());
+    if(Array.isArray(data))persons=data;
+  }catch(e){toast('Klarte ikke laste bursdager.');}
+}
+async function savePerson(){
+  const name=document.getElementById('b-name').value.trim();
+  const date=document.getElementById('b-date').value;
+  if(!name||!date){toast('Fyll ut navn og dato');return;}
+  try{
+    if(editingPersonIdx!==null){
+      const p=persons[editingPersonIdx];
+      const res=await fetch(`${SB_URL}/rest/v1/persons?id=eq.${p.id}`,{method:'PATCH',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify({name,date})}).then(r=>r.json());
+      if(Array.isArray(res)&&res[0])persons[editingPersonIdx]=res[0];
+    } else {
+      const res=await fetch(`${SB_URL}/rest/v1/persons`,{method:'POST',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify({name,date,cake:false})}).then(r=>r.json());
+      if(Array.isArray(res)&&res[0])persons.push(res[0]);
+    }
+    closeBursdagModal();renderBursdagView();
+    toast(editingPersonIdx!==null?'Oppdatert':'Kollega lagt til');
+  }catch(e){toast('Noe gikk galt');}
+}
+async function deletePerson(){
+  if(editingPersonIdx===null)return;
+  const p=persons[editingPersonIdx];
+  if(!confirm('Slett '+p.name+'?'))return;
+  await fetch(`${SB_URL}/rest/v1/persons?id=eq.${p.id}`,{method:'DELETE',headers:H});
+  persons.splice(editingPersonIdx,1);
+  closeBursdagModal();renderBursdagView();
+  toast('Slettet');
+}
+async function toggleCake(idx){
+  const p=persons[idx];
+  const newVal=!p.cake;
+  await fetch(`${SB_URL}/rest/v1/persons?id=eq.${p.id}`,{method:'PATCH',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify({cake:newVal})}).then(r=>r.json());
+  persons[idx].cake=newVal;
+  renderBursdagView();
+  toast(newVal?`${p.name} – kake registrert!`:`${p.name} – kake fjernet`);
+}
+
+function getInitials(name){
+  const parts=name.trim().split(/\s+/);
+  if(parts.length>=2)return(parts[0][0]+parts[parts.length-1][0]).toUpperCase();
+  return name.substring(0,2).toUpperCase();
+}
+function avatarStyle(idx){
+  const i=idx%AVATAR_COLORS.length;
+  return`background:${AVATAR_COLORS[i]};color:${AVATAR_TEXT[i]};`;
+}
+
+function bursdagThisYear(dateStr){
+  const d=new Date(dateStr);
+  return new Date(currentYear,d.getMonth(),d.getDate());
+}
+function daysBetween(a,b){return Math.round((b-a)/86400000);}
+function daysUntilBursdag(dateStr){
+  const bd=bursdagThisYear(dateStr);bd.setHours(0,0,0,0);
+  const diff=daysBetween(TODAY,bd);
+  if(diff<0){
+    const next=new Date(currentYear+1,bd.getMonth(),bd.getDate());next.setHours(0,0,0,0);
+    return daysBetween(TODAY,next);
+  }
+  return diff;
+}
+function bursdagPassed(dateStr){
+  const bd=bursdagThisYear(dateStr);bd.setHours(0,0,0,0);
+  return bd<TODAY;
+}
+function fmtBursdag(dateStr){
+  const d=new Date(dateStr);
+  return`${d.getDate()}. ${MONTHS[d.getMonth()].toLowerCase()}`;
+}
+
+function getBadge(dateStr){
+  const days=daysUntilBursdag(dateStr);
+  const bd=bursdagThisYear(dateStr);bd.setHours(0,0,0,0);
+  const passed=bd<TODAY;
+  if(days===0)return['badge-today','I dag'];
+  if(!passed&&days<=7)return['badge-soon',`Om ${days} dager`];
+  if(!passed&&days<=31)return['badge-upcoming',`${days} dager`];
+  if(passed)return['badge-passed','Passert'];
+  return['badge-upcoming',`${days} dager`];
+}
+
+function renderBursdagView(){
+  if(!bursdagViewActive)return;
+  const sorted=[...persons].map((p,i)=>({...p,_idx:i})).sort((a,b)=>{
+    const da=bursdagThisYear(a.date),db=bursdagThisYear(b.date);
+    const pa=da<TODAY,pb=db<TODAY;
+    if(pa&&!pb)return 1;if(!pa&&pb)return -1;
+    if(pa&&pb)return da-db;
+    return da-db;
+  });
+
+  // Stats
+  const cakeYes=persons.filter(p=>p.cake).length;
+  const cakeNo=persons.filter(p=>bursdagPassed(p.date)&&!p.cake).length;
+  document.getElementById('bstat-total').textContent=persons.length;
+  document.getElementById('bstat-cake').textContent=cakeYes;
+  document.getElementById('bstat-owe').textContent=cakeNo;
+
+  // Next banner
+  const upcoming=sorted.filter(p=>!bursdagPassed(p.date));
+  const banner=document.getElementById('bursdag-next-banner');
+  if(upcoming.length){
+    const next=upcoming[0];
+    const days=daysUntilBursdag(next.date);
+    banner.style.display='flex';
+    document.getElementById('bn-days').textContent=days;
+    document.getElementById('bn-text').innerHTML=days===0
+      ?`<strong>${next.name}</strong> har bursdag i dag!`
+      :`Neste bursdag: <strong>${next.name}</strong> – ${fmtBursdag(next.date)}`;
+  } else banner.style.display='none';
+
+  // Person list
+  const listEl=document.getElementById('bursdag-list');
+  if(!persons.length){listEl.innerHTML='<p class="no-persons">Ingen kollegaer lagt til ennå</p>';return;}
+  listEl.innerHTML=sorted.map((p,si)=>{
+    const [badgeClass,badgeText]=getBadge(p.date);
+    return`<div class="b-person">
+      <div class="b-avatar" style="${avatarStyle(p._idx)}">${getInitials(p.name)}</div>
+      <div class="b-info">
+        <div class="b-name">${p.name}</div>
+        <div class="b-date">${fmtBursdag(p.date)}</div>
+      </div>
+      <span class="b-badge ${badgeClass}">${badgeText}</span>
+      <button class="b-del-btn" onclick="openBursdagModal(${p._idx})" title="Rediger">✎</button>
+    </div>`;
+  }).join('');
+
+  // Cake list
+  const cakeEl=document.getElementById('cake-list');
+  const withBd=persons.filter(p=>bursdagPassed(p.date)||p.cake);
+  if(!withBd.length&&!persons.length){cakeEl.innerHTML='<p class="no-persons">Ingen data ennå</p>';return;}
+  cakeEl.innerHTML=persons.map((p,i)=>{
+    const passed=bursdagPassed(p.date);
+    const barColor=p.cake?'#4BA87D':'#e0ddd8';
+    const barW=p.cake?'100%':'100%';
+    const statusColor=p.cake?'#4BA87D':'#ccc';
+    return`<div class="cake-row">
+      <span class="cake-name-col">${p.name.split(' ')[0]}</span>
+      <div class="cake-bar-wrap"><div class="cake-bar" style="width:${barW};background:${barColor}"></div></div>
+      <span class="cake-status" style="color:${statusColor}">${p.cake?'✓':'✗'}</span>
+      ${passed||p.cake?`<button class="cake-toggle" onclick="toggleCake(${i})">${p.cake?'Fjern':'Levert'}</button>`:'<span style="font-size:11px;color:#ccc;width:52px;text-align:right">—</span>'}
+    </div>`;
+  }).join('');
+}
+
+function toggleCake(idx){
+  persons[idx].cake=!persons[idx].cake;
+  savePersons();renderBursdagView();
+  toast(persons[idx].cake?`${persons[idx].name} – kake registrert!`:`${persons[idx].name} – kake fjernet`);
+}
+
+function toggleBursdagView(){
+  bursdagViewActive=!bursdagViewActive;
+  const btn=document.getElementById('btn-bursdag-toggle');
+  const bv=document.getElementById('view-bursdag');
+  const wt=document.getElementById('wheel-tabs');
+  const cd=document.getElementById('countdown');
+  const fb=document.getElementById('filter-bar');
+  const vw=document.getElementById('view-wheel');
+  const vl=document.getElementById('view-list');
+  const dc=document.getElementById('detail-card');
+  const mv=document.getElementById('main-view-toggle');
+  const ne=document.getElementById('btn-new-event');
+  const yn=document.getElementById('year-nav-wrap');
+
+  if(bursdagViewActive){
+    btn.classList.add('active');
+    bv.style.display='flex';
+    wt.style.display='none';
+    cd.style.display='none';
+    fb.style.display='none';
+    vw.style.display='none';
+    vl.style.display='none';
+    dc.style.display='none';
+    mv.style.display='none';
+    ne.style.display='none';
+    yn.style.display='none';
+    renderBursdagView();
+  } else {
+    btn.classList.remove('active');
+    bv.style.display='none';
+    wt.style.display='flex';
+    fb.style.display='flex';
+    mv.style.display='flex';
+    ne.style.display='flex';
+    yn.style.display='flex';
+    applyWheelSettings();
+    applyFilter();
+  }
+}
+
+function openBursdagModal(idx){
+  editingPersonIdx=idx;
+  document.getElementById('bmodal-title').textContent=idx===null?'Legg til kollega':'Rediger kollega';
+  document.getElementById('b-delete-btn').style.display=idx!==null?'block':'none';
+  if(idx!==null){
+    document.getElementById('b-name').value=persons[idx].name;
+    document.getElementById('b-date').value=persons[idx].date;
+  } else {
+    document.getElementById('b-name').value='';
+    document.getElementById('b-date').value='';
+  }
+  document.getElementById('bursdag-modal-bg').classList.add('open');
+}
+function closeBursdagModal(){document.getElementById('bursdag-modal-bg').classList.remove('open');editingPersonIdx=null;}
+
+function savePerson(){
+  const name=document.getElementById('b-name').value.trim();
+  const date=document.getElementById('b-date').value;
+  if(!name||!date){toast('Fyll ut navn og dato');return;}
+  if(editingPersonIdx!==null){
+    persons[editingPersonIdx]={...persons[editingPersonIdx],name,date};
+  } else {
+    persons.push({name,date,cake:false});
+  }
+  savePersons();closeBursdagModal();renderBursdagView();
+  toast(editingPersonIdx!==null?'Oppdatert':'Kollega lagt til');
+}
+
+function deletePerson(){
+  if(editingPersonIdx===null)return;
+  if(!confirm('Slett '+persons[editingPersonIdx].name+'?'))return;
+  persons.splice(editingPersonIdx,1);
+  savePersons();closeBursdagModal();renderBursdagView();
+  toast('Slettet');
+}
+
+// ===== ORIGINAL ÅRSHJUL KODE =====
 function cw(){return wheels.find(w=>w.id===currentWheelId)||null;}
 
 async function init(){
+  await loadPersons();
   setYear(currentYear);buildMonthFilter();setupTooltip();
   try{
     const ws=await api.getWheels();
@@ -431,6 +794,7 @@ function applyFilter(){
 
 function updateCountdown(){
   const w=cw();const cd=document.getElementById('countdown');
+  if(bursdagViewActive){cd.style.display='none';return;}
   const next=nextUpcoming(filteredEvents);
   if(!next||daysUntil(next.start_date)<0){cd.style.display='none';return;}
   const days=daysUntil(next.start_date);
@@ -583,11 +947,8 @@ function dateToAngle(ds){
 
 function drawWheel(){
   ctx.clearRect(0,0,620,620);tooltipData=[];
-
-  // Background circle
   ctx.beginPath();ctx.arc(CX,CY,OR+2,0,2*Math.PI);
   ctx.fillStyle='#f7f5f0';ctx.fill();
-
   for(let m=0;m<12;m++){
     const sa=(m/12)*2*Math.PI-Math.PI/2,ea=((m+1)/12)*2*Math.PI-Math.PI/2,isSel=selectedMonth===m;
     ctx.beginPath();ctx.moveTo(CX,CY);ctx.arc(CX,CY,OR,sa,ea);ctx.closePath();
@@ -595,10 +956,7 @@ function drawWheel(){
     ctx.fill();
     ctx.strokeStyle='#f7f5f0';ctx.lineWidth=2.5;ctx.stroke();
   }
-
-  // Event arcs — maks 3 lag, tynnere arcs med mellomrom
-  const ARC_H=10, ARC_GAP=3, MAX_LAYERS=3;
-  // Grupper overlappende events i lag
+  const ARC_H=10,ARC_GAP=3,MAX_LAYERS=3;
   const layers=[];
   const yearEvs=filteredEvents.filter(ev=>{
     const s=new Date(ev.start_date),e=new Date(ev.end_date);
@@ -615,13 +973,8 @@ function drawWheel(){
       if(!overlap){layers[i].push(ev);placed=true;break;}
     }
     if(!placed&&layers.length<MAX_LAYERS){layers.push([ev]);placed=true;}
-    if(!placed){
-      // Tell opp skjulte per måned
-      if(!ev._hidden)ev._hidden=true;
-    }
+    if(!placed){if(!ev._hidden)ev._hidden=true;}
   });
-
-  // Tegn arcs lagvis
   layers.forEach((layer,li)=>{
     const outerR=OR-1-(li*(ARC_H+ARC_GAP));
     const innerR=outerR-ARC_H;
@@ -636,14 +989,11 @@ function drawWheel(){
       ctx.strokeStyle='#f7f5f0';ctx.lineWidth=1;ctx.stroke();
     });
   });
-
-  // Vis "+ N til" per måned hvis flere enn MAX_LAYERS lag
   if(yearEvs.length>0){
     for(let m=0;m<12;m++){
       const mEvs=getEventsForMonth(m,yearEvs);
       const sa=(m/12)*2*Math.PI-Math.PI/2,ea=((m+1)/12)*2*Math.PI-Math.PI/2;
       const mid=(sa+ea)/2;
-      // Tell hvor mange som ikke fikk plass
       const layerIds=layers.flat().map(e=>e.id);
       const hidden=mEvs.filter(e=>!layerIds.includes(e.id));
       if(hidden.length>0){
@@ -657,8 +1007,6 @@ function drawWheel(){
       }
     }
   }
-
-  // Hover-data for arrangement-arcs
   layers.forEach((layer,li)=>{
     const outerR=OR-1-(li*(ARC_H+ARC_GAP));
     const innerR=outerR-ARC_H;
@@ -683,17 +1031,13 @@ function drawWheel(){
       tooltipData.push({x:dx,y:dy,r:HENDELSE_DOT_R+5,text:`${ev.name}\n${h.name}\n${fmtDate(h.date)}`});
     });
   });
-
-  // Month labels
   for(let m=0;m<12;m++){
     const sa=(m/12)*2*Math.PI-Math.PI/2,ea=((m+1)/12)*2*Math.PI-Math.PI/2;
     const evts=getEventsForMonth(m),isSel=selectedMonth===m;
     const mid=(sa+ea)/2,lr=(OR+IR)/2-8;
     const tx=CX+lr*Math.cos(mid),ty=CY+lr*Math.sin(mid);
     ctx.save();ctx.translate(tx,ty);
-    // Normaliser mid til [0, 2PI]
     const a=((mid+2*Math.PI)%(2*Math.PI));
-    // Tekst skal peke utover: høyre side (kl.12 til kl.6) = roter slik tekst leser nedover, venstre = oppover
     const flipText=a>Math.PI;
     ctx.rotate(flipText?mid+Math.PI/2:mid-Math.PI/2);
     ctx.fillStyle=isSel?'#2c2c28':'#444';
@@ -707,8 +1051,6 @@ function drawWheel(){
     }
     ctx.restore();
   }
-
-  // Inner circle
   ctx.beginPath();ctx.arc(CX,CY,IR,0,2*Math.PI);
   ctx.fillStyle='#f7f5f0';ctx.fill();
   ctx.strokeStyle='#e8e4dc';ctx.lineWidth=1.5;ctx.stroke();
@@ -730,15 +1072,11 @@ function setupTooltip(){
     const mx=(e.clientX-r.left)*(620/r.width),my=(e.clientY-r.top)*(620/r.height);
     const dx=mx-CX,dy=my-CY,dist=Math.sqrt(dx*dx+dy*dy);
     let ang=Math.atan2(dy,dx);
-    // Normaliser vinkel til samme system som dateToAngle
     let found=tooltipData.find(td=>{
       if(td.type==='arc'){
         if(dist<td.innerR||dist>td.outerR)return false;
-        // Sjekk om vinkel er innenfor arc
-        let a=ang,sa=td.sa,ea=td.ea;
-        // Normaliser til [-PI, PI] sammenligning
         const norm=v=>((v+3*Math.PI)%(2*Math.PI))-Math.PI;
-        a=norm(a);sa=norm(sa);ea=norm(ea);
+        let a=norm(ang),sa=norm(td.sa),ea=norm(td.ea);
         if(sa<=ea)return a>=sa&&a<=ea;
         return a>=sa||a<=ea;
       }
