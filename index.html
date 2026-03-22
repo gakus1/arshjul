@@ -172,9 +172,26 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
 .bmodal input { width: 100%; border: 1px solid #e4e1d8; border-radius: 10px; padding: 10px 12px; font-size: 14px; font-family: inherit; background: #faf9f6; outline: none; color: #1a1a18; }
 .bmodal input:focus { border-color: #aaa; background: #fff; }
 
+/* Loading overlay */
+.loading-overlay { position: fixed; inset: 0; background: rgba(247,245,240,0.85); z-index: 400; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; backdrop-filter: blur(2px); }
+.loading-spinner { width: 36px; height: 36px; border: 3px solid #e4e1d8; border-top-color: #2c2c28; border-radius: 50%; animation: spin .7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { font-size: 13px; color: #888; font-weight: 500; }
+
+/* Tom state */
+.empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 48px 24px; gap: 12px; text-align: center; }
+.empty-state-icon { font-size: 40px; opacity: 0.4; }
+.empty-state-title { font-size: 15px; font-weight: 600; color: #555; }
+.empty-state-desc { font-size: 13px; color: #aaa; max-width: 260px; line-height: 1.6; }
+
 @media (max-width: 680px) {
-  .wheel-wrap { width: 340px; height: 340px; }
+  .wheel-wrap { width: 92vw; height: 92vw; }
+  .wheel-wrap canvas#wheel { width: 100% !important; height: 100% !important; }
   .below-wheel { grid-template-columns: 1fr; }
+  .topbar-right { gap: 6px; }
+  .wheel-mode-toggle button { padding: 7px 10px; font-size: 12px; }
+  .view-toggle button { padding: 7px 10px; font-size: 12px; }
+  .btn-primary { padding: 8px 12px; font-size: 12px; }
 }
 </style>
 </head>
@@ -384,6 +401,10 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
 </div>
 
 <div class="toast" id="toast"></div>
+<div class="loading-overlay" id="loading-overlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Laster inn data…</div>
+</div>
 
 <script>
 const SB_URL='https://cxqvenjholhtijnrnwau.supabase.co';
@@ -466,7 +487,13 @@ function openBursdagModal(idx){
   document.getElementById('b-delete-btn').style.display=idx!==null?'block':'none';
   document.getElementById('b-name').value=idx!==null?persons[idx].name:'';
   document.getElementById('b-date').value=idx!==null?persons[idx].date:'';
+  modalDirty=false;
   document.getElementById('bursdag-modal-bg').classList.add('open');
+  setTimeout(()=>{
+    ['b-name','b-date'].forEach(id=>{
+      document.getElementById(id).addEventListener('input',markDirty,{once:true});
+    });
+  },100);
 }
 function closeBursdagModal(){document.getElementById('bursdag-modal-bg').classList.remove('open');editingPersonIdx=null;}
 
@@ -564,7 +591,7 @@ function renderBursdagPanel(){
 
   // Liste
   const listEl=document.getElementById('bursdag-list');
-  if(!persons.length){listEl.innerHTML='<p class="no-persons">Ingen kollegaer lagt til ennå</p>';return;}
+  if(!persons.length){listEl.innerHTML=`<div class="empty-state"><div class="empty-state-icon">🎂</div><div class="empty-state-title">Ingen kollegaer ennå</div><div class="empty-state-desc">Trykk «+ Legg til» for å registrere bursdager.</div></div>`;return;}
   listEl.innerHTML=sorted.map(p=>{
     const[bc,bt]=getBadge(p.date);
     const isToday=daysUntilBursdag(p.date)===0;
@@ -609,6 +636,7 @@ function launchConfetti(){
 function cw(){return wheels.find(w=>w.id===currentWheelId)||null;}
 
 async function init(){
+  showLoading(true);
   await loadPersons();
   setYear(currentYear);buildMonthFilter();setupTooltip();
   try{
@@ -620,6 +648,7 @@ async function init(){
     }
     renderWheelTabs();await loadEvents();
   }catch(e){toast('Nettverksfeil.');}
+  finally{showLoading(false);}
 }
 
 function setYear(y){currentYear=y;document.getElementById('yr-label').textContent=y;document.getElementById('center-year').textContent=y;}
@@ -949,7 +978,7 @@ function renderSidebar(){
   list.innerHTML=evts.length?evts.map(ev=>{
     const live=isActiveNow(ev),nh=nextHendelseText(ev);
     return`<div class="evt-item${live?' active-now':''}" style="border-left-color:${ev.color}"><div class="evt-item-body" onclick="showDetail('${ev.id}')"><div class="en">${ev.name}${live?'<span class="badge-live">Pågår nå</span>':''}</div><div class="ed">${fmtDate(ev.start_date)}${ev.start_date!==ev.end_date?' – '+fmtDate(ev.end_date):''}</div>${nh?`<div class="next-h">↑ ${nh}</div>`:''}</div></div>`;
-  }).join(''):'<p class="empty">Ingen elementer denne måneden</p>';
+  }).join(''):`<div class="empty-state"><div class="empty-state-icon">📭</div><div class="empty-state-title">Ingen elementer</div><div class="empty-state-desc">Ingen arrangementer i ${MONTHS[selectedMonth].toLowerCase()} ennå. Trykk «+ Nytt element» for å legge til.</div></div>`;
 }
 
 function renderLegend(){
@@ -1034,7 +1063,13 @@ function openEventModal(id){
     selectedColor=COLORS[0];
   }
   buildColorGrid();renderPendingHendelser();
+  modalDirty=false;
   document.getElementById('event-modal-bg').classList.add('open');
+  setTimeout(()=>{
+    ['f-name','f-start','f-end','f-notes'].forEach(id=>{
+      document.getElementById(id).addEventListener('input',markDirty,{once:true});
+    });
+  },100);
 }
 function closeEventModal(){document.getElementById('event-modal-bg').classList.remove('open');editingId=null;pendingHendelser=[];}
 function buildColorGrid(){
