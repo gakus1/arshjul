@@ -407,6 +407,33 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
 </div>
 
 <script>
+// Loading
+function showLoading(v){document.getElementById('loading-overlay').style.display=v?'flex':'none';}
+
+// Dirty modal tracking
+let modalDirty=false;
+function markDirty(){modalDirty=true;}
+function confirmClose(fn){
+  if(modalDirty&&!confirm('Du har ulagrede endringer. Vil du lukke uten å lagre?'))return;
+  modalDirty=false;fn();
+}
+
+// ESC + klikk utenfor modal
+document.addEventListener('keydown',e=>{
+  if(e.key!=='Escape')return;
+  if(document.getElementById('event-modal-bg').classList.contains('open'))confirmClose(closeEventModal);
+  else if(document.getElementById('wheel-modal-bg').classList.contains('open'))confirmClose(closeWheelModal);
+  else if(document.getElementById('bursdag-modal-bg').classList.contains('open'))confirmClose(closeBursdagModal);
+});
+document.querySelectorAll('.modal-bg').forEach(bg=>{
+  bg.addEventListener('click',e=>{
+    if(e.target!==bg)return;
+    if(bg.id==='event-modal-bg')confirmClose(closeEventModal);
+    else if(bg.id==='wheel-modal-bg')confirmClose(closeWheelModal);
+    else if(bg.id==='bursdag-modal-bg')confirmClose(closeBursdagModal);
+  });
+});
+
 const SB_URL='https://cxqvenjholhtijnrnwau.supabase.co';
 const SB_KEY='sb_publishable_pn7_PfMvVPVpI421gQtWmQ_tyDGgmFc';
 const H={'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY};
