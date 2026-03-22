@@ -9,8 +9,6 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'Inter', system-ui, sans-serif; background: #f7f5f0; color: #1a1a18; min-height: 100vh; }
 .app { display: flex; flex-direction: column; align-items: center; padding: 32px 20px 100px; gap: 24px; }
-
-/* Top bar */
 .topbar { width: 100%; max-width: 980px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
 .topbar h1 { font-size: 20px; font-weight: 600; letter-spacing: -0.3px; color: #1a1a18; }
 .year-nav { display: flex; align-items: center; gap: 6px; }
@@ -19,18 +17,14 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #f7f5f0; color: 
 .year-nav span { font-size: 17px; font-weight: 600; min-width: 52px; text-align: center; letter-spacing: -0.3px; }
 .btn-primary { background: #2c2c28; color: #f7f5f0; border: none; border-radius: 10px; padding: 9px 18px; font-size: 13px; font-weight: 500; cursor: pointer; font-family: inherit; letter-spacing: 0.1px; transition: background .15s; }
 .btn-primary:hover { background: #3d3d38; }
-.topbar-right { display: flex; align-items: center; gap: 10px; }
+.topbar-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .view-toggle { display: flex; border: 1px solid #e4e1d8; border-radius: 10px; overflow: hidden; background: #fff; }
 .view-toggle button { background: none; border: none; padding: 7px 16px; cursor: pointer; font-size: 13px; font-weight: 500; color: #888; font-family: inherit; transition: all .15s; }
 .view-toggle button.active { background: #2c2c28; color: #f7f5f0; }
-
-/* Bursdag knapp */
-.btn-bursdag { background: #fff; border: 1px solid #e4e1d8; border-radius: 10px; padding: 8px 16px; font-size: 13px; font-weight: 500; cursor: pointer; font-family: inherit; color: #555; transition: all .15s; display: flex; align-items: center; gap: 7px; }
-.btn-bursdag:hover { background: #fdf6ff; border-color: #c9a8e0; color: #7a3fa0; }
-.btn-bursdag.active { background: #f3e8ff; border-color: #b07fd0; color: #6b2fa0; }
-.bursdag-dot { width: 8px; height: 8px; border-radius: 50%; background: #a855f7; }
-
-/* Wheel tabs */
+.wheel-mode-toggle { display: flex; border: 1px solid #e4d4f8; border-radius: 10px; overflow: hidden; background: #fff; }
+.wheel-mode-toggle button { background: none; border: none; padding: 7px 14px; cursor: pointer; font-size: 13px; font-weight: 500; color: #888; font-family: inherit; transition: all .15s; display: flex; align-items: center; gap: 6px; }
+.wheel-mode-toggle button.active { background: #6b2fa0; color: #fff; }
+.wheel-mode-toggle button .mdot { width: 7px; height: 7px; border-radius: 50%; }
 .wheel-tabs { width: 100%; max-width: 980px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .wheel-tab { display: flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 10px; border: 1px solid #e4e1d8; background: #fff; cursor: pointer; font-size: 13px; font-weight: 500; transition: all .15s; }
 .wheel-tab:hover { background: #f5f2ea; border-color: #ccc; }
@@ -40,35 +34,23 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #f7f5f0; color: 
 .wheel-tab .tab-settings:hover { opacity: 1; }
 .btn-add-wheel { padding: 8px 14px; border-radius: 10px; border: 1px dashed #ccc; background: transparent; cursor: pointer; font-size: 13px; font-weight: 500; color: #999; font-family: inherit; transition: all .15s; }
 .btn-add-wheel:hover { background: #f5f2ea; color: #555; border-color: #aaa; }
-
-/* Countdown */
 .countdown { width: 100%; max-width: 980px; background: linear-gradient(135deg, #2c2c28 0%, #3d3d38 100%); border-radius: 16px; padding: 18px 24px; display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
 .countdown-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 .countdown-text { font-size: 14px; color: rgba(247,245,240,0.75); flex: 1; }
 .countdown-text strong { color: #f7f5f0; font-weight: 600; }
 .countdown-days { font-size: 28px; font-weight: 600; color: #f7f5f0; letter-spacing: -1px; }
 .countdown-label { font-size: 11px; color: rgba(247,245,240,0.5); text-align: center; font-weight: 500; text-transform: uppercase; letter-spacing: .06em; }
-
-/* Filter */
 .filter-bar { width: 100%; max-width: 980px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
 .filter-bar input { flex: 1; min-width: 180px; border: 1px solid #e4e1d8; border-radius: 10px; padding: 9px 14px; font-size: 13px; background: #fff; font-family: inherit; outline: none; color: #1a1a18; transition: border .15s; }
 .filter-bar input:focus { border-color: #aaa; }
 .filter-bar select { border: 1px solid #e4e1d8; border-radius: 10px; padding: 9px 14px; font-size: 13px; background: #fff; font-family: inherit; outline: none; cursor: pointer; color: #1a1a18; }
-
-/* Wheel */
 .wheel-section { display: flex; flex-direction: column; align-items: center; gap: 20px; width: 100%; }
 .wheel-wrap { position: relative; width: 620px; height: 620px; flex-shrink: 0; filter: drop-shadow(0 8px 32px rgba(0,0,0,0.10)); }
 canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
-.center-label { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
-  width: 132px; height: 132px; border-radius: 50%; background: #f7f5f0;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  pointer-events: none; text-align: center; padding: 10px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+.center-label { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 132px; height: 132px; border-radius: 50%; background: #f7f5f0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; text-align: center; padding: 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
 .center-label span:first-child { font-size: 24px; font-weight: 700; letter-spacing: -1px; }
 .center-label span:last-child { font-size: 10px; color: #aaa; margin-top: 3px; font-weight: 500; text-transform: uppercase; letter-spacing: .06em; }
 .tooltip { position: fixed; background: #2c2c28; color: #f7f5f0; padding: 8px 13px; border-radius: 10px; font-size: 12px; font-weight: 500; pointer-events: none; z-index: 500; display: none; max-width: 220px; line-height: 1.6; box-shadow: 0 4px 16px rgba(0,0,0,0.18); }
-
-/* Below wheel */
 .below-wheel { width: 100%; max-width: 980px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
 .card { background: #fff; border: 1px solid #ece9e1; border-radius: 16px; padding: 18px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
 .card-title { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: #aaa; margin-bottom: 12px; }
@@ -85,8 +67,6 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
 .legend { display: flex; flex-wrap: wrap; gap: 8px; max-height: 220px; overflow-y: auto; }
 .leg-item { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 500; }
 .leg-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
-
-/* Timeline */
 .timeline { width: 100%; max-width: 980px; display: flex; flex-direction: column; }
 .tl-month { margin-top: 28px; }
 .tl-month:first-child { margin-top: 0; }
@@ -106,8 +86,6 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
 .tl-h-dot { width: 5px; height: 5px; border-radius: 50%; background: #ddd; flex-shrink: 0; }
 .tl-h-date { font-weight: 600; min-width: 110px; color: #555; }
 .badge-live-tl { font-size: 10px; background: #d4f0e4; color: #1a7a4a; border-radius: 5px; padding: 2px 7px; font-weight: 600; }
-
-/* Detail */
 .detail-card { background: #fff; border: 1px solid #ece9e1; border-radius: 16px; padding: 24px; width: 100%; max-width: 980px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
 .detail-card h2 { font-size: 22px; font-weight: 700; margin-bottom: 4px; letter-spacing: -0.4px; }
 .detail-dates { font-size: 13px; color: #aaa; margin-bottom: 18px; font-weight: 500; }
@@ -125,16 +103,12 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
 .btn-sec:hover { background: #f5f2ea; border-color: #ccc; }
 .btn-del { border: 1px solid #f0c8c8; background: #fff; color: #b03030; border-radius: 10px; padding: 8px 16px; font-size: 13px; font-weight: 500; cursor: pointer; font-family: inherit; transition: all .15s; }
 .btn-del:hover { background: #fdf0f0; }
-
-/* Modal */
 .modal-bg { display: none; position: fixed; inset: 0; background: rgba(20,18,14,.45); z-index: 200; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
 .modal-bg.open { display: flex; }
 .modal { background: #fff; border-radius: 20px; padding: 28px; width: 100%; max-width: 490px; max-height: 92vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.18); }
 .modal h2 { margin-bottom: 20px; font-size: 19px; font-weight: 700; letter-spacing: -0.3px; }
 .modal label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .07em; color: #aaa; display: block; margin-top: 16px; margin-bottom: 5px; }
-.modal input[type=text], .modal input[type=date], .modal textarea {
-  width: 100%; border: 1px solid #e4e1d8; border-radius: 10px; padding: 10px 12px;
-  font-size: 14px; font-family: inherit; background: #faf9f6; outline: none; color: #1a1a18; transition: border .15s; }
+.modal input[type=text], .modal input[type=date], .modal textarea { width: 100%; border: 1px solid #e4e1d8; border-radius: 10px; padding: 10px 12px; font-size: 14px; font-family: inherit; background: #faf9f6; outline: none; color: #1a1a18; transition: border .15s; }
 .modal input:focus, .modal textarea:focus { border-color: #aaa; background: #fff; }
 .modal textarea { height: 90px; resize: vertical; }
 .modal .row { display: flex; gap: 12px; }
@@ -150,8 +124,6 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
 .toggle-slider:before { content: ''; position: absolute; width: 14px; height: 14px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: .2s; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
 .toggle input:checked + .toggle-slider { background: #2c2c28; }
 .toggle input:checked + .toggle-slider:before { transform: translateX(16px); }
-
-/* Color picker */
 .color-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
 .color-swatch { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform .12s; outline: 2.5px solid transparent; outline-offset: 2px; }
 .color-swatch:hover { transform: scale(1.15); }
@@ -169,45 +141,29 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
 .toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); background: #2c2c28; color: #f7f5f0; padding: 11px 22px; border-radius: 12px; font-size: 13px; font-weight: 500; z-index: 300; opacity: 0; transition: opacity .3s; pointer-events: none; box-shadow: 0 4px 20px rgba(0,0,0,0.18); }
 .toast.show { opacity: 1; }
 
-/* ===== BURSDAG VIEW ===== */
-.bursdag-view { width: 100%; max-width: 980px; display: flex; flex-direction: column; gap: 20px; }
-.bursdag-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-.bstat { background: #fff; border: 1px solid #ece9e1; border-radius: 16px; padding: 18px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
-.bstat-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: #aaa; margin-bottom: 8px; }
-.bstat-val { font-size: 28px; font-weight: 700; letter-spacing: -1px; color: #1a1a18; }
-.bstat-sub { font-size: 12px; color: #aaa; margin-top: 4px; font-weight: 500; }
-.bursdag-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+/* Bursdag-panel under hjulet */
 .bursdag-panel { background: #fff; border: 1px solid #ece9e1; border-radius: 16px; padding: 18px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
 .bursdag-panel-title { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: #aaa; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; }
-.b-person { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #f0ede6; }
+.b-person { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid #f0ede6; }
 .b-person:last-child { border-bottom: none; padding-bottom: 0; }
-.b-avatar { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0; }
+.b-avatar { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; flex-shrink: 0; }
 .b-info { flex: 1; }
-.b-name { font-size: 14px; font-weight: 600; color: #1a1a18; }
-.b-date { font-size: 12px; color: #aaa; margin-top: 2px; }
+.b-name { font-size: 13px; font-weight: 600; color: #1a1a18; }
+.b-date { font-size: 11px; color: #aaa; margin-top: 1px; }
 .b-badge { font-size: 11px; padding: 3px 10px; border-radius: 8px; font-weight: 600; white-space: nowrap; }
 .badge-today { background: #f0e8ff; color: #6b2fa0; }
 .badge-soon { background: #fff4e0; color: #8a5a00; }
 .badge-upcoming { background: #e8f5ee; color: #1a6640; }
 .badge-passed { background: #f0f0ee; color: #888; }
-.cake-row { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid #f0ede6; }
-.cake-row:last-child { border-bottom: none; }
-.cake-name-col { width: 100px; font-size: 13px; color: #1a1a18; font-weight: 500; flex-shrink: 0; }
-.cake-bar-wrap { flex: 1; height: 7px; background: #f0ede6; border-radius: 4px; overflow: hidden; }
-.cake-bar { height: 100%; border-radius: 4px; }
-.cake-status { font-size: 12px; font-weight: 600; width: 28px; text-align: right; flex-shrink: 0; }
-.cake-toggle { background: none; border: 1px solid #e4e1d8; border-radius: 8px; padding: 3px 10px; font-size: 11px; cursor: pointer; font-family: inherit; color: #888; transition: all .15s; flex-shrink: 0; }
-.cake-toggle:hover { background: #f5f2ea; }
-.btn-add-person { background: #2c2c28; color: #f7f5f0; border: none; border-radius: 10px; padding: 7px 14px; font-size: 12px; font-weight: 500; cursor: pointer; font-family: inherit; }
-.btn-add-person:hover { background: #3d3d38; }
-.b-del-btn { background: none; border: none; color: #ddd; cursor: pointer; font-size: 16px; padding: 0 4px; transition: color .15s; }
+.b-del-btn { background: none; border: none; color: #ddd; cursor: pointer; font-size: 15px; padding: 0 4px; transition: color .15s; }
 .b-del-btn:hover { color: #c04040; }
-.bursdag-next-banner { background: linear-gradient(135deg, #6b2fa0 0%, #9b4fd0 100%); border-radius: 16px; padding: 18px 24px; display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
-.bursdag-next-banner .bn-text { font-size: 14px; color: rgba(255,255,255,0.8); flex: 1; }
-.bursdag-next-banner .bn-text strong { color: #fff; font-weight: 600; }
-.bn-days { font-size: 28px; font-weight: 700; color: #fff; letter-spacing: -1px; }
-.bn-label { font-size: 11px; color: rgba(255,255,255,0.5); text-align: center; font-weight: 500; text-transform: uppercase; letter-spacing: .06em; }
-.no-persons { font-size: 13px; color: #ccc; padding: 8px 0; }
+.btn-add-person { background: #2c2c28; color: #f7f5f0; border: none; border-radius: 10px; padding: 5px 12px; font-size: 12px; font-weight: 500; cursor: pointer; font-family: inherit; }
+.btn-add-person:hover { background: #3d3d38; }
+.no-persons { font-size: 13px; color: #ccc; padding: 4px 0; }
+
+/* Bursdag banner */
+.bursdag-today-banner { background: linear-gradient(135deg,#6b2fa0,#9b4fd0); border-radius: 16px; padding: 16px 24px; display: flex; align-items: center; gap: 14px; position: relative; overflow: hidden; }
+.bursdag-soon-banner { background: #fff; border: 1px solid #e4d4f8; border-radius: 16px; padding: 14px 24px; display: flex; align-items: center; gap: 14px; }
 
 /* Bursdag modal */
 .bmodal { background: #fff; border-radius: 20px; padding: 28px; width: 100%; max-width: 420px; max-height: 92vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.18); }
@@ -219,8 +175,6 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
 @media (max-width: 680px) {
   .wheel-wrap { width: 340px; height: 340px; }
   .below-wheel { grid-template-columns: 1fr; }
-  .bursdag-stats { grid-template-columns: 1fr 1fr; }
-  .bursdag-grid { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -229,17 +183,21 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
   <div class="topbar">
     <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
       <h1>Årshjul</h1>
-      <div class="year-nav" id="year-nav-wrap">
+      <div class="year-nav">
         <button onclick="changeYear(-1)">←</button>
         <span id="yr-label"></span>
         <button onclick="changeYear(1)">→</button>
       </div>
     </div>
     <div class="topbar-right">
-      <button class="btn-bursdag" id="btn-bursdag-toggle" onclick="toggleBursdagView()">
-        <div class="bursdag-dot"></div>
-        Bursdager
-      </button>
+      <div class="wheel-mode-toggle">
+        <button id="btn-mode-arr" class="active" onclick="setWheelMode('arrangementer')">
+          <div class="mdot" style="background:#5A7FBB"></div> Arrangementer
+        </button>
+        <button id="btn-mode-bursdag" onclick="setWheelMode('bursdager')">
+          <div class="mdot" style="background:#a855f7"></div> Bursdager
+        </button>
+      </div>
       <div class="view-toggle" id="main-view-toggle">
         <button id="btn-wheel" class="active" onclick="setView('wheel')">Hjul</button>
         <button id="btn-list" onclick="setView('list')">Tidslinje</button>
@@ -274,7 +232,7 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
         <span id="center-name">Årshjul</span>
       </div>
     </div>
-    <div class="below-wheel">
+    <div class="below-wheel" id="below-wheel-arr">
       <div class="card">
         <div class="card-title">Valgt måned</div>
         <div style="font-size:20px;font-weight:700;letter-spacing:-0.3px" id="sel-month">—</div>
@@ -290,6 +248,30 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
           <button onclick="toggleLegend()" id="legend-btn" style="background:none;border:1px solid #e4e1d8;border-radius:7px;padding:3px 10px;font-size:11px;font-weight:600;cursor:pointer;color:#888;font-family:inherit">Vis</button>
         </div>
         <div class="legend" id="legend" style="display:none;margin-top:12px"><p class="empty">Ingen elementer ennå</p></div>
+      </div>
+    </div>
+
+    <!-- Bursdag-panel under hjulet -->
+    <div id="below-wheel-bursdag" style="display:none;width:100%;max-width:980px;display:none;flex-direction:column;gap:14px;">
+      <div id="bursdag-today-banner" class="bursdag-today-banner" style="display:none">
+        <canvas id="confetti-canvas" style="position:absolute;inset:0;pointer-events:none;width:100%;height:100%"></canvas>
+        <div style="font-size:24px;position:relative">🎂</div>
+        <div style="font-size:15px;color:#fff;flex:1;position:relative" id="today-banner-text"></div>
+      </div>
+      <div id="bursdag-soon-banner" class="bursdag-soon-banner" style="display:none">
+        <div style="width:9px;height:9px;border-radius:50%;background:#a855f7;flex-shrink:0"></div>
+        <div style="font-size:14px;color:#555;flex:1" id="soon-banner-text"></div>
+        <div style="text-align:center">
+          <div style="font-size:24px;font-weight:700;color:#6b2fa0;letter-spacing:-1px" id="soon-banner-days"></div>
+          <div style="font-size:11px;color:#aaa;font-weight:500;text-transform:uppercase;letter-spacing:.06em">dager igjen</div>
+        </div>
+      </div>
+      <div class="bursdag-panel">
+        <div class="bursdag-panel-title">
+          <span>Bursdager</span>
+          <button class="btn-add-person" onclick="openBursdagModal(null)">+ Legg til</button>
+        </div>
+        <div id="bursdag-list"><p class="no-persons">Ingen kollegaer lagt til ennå</p></div>
       </div>
     </div>
   </div>
@@ -312,70 +294,7 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
       <div class="detail-section-title">Notater</div>
       <div class="detail-notes" id="det-notes"></div>
     </div>
-    <div class="detail-actions" id="det-actions">
-      <button class="btn-sec" onclick="editSelected()">Rediger</button>
-      <button class="btn-del" onclick="deleteSelected()">Slett</button>
-      <button class="btn-sec" onclick="closeDetail()">Lukk</button>
-    </div>
-  </div>
-
-  <!-- BURSDAG VIEW -->
-  <div id="view-bursdag" class="bursdag-view" style="display:none">
-    <div id="bursdag-today-banner" style="display:none;background:linear-gradient(135deg,#6b2fa0,#9b4fd0);border-radius:16px;padding:18px 24px;align-items:center;gap:18px;flex-wrap:wrap;position:relative;overflow:hidden;">
-      <canvas id="confetti-canvas" style="position:absolute;inset:0;pointer-events:none;width:100%;height:100%"></canvas>
-      <div style="font-size:28px">🎂</div>
-      <div style="font-size:15px;color:#fff;flex:1;" id="today-banner-text"></div>
-    </div>
-
-    <div id="bursdag-soon-banner" style="display:none;background:#fff;border:1px solid #e4d4f8;border-radius:16px;padding:16px 24px;align-items:center;gap:14px;flex-wrap:wrap;">
-      <div style="width:10px;height:10px;border-radius:50%;background:#a855f7;flex-shrink:0"></div>
-      <div style="font-size:14px;color:#555;flex:1;" id="soon-banner-text"></div>
-      <div style="text-align:center">
-        <div style="font-size:26px;font-weight:700;color:#6b2fa0;letter-spacing:-1px" id="soon-banner-days"></div>
-        <div style="font-size:11px;color:#aaa;font-weight:500;text-transform:uppercase;letter-spacing:.06em">dager igjen</div>
-      </div>
-    </div>
-
-    <div id="bursdag-next-banner" style="display:none" class="bursdag-next-banner">
-      <div style="font-size:22px">🎂</div>
-      <div class="bn-text" id="bn-text"></div>
-      <div style="text-align:center">
-        <div class="bn-days" id="bn-days"></div>
-        <div class="bn-label">dager igjen</div>
-      </div>
-    </div>
-
-    <div class="bursdag-stats">
-      <div class="bstat">
-        <div class="bstat-label">Kollegaer</div>
-        <div class="bstat-val" id="bstat-total">0</div>
-        <div class="bstat-sub">registrert</div>
-      </div>
-      <div class="bstat">
-        <div class="bstat-label">Kaker levert</div>
-        <div class="bstat-val" id="bstat-cake">0</div>
-        <div class="bstat-sub" id="bstat-cake-sub">i år</div>
-      </div>
-      <div class="bstat">
-        <div class="bstat-label">Skyldes kake</div>
-        <div class="bstat-val" id="bstat-owe" style="color:#b03030">0</div>
-        <div class="bstat-sub">har ikke tatt med</div>
-      </div>
-    </div>
-
-    <div class="bursdag-grid">
-      <div class="bursdag-panel">
-        <div class="bursdag-panel-title">
-          <span>Bursdager</span>
-          <button class="btn-add-person" onclick="openBursdagModal(null)">+ Legg til</button>
-        </div>
-        <div id="bursdag-list"><p class="no-persons">Ingen kollegaer lagt til ennå</p></div>
-      </div>
-      <div class="bursdag-panel">
-        <div class="bursdag-panel-title"><span>Kakerangering 🏆</span></div>
-        <div id="cake-list"><p class="no-persons">Ingen data ennå</p></div>
-      </div>
-    </div>
+    <div class="detail-actions" id="det-actions"></div>
   </div>
 </div>
 
@@ -387,7 +306,7 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
     <h2 id="event-modal-title">Nytt element</h2>
     <label id="lbl-name">Navn</label>
     <input id="f-name" type="text">
-    <div class="row" id="date-row">
+    <div class="row">
       <div><label id="lbl-start-date">Startdato</label><input id="f-start" type="date" onchange="onStartChange()"></div>
       <div id="end-date-col"><label>Sluttdato</label><input id="f-end" type="date"></div>
     </div>
@@ -422,44 +341,23 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
   <div class="modal">
     <h2 id="wheel-modal-title">Nytt årshjul</h2>
     <label>Navn på årshjulet</label>
-    <input id="w-name" type="text" placeholder="f.eks. Bursdager">
+    <input id="w-name" type="text">
     <label>Farge på fanen</label>
     <div class="color-grid" id="wheel-color-grid"></div>
     <div class="modal-section">
       <div class="modal-section-title">Tilpass tekster</div>
-      <label>Hva heter et element?</label>
-      <input id="w-item-label" type="text" placeholder="Arrangement">
-      <label>Hva heter en hendelse?</label>
-      <input id="w-event-label" type="text" placeholder="Hendelse">
-      <label>Nedtellingstekst</label>
-      <input id="w-countdown-label" type="text" placeholder="Neste arrangement">
+      <label>Hva heter et element?</label><input id="w-item-label" type="text" placeholder="Arrangement">
+      <label>Hva heter en hendelse?</label><input id="w-event-label" type="text" placeholder="Hendelse">
+      <label>Nedtellingstekst</label><input id="w-countdown-label" type="text" placeholder="Neste arrangement">
     </div>
     <div class="modal-section">
       <div class="modal-section-title">Innstillinger</div>
-      <div class="toggle-row">
-        <label>Nedtelling viser neste hendelse</label>
-        <label class="toggle"><input type="checkbox" id="w-countdown-hendelse"><span class="toggle-slider"></span></label>
-      </div>
-      <div class="toggle-row">
-        <label>Standard visning: Tidslinje</label>
-        <label class="toggle"><input type="checkbox" id="w-default-list"><span class="toggle-slider"></span></label>
-      </div>
-      <div class="toggle-row">
-        <label>Skrivebeskyttet</label>
-        <label class="toggle"><input type="checkbox" id="w-readonly"><span class="toggle-slider"></span></label>
-      </div>
-      <div class="toggle-row">
-        <label>Egen farge per hendelse</label>
-        <label class="toggle"><input type="checkbox" id="w-hendelse-color"><span class="toggle-slider"></span></label>
-      </div>
-      <div class="toggle-row">
-        <label>Vis hendelser</label>
-        <label class="toggle"><input type="checkbox" id="w-show-hendelser" checked><span class="toggle-slider"></span></label>
-      </div>
-      <div class="toggle-row">
-        <label>Vis notater</label>
-        <label class="toggle"><input type="checkbox" id="w-show-notes" checked><span class="toggle-slider"></span></label>
-      </div>
+      <div class="toggle-row"><label>Nedtelling viser neste hendelse</label><label class="toggle"><input type="checkbox" id="w-countdown-hendelse"><span class="toggle-slider"></span></label></div>
+      <div class="toggle-row"><label>Standard visning: Tidslinje</label><label class="toggle"><input type="checkbox" id="w-default-list"><span class="toggle-slider"></span></label></div>
+      <div class="toggle-row"><label>Skrivebeskyttet</label><label class="toggle"><input type="checkbox" id="w-readonly"><span class="toggle-slider"></span></label></div>
+      <div class="toggle-row"><label>Egen farge per hendelse</label><label class="toggle"><input type="checkbox" id="w-hendelse-color"><span class="toggle-slider"></span></label></div>
+      <div class="toggle-row"><label>Vis hendelser</label><label class="toggle"><input type="checkbox" id="w-show-hendelser" checked><span class="toggle-slider"></span></label></div>
+      <div class="toggle-row"><label>Vis notater</label><label class="toggle"><input type="checkbox" id="w-show-notes" checked><span class="toggle-slider"></span></label></div>
     </div>
     <div class="modal-actions">
       <button class="btn-del" id="w-delete-btn" style="display:none;margin-right:auto" onclick="deleteWheel()">Slett årshjul</button>
@@ -508,27 +406,30 @@ const COLORS=['#C9624F','#D4845A','#D4A24C','#C9B84C','#8FB84C','#4BA87D','#3a8a
 const RING_COLORS=['#c8d8f0','#b8d0ee','#b8e4d0','#c8eac8','#ddf0a0','#fce87c','#fcd070','#f8b090','#f09090','#d4a0d8','#b8a8e0','#c8d8f0'];
 const AVATAR_COLORS=['#f0e8ff','#e8f0ff','#e8fff4','#fff4e8','#ffe8f0','#f0ffe8','#e8f8ff'];
 const AVATAR_TEXT=['#6b2fa0','#2f4fa0','#2fa06b','#a07a2f','#a02f6b','#4aa02f','#2f8aa0'];
+const BURSDAG_COLOR='#a855f7';
+const WARN_DAYS=7;
 
 let currentYear=new Date().getFullYear();
 let wheels=[],currentWheelId=null,events=[],filteredEvents=[];
 let selectedMonth=null,selectedId=null,editingId=null,editingWheelId=null;
-let selectedColor=COLORS[0],selectedWheelColor=COLORS[0];
+let selectedColor=COLORS[0];
 let pendingHendelser=[],currentView='wheel';
+let wheelMode='arrangementer'; // 'arrangementer' | 'bursdager'
 const TODAY=new Date();TODAY.setHours(0,0,0,0);
-const CX=310,CY=310,OR=295,IR=118,EVENT_ARC_W=22,HENDELSE_R=OR-EVENT_ARC_W-8,HENDELSE_DOT_R=5;
+const CX=310,CY=310,OR=295,IR=118,HENDELSE_R=265,HENDELSE_DOT_R=5;
 let tooltipData=[];
 
-// ===== BURSDAG DATA (Supabase) =====
+// ===== PERSONS (Supabase) =====
 let persons=[];
 let editingPersonIdx=null;
-let bursdagViewActive=false;
 
 async function loadPersons(){
   try{
-    const data=await fetch(`${SB_URL}/rest/v1/persons?order=date.asc`,{headers:H}).then(r=>r.json());
-    if(Array.isArray(data))persons=data;
+    const d=await fetch(`${SB_URL}/rest/v1/persons?order=date.asc`,{headers:H}).then(r=>r.json());
+    if(Array.isArray(d))persons=d;
   }catch(e){toast('Klarte ikke laste bursdager.');}
 }
+
 async function savePerson(){
   const name=document.getElementById('b-name').value.trim();
   const date=document.getElementById('b-date').value;
@@ -538,132 +439,134 @@ async function savePerson(){
       const p=persons[editingPersonIdx];
       const res=await fetch(`${SB_URL}/rest/v1/persons?id=eq.${p.id}`,{method:'PATCH',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify({name,date})}).then(r=>r.json());
       if(Array.isArray(res)&&res[0])persons[editingPersonIdx]=res[0];
-    } else {
+    }else{
       const res=await fetch(`${SB_URL}/rest/v1/persons`,{method:'POST',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify({name,date,cake:false})}).then(r=>r.json());
       if(Array.isArray(res)&&res[0])persons.push(res[0]);
     }
-    closeBursdagModal();renderBursdagView();
+    closeBursdagModal();
+    if(wheelMode==='bursdager'){drawWheel();renderBursdagPanel();}
     toast(editingPersonIdx!==null?'Oppdatert':'Kollega lagt til');
   }catch(e){toast('Noe gikk galt');}
 }
+
 async function deletePerson(){
   if(editingPersonIdx===null)return;
   const p=persons[editingPersonIdx];
   if(!confirm('Slett '+p.name+'?'))return;
   await fetch(`${SB_URL}/rest/v1/persons?id=eq.${p.id}`,{method:'DELETE',headers:H});
   persons.splice(editingPersonIdx,1);
-  closeBursdagModal();renderBursdagView();
+  closeBursdagModal();
+  if(wheelMode==='bursdager'){drawWheel();renderBursdagPanel();}
   toast('Slettet');
 }
-async function toggleCake(idx){
-  const p=persons[idx];
-  const newVal=!p.cake;
-  await fetch(`${SB_URL}/rest/v1/persons?id=eq.${p.id}`,{method:'PATCH',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify({cake:newVal})}).then(r=>r.json());
-  persons[idx].cake=newVal;
-  renderBursdagView();
-  toast(newVal?`${p.name} – kake registrert!`:`${p.name} – kake fjernet`);
-}
 
-function getInitials(name){
-  const parts=name.trim().split(/\s+/);
-  if(parts.length>=2)return(parts[0][0]+parts[parts.length-1][0]).toUpperCase();
-  return name.substring(0,2).toUpperCase();
+function openBursdagModal(idx){
+  editingPersonIdx=idx;
+  document.getElementById('bmodal-title').textContent=idx===null?'Legg til kollega':'Rediger kollega';
+  document.getElementById('b-delete-btn').style.display=idx!==null?'block':'none';
+  document.getElementById('b-name').value=idx!==null?persons[idx].name:'';
+  document.getElementById('b-date').value=idx!==null?persons[idx].date:'';
+  document.getElementById('bursdag-modal-bg').classList.add('open');
 }
-function avatarStyle(idx){
-  const i=idx%AVATAR_COLORS.length;
-  return`background:${AVATAR_COLORS[i]};color:${AVATAR_TEXT[i]};`;
-}
+function closeBursdagModal(){document.getElementById('bursdag-modal-bg').classList.remove('open');editingPersonIdx=null;}
 
-function bursdagThisYear(dateStr){
-  const d=new Date(dateStr);
-  return new Date(currentYear,d.getMonth(),d.getDate());
-}
-function daysBetween(a,b){return Math.round((b-a)/86400000);}
-function daysUntilBursdag(dateStr){
-  const bd=bursdagThisYear(dateStr);bd.setHours(0,0,0,0);
-  const diff=daysBetween(TODAY,bd);
-  if(diff<0){
-    const next=new Date(currentYear+1,bd.getMonth(),bd.getDate());next.setHours(0,0,0,0);
-    return daysBetween(TODAY,next);
-  }
+// Bursdag helpers
+function bursdagThisYear(ds){const d=new Date(ds);return new Date(currentYear,d.getMonth(),d.getDate());}
+function daysUntilBursdag(ds){
+  const bd=bursdagThisYear(ds);bd.setHours(0,0,0,0);
+  const diff=Math.round((bd-TODAY)/86400000);
+  if(diff<0){const n=new Date(currentYear+1,bd.getMonth(),bd.getDate());n.setHours(0,0,0,0);return Math.round((n-TODAY)/86400000);}
   return diff;
 }
-function bursdagPassed(dateStr){
-  const bd=bursdagThisYear(dateStr);bd.setHours(0,0,0,0);
-  return bd<TODAY;
-}
-function fmtBursdag(dateStr){
-  const d=new Date(dateStr);
-  return`${d.getDate()}. ${MONTHS[d.getMonth()].toLowerCase()}`;
-}
-
-function getBadge(dateStr){
-  const days=daysUntilBursdag(dateStr);
-  const bd=bursdagThisYear(dateStr);bd.setHours(0,0,0,0);
-  const passed=bd<TODAY;
+function bursdagPassed(ds){const bd=bursdagThisYear(ds);bd.setHours(0,0,0,0);return bd<TODAY;}
+function fmtBursdag(ds){const d=new Date(ds);return`${d.getDate()}. ${MONTHS[d.getMonth()].toLowerCase()}`;}
+function getBadge(ds){
+  const days=daysUntilBursdag(ds);
+  const passed=bursdagPassed(ds);
   if(days===0)return['badge-today','I dag'];
   if(!passed&&days<=7)return['badge-soon',`Om ${days} dager`];
   if(!passed&&days<=31)return['badge-upcoming',`${days} dager`];
   if(passed)return['badge-passed','Passert'];
   return['badge-upcoming',`${days} dager`];
 }
+function getInitials(name){const p=name.trim().split(/\s+/);return p.length>=2?(p[0][0]+p[p.length-1][0]).toUpperCase():name.substring(0,2).toUpperCase();}
+function avatarStyle(idx){const i=idx%AVATAR_COLORS.length;return`background:${AVATAR_COLORS[i]};color:${AVATAR_TEXT[i]};`;}
 
-const WARN_DAYS=7;
+// ===== WHEEL MODE TOGGLE =====
+function setWheelMode(mode){
+  wheelMode=mode;
+  document.getElementById('btn-mode-arr').classList.toggle('active',mode==='arrangementer');
+  document.getElementById('btn-mode-bursdag').classList.toggle('active',mode==='bursdager');
 
-function renderBursdagView(){
-  if(!bursdagViewActive)return;
-  const sorted=[...persons].map((p,i)=>({...p,_idx:i})).sort((a,b)=>{
-    const da=bursdagThisYear(a.date),db=bursdagThisYear(b.date);
-    const pa=da<TODAY,pb=db<TODAY;
-    if(pa&&!pb)return 1;if(!pa&&pb)return -1;
-    if(pa&&pb)return da-db;
-    return da-db;
-  });
+  const arrBelow=document.getElementById('below-wheel-arr');
+  const bdBelow=document.getElementById('below-wheel-bursdag');
+  const wheelTabs=document.getElementById('wheel-tabs');
+  const filterBar=document.getElementById('filter-bar');
+  const btnNew=document.getElementById('btn-new-event');
+  const mainToggle=document.getElementById('main-view-toggle');
+  const countdown=document.getElementById('countdown');
 
-  // Stats
-  const cakeYes=persons.filter(p=>p.cake).length;
-  const cakeNo=persons.filter(p=>bursdagPassed(p.date)&&!p.cake).length;
-  document.getElementById('bstat-total').textContent=persons.length;
-  document.getElementById('bstat-cake').textContent=cakeYes;
-  document.getElementById('bstat-owe').textContent=cakeNo;
+  if(mode==='bursdager'){
+    arrBelow.style.display='none';
+    bdBelow.style.display='flex';
+    wheelTabs.style.display='none';
+    filterBar.style.display='none';
+    btnNew.style.display='none';
+    countdown.style.display='none';
+    mainToggle.style.display='none';
+    document.getElementById('center-name').textContent='Bursdager';
+    // Vis kun hjulvisning
+    document.getElementById('view-wheel').style.display='flex';
+    document.getElementById('view-list').style.display='none';
+    drawWheel();
+    renderBursdagPanel();
+  } else {
+    arrBelow.style.display='grid';
+    bdBelow.style.display='none';
+    wheelTabs.style.display='flex';
+    filterBar.style.display='flex';
+    btnNew.style.display='flex';
+    mainToggle.style.display='flex';
+    applyWheelSettings();
+    applyFilter();
+  }
+}
 
-  // Today banner (konfetti)
+// Bursdag-panel under hjulet i bursdag-modus
+function renderBursdagPanel(){
+  // Bannere
   const todayPeople=persons.filter(p=>daysUntilBursdag(p.date)===0);
   const todayBanner=document.getElementById('bursdag-today-banner');
   if(todayPeople.length){
     todayBanner.style.display='flex';
-    document.getElementById('today-banner-text').innerHTML=
-      `<strong style="font-size:17px">${todayPeople.map(p=>p.name).join(' & ')}</strong> har bursdag i dag! 🎉`;
+    document.getElementById('today-banner-text').innerHTML=`<strong>${todayPeople.map(p=>p.name).join(' & ')}</strong> har bursdag i dag! 🎉`;
     launchConfetti();
   } else todayBanner.style.display='none';
 
-  // Soon banner (X dager igjen)
+  const sorted=[...persons].map((p,i)=>({...p,_idx:i})).sort((a,b)=>{
+    const da=bursdagThisYear(a.date),db=bursdagThisYear(b.date);
+    const pa=da<TODAY,pb=db<TODAY;
+    if(pa&&!pb)return 1;if(!pa&&pb)return-1;
+    return da-db;
+  });
+
   const upcoming=sorted.filter(p=>!bursdagPassed(p.date)&&daysUntilBursdag(p.date)>0);
   const soonBanner=document.getElementById('bursdag-soon-banner');
-  const nextBanner=document.getElementById('bursdag-next-banner');
   if(upcoming.length){
     const next=upcoming[0];
     const days=daysUntilBursdag(next.date);
-    nextBanner.style.display='none';
     if(days<=WARN_DAYS){
       soonBanner.style.display='flex';
-      document.getElementById('soon-banner-text').innerHTML=
-        `Husk: <strong>${next.name}</strong> har bursdag ${fmtBursdag(next.date)} – hvem tar med kake?`;
+      document.getElementById('soon-banner-text').innerHTML=`Husk: <strong>${next.name}</strong> har bursdag ${fmtBursdag(next.date)}!`;
       document.getElementById('soon-banner-days').textContent=days;
-    } else {
-      soonBanner.style.display='none';
-      nextBanner.style.display='flex';
-      document.getElementById('bn-days').textContent=days;
-      document.getElementById('bn-text').innerHTML=
-        `Neste bursdag: <strong>${next.name}</strong> – ${fmtBursdag(next.date)}`;
-    }
-  } else { soonBanner.style.display='none'; nextBanner.style.display='none'; }
+    } else soonBanner.style.display='none';
+  } else soonBanner.style.display='none';
 
-  // Person list
+  // Liste
   const listEl=document.getElementById('bursdag-list');
   if(!persons.length){listEl.innerHTML='<p class="no-persons">Ingen kollegaer lagt til ennå</p>';return;}
-  listEl.innerHTML=sorted.map((p)=>{
-    const [badgeClass,badgeText]=getBadge(p.date);
+  listEl.innerHTML=sorted.map(p=>{
+    const[bc,bt]=getBadge(p.date);
     const isToday=daysUntilBursdag(p.date)===0;
     return`<div class="b-person"${isToday?' style="background:#fdf4ff;border-radius:10px;padding:6px 8px;margin:-6px -8px"':''}>
       <div class="b-avatar" style="${avatarStyle(p._idx)}">${getInitials(p.name)}</div>
@@ -671,28 +574,8 @@ function renderBursdagView(){
         <div class="b-name">${p.name}${isToday?' 🎂':''}</div>
         <div class="b-date">${fmtBursdag(p.date)}</div>
       </div>
-      <span class="b-badge ${badgeClass}">${badgeText}</span>
+      <span class="b-badge ${bc}">${bt}</span>
       <button class="b-del-btn" onclick="openBursdagModal(${p._idx})" title="Rediger">✎</button>
-    </div>`;
-  }).join('');
-
-  // Cake ranking
-  const cakeEl=document.getElementById('cake-list');
-  if(!persons.length){cakeEl.innerHTML='<p class="no-persons">Ingen data ennå</p>';return;}
-  const ranked=[...persons].map((p,i)=>({...p,_idx:i})).sort((a,b)=>{
-    if(b.cake!==a.cake)return(b.cake?1:0)-(a.cake?1:0);
-    return a.name.localeCompare(b.name);
-  });
-  const medals=['🥇','🥈','🥉'];
-  cakeEl.innerHTML=ranked.map((p,ri)=>{
-    const passed=bursdagPassed(p.date);
-    const medal=p.cake&&ri<3?medals[ri]:'';
-    return`<div class="cake-row">
-      <span style="width:22px;font-size:15px;text-align:center;flex-shrink:0">${medal||`<span style="font-size:12px;color:#ccc">${ri+1}</span>`}</span>
-      <span class="cake-name-col">${p.name.split(' ')[0]}</span>
-      <div class="cake-bar-wrap"><div class="cake-bar" style="width:100%;background:${p.cake?'#4BA87D':'#eee'}"></div></div>
-      <span class="cake-status" style="color:${p.cake?'#4BA87D':'#ccc'}">${p.cake?'✓':'✗'}</span>
-      ${passed||p.cake?`<button class="cake-toggle" onclick="toggleCake(${p._idx})">${p.cake?'Fjern':'Levert'}</button>`:'<span style="font-size:11px;color:#ccc;width:52px;text-align:right">—</span>'}
     </div>`;
   }).join('');
 }
@@ -722,68 +605,7 @@ function launchConfetti(){
   draw();
 }
 
-function toggleCake(idx){
-  persons[idx].cake=!persons[idx].cake;
-  renderBursdagView();
-  toast(persons[idx].cake?`${persons[idx].name} – kake registrert!`:`${persons[idx].name} – kake fjernet`);
-}
-
-function toggleBursdagView(){
-  bursdagViewActive=!bursdagViewActive;
-  const btn=document.getElementById('btn-bursdag-toggle');
-  const bv=document.getElementById('view-bursdag');
-  const wt=document.getElementById('wheel-tabs');
-  const cd=document.getElementById('countdown');
-  const fb=document.getElementById('filter-bar');
-  const vw=document.getElementById('view-wheel');
-  const vl=document.getElementById('view-list');
-  const dc=document.getElementById('detail-card');
-  const mv=document.getElementById('main-view-toggle');
-  const ne=document.getElementById('btn-new-event');
-  const yn=document.getElementById('year-nav-wrap');
-
-  if(bursdagViewActive){
-    btn.classList.add('active');
-    bv.style.display='flex';
-    wt.style.display='none';
-    cd.style.display='none';
-    fb.style.display='none';
-    vw.style.display='none';
-    vl.style.display='none';
-    dc.style.display='none';
-    mv.style.display='none';
-    ne.style.display='none';
-    yn.style.display='none';
-    renderBursdagView();
-  } else {
-    btn.classList.remove('active');
-    bv.style.display='none';
-    wt.style.display='flex';
-    fb.style.display='flex';
-    mv.style.display='flex';
-    ne.style.display='flex';
-    yn.style.display='flex';
-    applyWheelSettings();
-    applyFilter();
-  }
-}
-
-function openBursdagModal(idx){
-  editingPersonIdx=idx;
-  document.getElementById('bmodal-title').textContent=idx===null?'Legg til kollega':'Rediger kollega';
-  document.getElementById('b-delete-btn').style.display=idx!==null?'block':'none';
-  if(idx!==null){
-    document.getElementById('b-name').value=persons[idx].name;
-    document.getElementById('b-date').value=persons[idx].date;
-  } else {
-    document.getElementById('b-name').value='';
-    document.getElementById('b-date').value='';
-  }
-  document.getElementById('bursdag-modal-bg').classList.add('open');
-}
-function closeBursdagModal(){document.getElementById('bursdag-modal-bg').classList.remove('open');editingPersonIdx=null;}
-
-// ===== ORIGINAL ÅRSHJUL KODE =====
+// ===== ÅRSHJUL =====
 function cw(){return wheels.find(w=>w.id===currentWheelId)||null;}
 
 async function init(){
@@ -801,7 +623,7 @@ async function init(){
 }
 
 function setYear(y){currentYear=y;document.getElementById('yr-label').textContent=y;document.getElementById('center-year').textContent=y;}
-function changeYear(d){setYear(currentYear+d);applyFilter();}
+function changeYear(d){setYear(currentYear+d);applyFilter();if(wheelMode==='bursdager'){drawWheel();renderBursdagPanel();}}
 
 async function loadEvents(){
   if(!currentWheelId)return;
@@ -838,7 +660,7 @@ function applyFilter(){
 
 function updateCountdown(){
   const w=cw();const cd=document.getElementById('countdown');
-  if(bursdagViewActive){cd.style.display='none';return;}
+  if(wheelMode==='bursdager'){cd.style.display='none';return;}
   const next=nextUpcoming(filteredEvents);
   if(!next||daysUntil(next.start_date)<0){cd.style.display='none';return;}
   const days=daysUntil(next.start_date);
@@ -846,15 +668,10 @@ function updateCountdown(){
   document.getElementById('cd-dot').style.background=next.color;
   document.getElementById('cd-days').textContent=days;
   const label=w?w.countdown_label:'Neste arrangement';
-  document.getElementById('cd-text').innerHTML=days===0
-    ?`<strong>${next.name}</strong> starter i dag!`
-    :`${label}: <strong>${next.name}</strong> – ${fmtDate(next.start_date)}`;
+  document.getElementById('cd-text').innerHTML=days===0?`<strong>${next.name}</strong> starter i dag!`:`${label}: <strong>${next.name}</strong> – ${fmtDate(next.start_date)}`;
 }
 
-function nextUpcoming(evList){
-  return evList.filter(e=>{const s=new Date(e.start_date);s.setHours(0,0,0,0);return s>=TODAY;})
-    .sort((a,b)=>new Date(a.start_date)-new Date(b.start_date))[0]||null;
-}
+function nextUpcoming(evList){return evList.filter(e=>{const s=new Date(e.start_date);s.setHours(0,0,0,0);return s>=TODAY;}).sort((a,b)=>new Date(a.start_date)-new Date(b.start_date))[0]||null;}
 function daysUntil(d){const dt=new Date(d);dt.setHours(0,0,0,0);return Math.round((dt-TODAY)/86400000);}
 function isActiveNow(ev){const s=new Date(ev.start_date);s.setHours(0,0,0,0);const e=new Date(ev.end_date);e.setHours(23,59,59,0);return TODAY>=s&&TODAY<=e;}
 
@@ -903,51 +720,26 @@ function openWheelModal(id){
     document.getElementById('w-show-notes').checked=w.show_notes!==false;
     wheelColorSelected=w.color||'#5A7FBB';
   }else{
-    document.getElementById('w-name').value='';
-    document.getElementById('w-item-label').value='';
-    document.getElementById('w-event-label').value='';
-    document.getElementById('w-countdown-label').value='';
-    document.getElementById('w-countdown-hendelse').checked=false;
-    document.getElementById('w-default-list').checked=false;
-    document.getElementById('w-readonly').checked=false;
-    document.getElementById('w-hendelse-color').checked=false;
-    document.getElementById('w-show-hendelser').checked=true;
-    document.getElementById('w-show-notes').checked=true;
+    ['w-name','w-item-label','w-event-label','w-countdown-label'].forEach(id=>document.getElementById(id).value='');
+    ['w-countdown-hendelse','w-default-list','w-readonly','w-hendelse-color'].forEach(id=>document.getElementById(id).checked=false);
+    ['w-show-hendelser','w-show-notes'].forEach(id=>document.getElementById(id).checked=true);
     wheelColorSelected=COLORS[0];
   }
   buildWheelColorGrid();
   document.getElementById('wheel-modal-bg').classList.add('open');
 }
 function closeWheelModal(){document.getElementById('wheel-modal-bg').classList.remove('open');editingWheelId=null;}
-
 function buildWheelColorGrid(){
-  document.getElementById('wheel-color-grid').innerHTML=COLORS.map(c=>
-    `<div class="color-swatch${c===wheelColorSelected?' selected':''}" style="background:${c}" onclick="pickWheelColor('${c}')"></div>`).join('');
+  document.getElementById('wheel-color-grid').innerHTML=COLORS.map(c=>`<div class="color-swatch${c===wheelColorSelected?' selected':''}" style="background:${c}" onclick="pickWheelColor('${c}')"></div>`).join('');
 }
 function pickWheelColor(c){
   wheelColorSelected=c;
-  document.querySelectorAll('#wheel-color-grid .color-swatch').forEach(s=>{
-    s.classList.remove('selected');
-    if(rgbToHex(s.style.backgroundColor).toLowerCase()===c.toLowerCase())s.classList.add('selected');
-  });
+  document.querySelectorAll('#wheel-color-grid .color-swatch').forEach(s=>{s.classList.remove('selected');if(rgbToHex(s.style.backgroundColor).toLowerCase()===c.toLowerCase())s.classList.add('selected');});
 }
-
 async function saveWheel(){
   const name=document.getElementById('w-name').value.trim();
   if(!name){toast('Gi årshjulet et navn');return;}
-  const payload={
-    name,color:wheelColorSelected,
-    item_label:document.getElementById('w-item-label').value.trim()||'Arrangement',
-    event_label:document.getElementById('w-event-label').value.trim()||'Hendelse',
-    countdown_label:document.getElementById('w-countdown-label').value.trim()||'Neste arrangement',
-    hendelse_color:document.getElementById('w-hendelse-color').checked,
-    countdown_hendelse:document.getElementById('w-countdown-hendelse')?.checked||false,
-    default_view:document.getElementById('w-default-list').checked?'list':'wheel',
-    single_day:false,
-    readonly:document.getElementById('w-readonly').checked,
-    show_hendelser:document.getElementById('w-show-hendelser').checked,
-    show_notes:document.getElementById('w-show-notes').checked,
-  };
+  const payload={name,color:wheelColorSelected,item_label:document.getElementById('w-item-label').value.trim()||'Arrangement',event_label:document.getElementById('w-event-label').value.trim()||'Hendelse',countdown_label:document.getElementById('w-countdown-label').value.trim()||'Neste arrangement',hendelse_color:document.getElementById('w-hendelse-color').checked,countdown_hendelse:document.getElementById('w-countdown-hendelse').checked||false,default_view:document.getElementById('w-default-list').checked?'list':'wheel',single_day:false,readonly:document.getElementById('w-readonly').checked,show_hendelser:document.getElementById('w-show-hendelser').checked,show_notes:document.getElementById('w-show-notes').checked};
   if(editingWheelId){
     const res=await api.updateWheel(editingWheelId,payload);
     if(Array.isArray(res)&&res[0]){const i=wheels.findIndex(w=>w.id===editingWheelId);wheels[i]=res[0];}
@@ -958,7 +750,6 @@ async function saveWheel(){
   closeWheelModal();renderWheelTabs();applyWheelSettings();applyFilter();
   toast(editingWheelId?'Årshjul oppdatert':'Årshjul opprettet');
 }
-
 async function deleteWheel(){
   if(!editingWheelId||!confirm('Slett dette årshjulet og alle elementer i det?'))return;
   await api.deleteWheel(editingWheelId);
@@ -983,6 +774,10 @@ function getEventsForMonth(m,src){
   });
 }
 
+function getPersonsForMonth(m){
+  return persons.filter(p=>{const d=new Date(p.date);return d.getMonth()===m;});
+}
+
 function dateToAngle(ds){
   const d=new Date(ds);d.setHours(12);
   const s=new Date(currentYear,0,1),e=new Date(currentYear+1,0,1);
@@ -991,37 +786,61 @@ function dateToAngle(ds){
 
 function drawWheel(){
   ctx.clearRect(0,0,620,620);tooltipData=[];
-  ctx.beginPath();ctx.arc(CX,CY,OR+2,0,2*Math.PI);
-  ctx.fillStyle='#f7f5f0';ctx.fill();
+  ctx.beginPath();ctx.arc(CX,CY,OR+2,0,2*Math.PI);ctx.fillStyle='#f7f5f0';ctx.fill();
+
   for(let m=0;m<12;m++){
     const sa=(m/12)*2*Math.PI-Math.PI/2,ea=((m+1)/12)*2*Math.PI-Math.PI/2,isSel=selectedMonth===m;
     ctx.beginPath();ctx.moveTo(CX,CY);ctx.arc(CX,CY,OR,sa,ea);ctx.closePath();
-    ctx.fillStyle=isSel?RING_COLORS[m]+'ff':RING_COLORS[m]+'aa';
-    ctx.fill();
+    ctx.fillStyle=isSel?RING_COLORS[m]+'ff':RING_COLORS[m]+'aa';ctx.fill();
     ctx.strokeStyle='#f7f5f0';ctx.lineWidth=2.5;ctx.stroke();
   }
+
+  if(wheelMode==='arrangementer'){
+    drawArrangementArcs();
+  } else {
+    drawBursdagDots();
+  }
+
+  // Månedsetiketter
+  for(let m=0;m<12;m++){
+    const sa=(m/12)*2*Math.PI-Math.PI/2,ea=((m+1)/12)*2*Math.PI-Math.PI/2;
+    const count=wheelMode==='arrangementer'?getEventsForMonth(m).length:getPersonsForMonth(m).length;
+    const isSel=selectedMonth===m;
+    const mid=(sa+ea)/2,lr=(OR+IR)/2-8;
+    const tx=CX+lr*Math.cos(mid),ty=CY+lr*Math.sin(mid);
+    ctx.save();ctx.translate(tx,ty);
+    const a=((mid+2*Math.PI)%(2*Math.PI));
+    ctx.rotate(a>Math.PI?mid+Math.PI/2:mid-Math.PI/2);
+    ctx.fillStyle=isSel?'#2c2c28':'#444';
+    ctx.font=`${isSel?'700':'500'} 13px Inter,system-ui`;
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(MONTHS[m].substring(0,3),0,count?-8:0);
+    if(count){
+      ctx.font='500 10px Inter,system-ui';
+      ctx.fillStyle=isSel?'#2c2c28':'#888';
+      ctx.fillText(count+(wheelMode==='bursdager'?' 🎂':' arr.'),0,8);
+    }
+    ctx.restore();
+  }
+
+  ctx.beginPath();ctx.arc(CX,CY,IR,0,2*Math.PI);ctx.fillStyle='#f7f5f0';ctx.fill();
+  ctx.strokeStyle='#e8e4dc';ctx.lineWidth=1.5;ctx.stroke();
+}
+
+function drawArrangementArcs(){
   const ARC_H=10,ARC_GAP=3,MAX_LAYERS=3;
   const layers=[];
-  const yearEvs=filteredEvents.filter(ev=>{
-    const s=new Date(ev.start_date),e=new Date(ev.end_date);
-    return!(s.getFullYear()>currentYear||e.getFullYear()<currentYear);
-  });
+  const yearEvs=filteredEvents.filter(ev=>!(new Date(ev.start_date).getFullYear()>currentYear||new Date(ev.end_date).getFullYear()<currentYear));
   yearEvs.forEach(ev=>{
     let placed=false;
     for(let i=0;i<layers.length&&i<MAX_LAYERS;i++){
-      const overlap=layers[i].some(e2=>{
-        const s1=new Date(ev.start_date),e1=new Date(ev.end_date);
-        const s2=new Date(e2.start_date),e2e=new Date(e2.end_date);
-        return s1<=e2e&&e1>=s2;
-      });
+      const overlap=layers[i].some(e2=>{const s1=new Date(ev.start_date),e1=new Date(ev.end_date),s2=new Date(e2.start_date),e2e=new Date(e2.end_date);return s1<=e2e&&e1>=s2;});
       if(!overlap){layers[i].push(ev);placed=true;break;}
     }
     if(!placed&&layers.length<MAX_LAYERS){layers.push([ev]);placed=true;}
-    if(!placed){if(!ev._hidden)ev._hidden=true;}
   });
   layers.forEach((layer,li)=>{
-    const outerR=OR-1-(li*(ARC_H+ARC_GAP));
-    const innerR=outerR-ARC_H;
+    const outerR=OR-1-(li*(ARC_H+ARC_GAP)),innerR=outerR-ARC_H;
     layer.forEach(ev=>{
       const s=new Date(ev.start_date),e=new Date(ev.end_date);
       const cs=new Date(Math.max(s,new Date(currentYear,0,1)));
@@ -1031,35 +850,6 @@ function drawWheel(){
       ctx.beginPath();ctx.arc(CX,CY,outerR,sa,ea);ctx.arc(CX,CY,innerR,ea,sa,true);
       ctx.closePath();ctx.fillStyle=ev.color+'ee';ctx.fill();
       ctx.strokeStyle='#f7f5f0';ctx.lineWidth=1;ctx.stroke();
-    });
-  });
-  if(yearEvs.length>0){
-    for(let m=0;m<12;m++){
-      const mEvs=getEventsForMonth(m,yearEvs);
-      const sa=(m/12)*2*Math.PI-Math.PI/2,ea=((m+1)/12)*2*Math.PI-Math.PI/2;
-      const mid=(sa+ea)/2;
-      const layerIds=layers.flat().map(e=>e.id);
-      const hidden=mEvs.filter(e=>!layerIds.includes(e.id));
-      if(hidden.length>0){
-        const r=OR-1-(MAX_LAYERS*(ARC_H+ARC_GAP))-8;
-        const tx=CX+r*Math.cos(mid),ty=CY+r*Math.sin(mid);
-        ctx.save();ctx.translate(tx,ty);
-        ctx.font='600 9px Inter,system-ui';ctx.fillStyle='#888';
-        ctx.textAlign='center';ctx.textBaseline='middle';
-        ctx.fillText(`+${hidden.length}`,0,0);
-        ctx.restore();
-      }
-    }
-  }
-  layers.forEach((layer,li)=>{
-    const outerR=OR-1-(li*(ARC_H+ARC_GAP));
-    const innerR=outerR-ARC_H;
-    layer.forEach(ev=>{
-      const s=new Date(ev.start_date),e=new Date(ev.end_date);
-      const cs=new Date(Math.max(s,new Date(currentYear,0,1)));
-      const ce=new Date(Math.min(e,new Date(currentYear,11,31)));
-      const sa=dateToAngle(cs.toISOString().split('T')[0]);
-      const ea=dateToAngle(ce.toISOString().split('T')[0]);
       tooltipData.push({type:'arc',sa,ea,innerR,outerR,text:`${ev.name}\n${fmtDate(ev.start_date)}${ev.start_date!==ev.end_date?' – '+fmtDate(ev.end_date):''}`,id:ev.id});
     });
   });
@@ -1068,36 +858,46 @@ function drawWheel(){
       if(new Date(h.date).getFullYear()!==currentYear)return;
       const ang=dateToAngle(h.date);
       const dx=CX+HENDELSE_R*Math.cos(ang),dy=CY+HENDELSE_R*Math.sin(ang);
-      ctx.beginPath();ctx.arc(dx,dy,HENDELSE_DOT_R+1,0,2*Math.PI);
-      ctx.fillStyle='#fff';ctx.fill();
-      ctx.beginPath();ctx.arc(dx,dy,HENDELSE_DOT_R,0,2*Math.PI);
-      ctx.fillStyle=h.color||ev.color;ctx.fill();
+      ctx.beginPath();ctx.arc(dx,dy,HENDELSE_DOT_R+1,0,2*Math.PI);ctx.fillStyle='#fff';ctx.fill();
+      ctx.beginPath();ctx.arc(dx,dy,HENDELSE_DOT_R,0,2*Math.PI);ctx.fillStyle=h.color||ev.color;ctx.fill();
       tooltipData.push({x:dx,y:dy,r:HENDELSE_DOT_R+5,text:`${ev.name}\n${h.name}\n${fmtDate(h.date)}`});
     });
   });
-  for(let m=0;m<12;m++){
-    const sa=(m/12)*2*Math.PI-Math.PI/2,ea=((m+1)/12)*2*Math.PI-Math.PI/2;
-    const evts=getEventsForMonth(m),isSel=selectedMonth===m;
-    const mid=(sa+ea)/2,lr=(OR+IR)/2-8;
-    const tx=CX+lr*Math.cos(mid),ty=CY+lr*Math.sin(mid);
-    ctx.save();ctx.translate(tx,ty);
-    const a=((mid+2*Math.PI)%(2*Math.PI));
-    const flipText=a>Math.PI;
-    ctx.rotate(flipText?mid+Math.PI/2:mid-Math.PI/2);
-    ctx.fillStyle=isSel?'#2c2c28':'#444';
-    ctx.font=`${isSel?'700':'500'} 13px Inter,system-ui`;
-    ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.fillText(MONTHS[m].substring(0,3),0,evts.length?-8:0);
-    if(evts.length){
-      ctx.font=`500 10px Inter,system-ui`;
-      ctx.fillStyle=isSel?'#2c2c28':'#888';
-      ctx.fillText(evts.length+' arr.',0,8);
+}
+
+function drawBursdagDots(){
+  // Tegn en arc-ring per måned med antall bursdager, pluss en dot per person
+  const DOT_R=8,DOT_ORBIT=OR-20;
+  persons.forEach((p,i)=>{
+    const d=new Date(p.date);
+    if(d.getMonth()<0)return;
+    // Plasser dot midt i riktig måned + litt offset for å unngå overlapp
+    const m=d.getMonth();
+    const sa=(m/12)*2*Math.PI-Math.PI/2;
+    const ea=((m+1)/12)*2*Math.PI-Math.PI/2;
+    // Fordel prikker jevnt innen måneden basert på dag
+    const daysInMonth=new Date(currentYear,m+1,0).getDate();
+    const dayFrac=(d.getDate()-0.5)/daysInMonth;
+    const ang=sa+(ea-sa)*dayFrac;
+    const dx=CX+DOT_ORBIT*Math.cos(ang),dy=CY+DOT_ORBIT*Math.sin(ang);
+
+    // Uthev hvis bursdag er i dag
+    const isToday=daysUntilBursdag(p.date)===0;
+    if(isToday){
+      ctx.beginPath();ctx.arc(dx,dy,DOT_R+4,0,2*Math.PI);
+      ctx.fillStyle='#f0e8ff';ctx.fill();
     }
-    ctx.restore();
-  }
-  ctx.beginPath();ctx.arc(CX,CY,IR,0,2*Math.PI);
-  ctx.fillStyle='#f7f5f0';ctx.fill();
-  ctx.strokeStyle='#e8e4dc';ctx.lineWidth=1.5;ctx.stroke();
+    ctx.beginPath();ctx.arc(dx,dy,DOT_R+1,0,2*Math.PI);ctx.fillStyle='#fff';ctx.fill();
+    ctx.beginPath();ctx.arc(dx,dy,DOT_R,0,2*Math.PI);
+    ctx.fillStyle=isToday?'#6b2fa0':BURSDAG_COLOR;ctx.fill();
+
+    // Initialer
+    ctx.font='500 8px Inter,system-ui';ctx.fillStyle='#fff';
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(getInitials(p.name),dx,dy);
+
+    tooltipData.push({x:dx,y:dy,r:DOT_R+6,text:`${p.name}\n${fmtBursdag(p.date)}${isToday?' 🎂':''}`});
+  });
 }
 
 canvas.addEventListener('click',e=>{
@@ -1106,7 +906,8 @@ canvas.addEventListener('click',e=>{
   const dist=Math.sqrt(x*x+y*y);if(dist<IR||dist>OR)return;
   let ang=Math.atan2(y,x)+Math.PI/2;if(ang<0)ang+=2*Math.PI;
   selectedMonth=Math.floor((ang/(2*Math.PI))*12);
-  closeDetail();drawWheel();renderSidebar();
+  closeDetail();drawWheel();
+  if(wheelMode==='arrangementer')renderSidebar();
 });
 
 function setupTooltip(){
@@ -1115,8 +916,8 @@ function setupTooltip(){
     const r=canvas.getBoundingClientRect();
     const mx=(e.clientX-r.left)*(620/r.width),my=(e.clientY-r.top)*(620/r.height);
     const dx=mx-CX,dy=my-CY,dist=Math.sqrt(dx*dx+dy*dy);
-    let ang=Math.atan2(dy,dx);
-    let found=tooltipData.find(td=>{
+    const ang=Math.atan2(dy,dx);
+    const found=tooltipData.find(td=>{
       if(td.type==='arc'){
         if(dist<td.innerR||dist>td.outerR)return false;
         const norm=v=>((v+3*Math.PI)%(2*Math.PI))-Math.PI;
@@ -1124,8 +925,7 @@ function setupTooltip(){
         if(sa<=ea)return a>=sa&&a<=ea;
         return a>=sa||a<=ea;
       }
-      const ddx=mx-td.x,ddy=my-td.y;
-      return Math.sqrt(ddx*ddx+ddy*ddy)<=td.r;
+      return Math.sqrt((mx-td.x)**2+(my-td.y)**2)<=td.r;
     });
     if(found){tip.style.display='block';tip.innerHTML=found.text.replace(/\n/g,'<br>');tip.style.left=(e.clientX+14)+'px';tip.style.top=(e.clientY-10)+'px';}
     else tip.style.display='none';
@@ -1142,23 +942,13 @@ function nextHendelseText(ev){
 
 function renderSidebar(){
   const w=cw(),list=document.getElementById('evt-list');
-  if(selectedMonth===null){
-    document.getElementById('sel-month').textContent='—';
-    document.getElementById('sel-count').textContent='';
-    list.innerHTML='<p class="empty">Klikk på en måned</p>';return;
-  }
+  if(selectedMonth===null){document.getElementById('sel-month').textContent='—';document.getElementById('sel-count').textContent='';list.innerHTML='<p class="empty">Klikk på en måned</p>';return;}
   const evts=getEventsForMonth(selectedMonth);
   document.getElementById('sel-month').textContent=MONTHS[selectedMonth];
   document.getElementById('sel-count').textContent=evts.length?evts.length+' '+(w?.item_label||'element')+(evts.length>1?'er':''):'Ingen elementer';
   list.innerHTML=evts.length?evts.map(ev=>{
     const live=isActiveNow(ev),nh=nextHendelseText(ev);
-    return`<div class="evt-item${live?' active-now':''}" style="border-left-color:${ev.color}">
-      <div class="evt-item-body" onclick="showDetail('${ev.id}')">
-        <div class="en">${ev.name}${live?'<span class="badge-live">Pågår nå</span>':''}</div>
-        <div class="ed">${fmtDate(ev.start_date)}${ev.start_date!==ev.end_date?' – '+fmtDate(ev.end_date):''}</div>
-        ${nh?`<div class="next-h">↑ ${nh}</div>`:''}
-      </div>
-    </div>`;
+    return`<div class="evt-item${live?' active-now':''}" style="border-left-color:${ev.color}"><div class="evt-item-body" onclick="showDetail('${ev.id}')"><div class="en">${ev.name}${live?'<span class="badge-live">Pågår nå</span>':''}</div><div class="ed">${fmtDate(ev.start_date)}${ev.start_date!==ev.end_date?' – '+fmtDate(ev.end_date):''}</div>${nh?`<div class="next-h">↑ ${nh}</div>`:''}</div></div>`;
   }).join(''):'<p class="empty">Ingen elementer denne måneden</p>';
 }
 
@@ -1167,11 +957,7 @@ function renderLegend(){
   const items=filteredEvents.filter(e=>new Date(e.start_date).getFullYear()===currentYear||new Date(e.end_date).getFullYear()===currentYear);
   leg.innerHTML=items.length?items.map(e=>`<div class="leg-item"><div class="leg-dot" style="background:${e.color}"></div><span>${e.name}</span></div>`).join(''):'<p class="empty">Ingen elementer ennå</p>';
 }
-
-function toggleLegend(){
-  const leg=document.getElementById('legend'),btn=document.getElementById('legend-btn');
-  const vis=leg.style.display!=='none';leg.style.display=vis?'none':'flex';btn.textContent=vis?'Vis':'Skjul';
-}
+function toggleLegend(){const leg=document.getElementById('legend'),btn=document.getElementById('legend-btn');const vis=leg.style.display!=='none';leg.style.display=vis?'none':'flex';btn.textContent=vis?'Vis':'Skjul';}
 
 function renderTimeline(){
   const w=cw(),cont=document.getElementById('timeline-items');
@@ -1181,25 +967,12 @@ function renderTimeline(){
   items.forEach(ev=>{const m=new Date(ev.start_date).getMonth();if(!byMonth[m])byMonth[m]=[];byMonth[m].push(ev);});
   cont.innerHTML=Object.keys(byMonth).sort((a,b)=>a-b).map(m=>{
     const rows=[];
-    byMonth[m].sort((a,b)=>new Date(a.start_date)-new Date(b.start_date)).forEach(ev=>{
-      let placed=false;
-      for(const row of rows){if(new Date(ev.start_date)>new Date(row[row.length-1].end_date)){row.push(ev);placed=true;break;}}
-      if(!placed)rows.push([ev]);
-    });
-    return`<div class="tl-month"><div class="tl-month-header">${MONTHS[m]} ${currentYear}</div><div class="tl-items">${
-      rows.map(row=>`<div style="display:flex;gap:8px">${row.map(ev=>{
-        const live=isActiveNow(ev);
-        const hRows=w?.show_hendelser!==false?parseHendelser(ev.hendelser).sort((a,b)=>a.date.localeCompare(b.date)).map(h=>`
-          <div class="tl-h-row"><div class="tl-h-dot"></div><span class="tl-h-date">${fmtDate(h.date)}</span><span>${h.name}</span></div>`).join(''):'';
-        return`<div class="tl-item${live?' active-now':''}" style="flex:1;min-width:0" onclick="showDetail('${ev.id}')">
-          <div class="tl-accent" style="background:${ev.color}"></div>
-          <div class="tl-body">
-            <div class="tl-name">${ev.name}${live?'<span class="badge-live-tl">Pågår nå</span>':''}</div>
-            <div class="tl-dates">${fmtDate(ev.start_date)}${ev.start_date!==ev.end_date?' – '+fmtDate(ev.end_date):''}</div>
-            ${hRows?`<div class="tl-hendelser">${hRows}</div>`:''}
-          </div></div>`;
-      }).join('')}</div>`).join('')
-    }</div></div>`;
+    byMonth[m].sort((a,b)=>new Date(a.start_date)-new Date(b.start_date)).forEach(ev=>{let placed=false;for(const row of rows){if(new Date(ev.start_date)>new Date(row[row.length-1].end_date)){row.push(ev);placed=true;break;}}if(!placed)rows.push([ev]);});
+    return`<div class="tl-month"><div class="tl-month-header">${MONTHS[m]} ${currentYear}</div><div class="tl-items">${rows.map(row=>`<div style="display:flex;gap:8px">${row.map(ev=>{
+      const live=isActiveNow(ev);
+      const hRows=w?.show_hendelser!==false?parseHendelser(ev.hendelser).sort((a,b)=>a.date.localeCompare(b.date)).map(h=>`<div class="tl-h-row"><div class="tl-h-dot"></div><span class="tl-h-date">${fmtDate(h.date)}</span><span>${h.name}</span></div>`).join(''):'';
+      return`<div class="tl-item${live?' active-now':''}" style="flex:1;min-width:0" onclick="showDetail('${ev.id}')"><div class="tl-accent" style="background:${ev.color}"></div><div class="tl-body"><div class="tl-name">${ev.name}${live?'<span class="badge-live-tl">Pågår nå</span>':''}</div><div class="tl-dates">${fmtDate(ev.start_date)}${ev.start_date!==ev.end_date?' – '+fmtDate(ev.end_date):''}</div>${hRows?`<div class="tl-hendelser">${hRows}</div>`:''}</div></div>`;
+    }).join('')}</div>`).join('')}</div></div>`;
   }).join('');
 }
 
@@ -1216,26 +989,17 @@ function showDetail(id){
   document.getElementById('det-hendelser-title').textContent=w?.event_label||'Hendelser';
   renderDetailHendelser(ev,w);
   const ro=w?.readonly;
-  document.getElementById('det-actions').innerHTML=ro
-    ?`<button class="btn-sec" onclick="closeDetail()">Lukk</button>`
-    :`<button class="btn-sec" onclick="editSelected()">Rediger</button><button class="btn-del" onclick="deleteSelected()">Slett</button><button class="btn-sec" onclick="closeDetail()">Lukk</button>`;
+  document.getElementById('det-actions').innerHTML=ro?`<button class="btn-sec" onclick="closeDetail()">Lukk</button>`:`<button class="btn-sec" onclick="editSelected()">Rediger</button><button class="btn-del" onclick="deleteSelected()">Slett</button><button class="btn-sec" onclick="closeDetail()">Lukk</button>`;
   const card=document.getElementById('detail-card');card.style.display='block';
   setTimeout(()=>card.scrollIntoView({behavior:'smooth',block:'nearest'}),50);
 }
-
 function renderDetailHendelser(ev,w){
   const hendelser=parseHendelser(ev.hendelser);
   const section=document.getElementById('det-hendelser-section');
   if(!hendelser.length||w?.show_hendelser===false){section.style.display='none';return;}
   section.style.display='block';
-  document.getElementById('det-hendelser').innerHTML=hendelser.sort((a,b)=>a.date.localeCompare(b.date)).map((h,i)=>`
-    <div class="hendelse-row">
-      <span class="h-date">${fmtDate(h.date)}</span>
-      <span class="h-name">${h.name}</span>
-      ${w?.readonly?'':`<button class="h-del" onclick="deleteHendelse('${ev.id}',${i})">×</button>`}
-    </div>`).join('');
+  document.getElementById('det-hendelser').innerHTML=hendelser.sort((a,b)=>a.date.localeCompare(b.date)).map((h,i)=>`<div class="hendelse-row"><span class="h-date">${fmtDate(h.date)}</span><span class="h-name">${h.name}</span>${w?.readonly?'':`<button class="h-del" onclick="deleteHendelse('${ev.id}',${i})">×</button>`}</div>`).join('');
 }
-
 async function deleteHendelse(evId,idx){
   const ev=events.find(e=>e.id===evId);if(!ev)return;
   const h=parseHendelser(ev.hendelser);h.splice(idx,1);ev.hendelser=JSON.stringify(h);
@@ -1246,20 +1010,16 @@ function closeDetail(){document.getElementById('detail-card').style.display='non
 function editSelected(){if(selectedId)openEventModal(selectedId);}
 async function deleteSelected(){
   if(!selectedId||!confirm('Slett dette elementet?'))return;
-  await api.deleteEvent(selectedId);
-  events=events.filter(e=>e.id!==selectedId);closeDetail();applyFilter();toast('Element slettet');
+  await api.deleteEvent(selectedId);events=events.filter(e=>e.id!==selectedId);closeDetail();applyFilter();toast('Element slettet');
 }
 
 function openEventModal(id){
-  const w=cw();
-  editingId=id;pendingHendelser=[];
+  const w=cw();editingId=id;pendingHendelser=[];
   document.getElementById('event-modal-title').textContent=id?`Rediger ${w?.item_label||'element'}`:`Nytt ${w?.item_label||'element'}`;
   document.getElementById('lbl-name').textContent=(w?.item_label||'Element')+' navn';
   document.getElementById('lbl-hendelse').textContent=w?.event_label||'Hendelser';
   document.getElementById('hendelser-section').style.display=w?.show_hendelser!==false?'block':'none';
   document.getElementById('notes-section').style.display=w?.show_notes!==false?'block':'none';
-  document.getElementById('lbl-start-date').textContent='Startdato';
-  document.getElementById('end-date-col').style.display='block';
   if(id){
     const ev=events.find(e=>e.id===id);
     document.getElementById('f-name').value=ev.name;
@@ -1270,22 +1030,16 @@ function openEventModal(id){
     selectedColor=ev.color;
     pendingHendelser=[...parseHendelser(ev.hendelser)];
   }else{
-    document.getElementById('f-name').value='';
-    document.getElementById('f-start').value='';
-    document.getElementById('f-end').value='';
-    document.getElementById('f-notes').value='';
+    ['f-name','f-start','f-end','f-notes'].forEach(i=>document.getElementById(i).value='');
     selectedColor=COLORS[0];
   }
   buildColorGrid();renderPendingHendelser();
   document.getElementById('event-modal-bg').classList.add('open');
 }
 function closeEventModal(){document.getElementById('event-modal-bg').classList.remove('open');editingId=null;pendingHendelser=[];}
-
 function buildColorGrid(){
-  document.getElementById('color-grid').innerHTML=COLORS.map(c=>
-    `<div class="color-swatch${c===selectedColor?' selected':''}" style="background:${c}" onclick="pickColor('${c}')"></div>`).join('');
-  const cc=document.getElementById('custom-color');
-  cc.value=selectedColor;
+  document.getElementById('color-grid').innerHTML=COLORS.map(c=>`<div class="color-swatch${c===selectedColor?' selected':''}" style="background:${c}" onclick="pickColor('${c}')"></div>`).join('');
+  const cc=document.getElementById('custom-color');cc.value=selectedColor;
   cc.oninput=e=>{selectedColor=e.target.value;document.querySelectorAll('#color-grid .color-swatch').forEach(s=>s.classList.remove('selected'));};
 }
 function pickColor(c){
@@ -1293,41 +1047,23 @@ function pickColor(c){
   document.querySelectorAll('#color-grid .color-swatch').forEach(s=>{s.classList.remove('selected');if(rgbToHex(s.style.backgroundColor).toLowerCase()===c.toLowerCase())s.classList.add('selected');});
   document.getElementById('custom-color').value=c;
 }
-function onStartChange(){
-  const start=document.getElementById('f-start').value,endEl=document.getElementById('f-end');
-  endEl.min=start;if(!endEl.value||endEl.value<start)endEl.value=start;
-}
+function onStartChange(){const start=document.getElementById('f-start').value,endEl=document.getElementById('f-end');endEl.min=start;if(!endEl.value||endEl.value<start)endEl.value=start;}
 function rgbToHex(rgb){const m=rgb.match(/\d+/g);if(!m)return rgb;return'#'+m.slice(0,3).map(x=>parseInt(x).toString(16).padStart(2,'0')).join('');}
-
 function addHendelse(){
-  const w=cw();
-  const d=document.getElementById('h-date').value,n=document.getElementById('h-name').value.trim();
+  const w=cw(),d=document.getElementById('h-date').value,n=document.getElementById('h-name').value.trim();
   if(!d||!n){toast('Fyll ut dato og navn');return;}
   const colorEl=document.getElementById('h-color');
-  const color=w?.hendelse_color&&colorEl?colorEl.value:null;
-  pendingHendelser.push({date:d,name:n,...(color?{color}:{})});
+  pendingHendelser.push({date:d,name:n,...(w?.hendelse_color&&colorEl?{color:colorEl.value}:{})});
   document.getElementById('h-date').value='';document.getElementById('h-name').value='';
   renderPendingHendelser();
 }
-
 function removeHendelse(i){pendingHendelser.splice(i,1);renderPendingHendelser();}
 function renderPendingHendelser(){
-  document.getElementById('h-preview').innerHTML=pendingHendelser.map((h,i)=>`
-    <div class="hp-row">
-      ${h.color?`<div style="width:9px;height:9px;border-radius:50%;background:${h.color};flex-shrink:0"></div>`:''}
-      <span><b>${fmtDate(h.date)}</b> – ${h.name}</span>
-      <button onclick="removeHendelse(${i})">×</button>
-    </div>`).join('');
+  document.getElementById('h-preview').innerHTML=pendingHendelser.map((h,i)=>`<div class="hp-row">${h.color?`<div style="width:9px;height:9px;border-radius:50%;background:${h.color};flex-shrink:0"></div>`:''}<span><b>${fmtDate(h.date)}</b> – ${h.name}</span><button onclick="removeHendelse(${i})">×</button></div>`).join('');
 }
-
 async function saveEvent(){
-  const w=cw();
-  const name=document.getElementById('f-name').value.trim();
-  const start=document.getElementById('f-start').value;
-  const end=document.getElementById('f-end').value;
-  const notes=document.getElementById('f-notes').value.trim();
-  if(!name){toast('Fyll ut navn');return;}
-  if(!start){toast('Fyll ut dato');return;}
+  const name=document.getElementById('f-name').value.trim(),start=document.getElementById('f-start').value,end=document.getElementById('f-end').value,notes=document.getElementById('f-notes').value.trim();
+  if(!name){toast('Fyll ut navn');return;}if(!start){toast('Fyll ut dato');return;}
   try{
     const payload={name,start_date:start,end_date:end||start,color:selectedColor,notes,hendelser:JSON.stringify(pendingHendelser),wheel_id:currentWheelId};
     if(editingId){
