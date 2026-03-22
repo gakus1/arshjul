@@ -783,27 +783,6 @@ function openBursdagModal(idx){
 }
 function closeBursdagModal(){document.getElementById('bursdag-modal-bg').classList.remove('open');editingPersonIdx=null;}
 
-function savePerson(){
-  const name=document.getElementById('b-name').value.trim();
-  const date=document.getElementById('b-date').value;
-  if(!name||!date){toast('Fyll ut navn og dato');return;}
-  if(editingPersonIdx!==null){
-    persons[editingPersonIdx]={...persons[editingPersonIdx],name,date};
-  } else {
-    persons.push({name,date,cake:false});
-  }
-  savePersons();closeBursdagModal();renderBursdagView();
-  toast(editingPersonIdx!==null?'Oppdatert':'Kollega lagt til');
-}
-
-function deletePerson(){
-  if(editingPersonIdx===null)return;
-  if(!confirm('Slett '+persons[editingPersonIdx].name+'?'))return;
-  persons.splice(editingPersonIdx,1);
-  savePersons();closeBursdagModal();renderBursdagView();
-  toast('Slettet');
-}
-
 // ===== ORIGINAL ÅRSHJUL KODE =====
 function cw(){return wheels.find(w=>w.id===currentWheelId)||null;}
 
