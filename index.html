@@ -568,11 +568,30 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
 // ══ LOGIN ══
 const PASSWORD='Direkte2025!';
 function doLogin(){
-  const v=document.getElementById('login-input').value;
-  if(v===PASSWORD){localStorage.setItem('vt_auth','1');document.getElementById('login-screen').style.display='none';openModuleSelector();}
-  else{const e=document.getElementById('login-error');e.textContent='Feil passord – prøv igjen.';document.getElementById('login-input').value='';setTimeout(()=>e.textContent='',3000);}
+  const v=document.getElementById('login-input').value.trim();
+  const errEl=document.getElementById('login-error');
+  if(v===PASSWORD){
+    localStorage.setItem('vt_auth','1');
+    const ls=document.getElementById('login-screen');
+    ls.style.opacity='0';
+    ls.style.transition='opacity 0.3s';
+    setTimeout(()=>{ls.style.display='none';openModuleSelector();},300);
+  } else {
+    errEl.textContent='Feil passord – prøv igjen.';
+    document.getElementById('login-input').value='';
+    document.getElementById('login-input').focus();
+    setTimeout(()=>errEl.textContent='',3000);
+  }
 }
-window.addEventListener('load',()=>{if(localStorage.getItem('vt_auth')==='1'){document.getElementById('login-screen').style.display='none';openModuleSelector();}});
+window.addEventListener('load',()=>{
+  if(localStorage.getItem('vt_auth')==='1'){
+    document.getElementById('login-screen').style.display='none';
+    openModuleSelector();
+  } else {
+    document.getElementById('login-screen').style.display='flex';
+    setTimeout(()=>document.getElementById('login-input').focus(),100);
+  }
+});
 
 // ══ MODULES ══
 let currentModule=null;
