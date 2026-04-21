@@ -265,6 +265,10 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
 .c-info { flex: 1; min-width: 0; }
 .c-name { font-size: 13px; font-weight: 600; }
 .c-note { font-size: 12px; color: #888; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.c-tags { display: flex; gap: 5px; margin-top: 4px; flex-wrap: wrap; }
+.c-tag { font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 5px; background: #f0ede6; color: #666; }
+.c-tag-seg { background: #e8f0ff; color: #3a5fa0; }
+.c-tag-mod { background: #e8f5ee; color: #2a6a40; }
 .c-meta { text-align: right; flex-shrink: 0; }
 .c-time { font-size: 12px; font-weight: 500; }
 .c-date { font-size: 11px; color: #888; margin-top: 1px; }
@@ -279,11 +283,22 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
 .ov-table tr:last-child td { border-bottom: none; }
 .ov-table tr:hover td { background: #faf9f6; }
 .ov-av { width: 26px; height: 26px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; margin-right: 8px; vertical-align: middle; }
-#call-modal .modal { max-width: 430px; }
-#call-modal .modal label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .07em; color: #aaa; display: block; margin-top: 14px; margin-bottom: 5px; }
-#call-modal .modal input,#call-modal .modal select,#call-modal .modal textarea { width: 100%; border: 1px solid #e4e1d8; border-radius: 9px; padding: 9px 12px; font-size: 13px; font-family: inherit; background: #faf9f6; outline: none; color: #1a1a18; transition: border .15s; }
-#call-modal .modal input:focus,#call-modal .modal select:focus,#call-modal .modal textarea:focus { border-color: #aaa; background: #fff; }
-#call-modal .modal textarea { height: 70px; resize: vertical; }
+/* Export modal */
+.export-modal { background: #fff; border-radius: 20px; padding: 28px; width: 100%; max-width: 460px; max-height: 92vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.18); }
+.export-modal h2 { margin-bottom: 6px; font-size: 19px; font-weight: 700; }
+.export-modal p { font-size: 13px; color: #888; margin-bottom: 20px; }
+.export-options { display: flex; flex-direction: column; gap: 10px; }
+.export-opt { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border: 1.5px solid #e4e1d8; border-radius: 12px; cursor: pointer; transition: all .15s; background: #faf9f6; }
+.export-opt:hover { border-color: #2c2c28; background: #f5f2ea; }
+.export-opt-icon { font-size: 22px; flex-shrink: 0; }
+.export-opt-info { flex: 1; }
+.export-opt-name { font-size: 14px; font-weight: 600; }
+.export-opt-desc { font-size: 12px; color: #888; margin-top: 2px; }
+.export-opt-btn { background: #2c2c28; color: #f7f5f0; border: none; border-radius: 8px; padding: 7px 14px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit; white-space: nowrap; }
+.export-opt-btn:hover { background: #3d3d38; }
+/* call modal selects */
+#call-modal .modal select { width: 100%; border: 1px solid #e4e1d8; border-radius: 9px; padding: 9px 12px; font-size: 13px; font-family: inherit; background: #faf9f6; outline: none; color: #1a1a18; transition: border .15s; cursor: pointer; }
+#call-modal .modal select:focus { border-color: #aaa; background: #fff; }
 @media(max-width:680px){
   .wheel-wrap{width:92vw;height:92vw;}
   .wheel-wrap canvas#wheel{width:100%!important;height:100%!important;}
@@ -509,7 +524,10 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
 <div id="tool-telefon">
   <div class="tel-header">
     <div class="person-tabs" id="person-tabs"></div>
-    <div style="margin-left:auto"><button class="btn-primary" onclick="openCallModal(null)">+ Ny samtale</button></div>
+    <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+      <button class="btn-sec" onclick="openExportModal()" style="display:flex;align-items:center;gap:6px;font-size:13px;">📥 Eksporter</button>
+      <button class="btn-primary" onclick="openCallModal(null)">+ Ny samtale</button>
+    </div>
   </div>
   <div class="tel-body">
     <div class="tel-stats" id="tel-stats"></div>
@@ -517,6 +535,7 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
       <div class="ql-f ql-grow"><label>Navn / tlf</label><input type="text" id="ql-name" placeholder="Kari Nordmann"></div>
       <div class="ql-f ql-sm"><label>Min.</label><input type="number" id="ql-dur" placeholder="5" min="0" max="999"></div>
       <div class="ql-f ql-md"><label>Retning</label><select id="ql-dir"><option value="inn">📥 Innkommende</option><option value="ut">📤 Utgående</option></select></div>
+      <div class="ql-f ql-md"><label>Segment</label><select id="ql-seg"><option value="">– Velg –</option></select></div>
       <div class="ql-f ql-grow"><label>Notat</label><input type="text" id="ql-note" placeholder="Hva handlet det om?"></div>
       <button class="btn-qlog" onclick="quickLog()">⚡ Logg raskt</button>
     </div>
@@ -539,7 +558,7 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
 
 <!-- CALL MODAL -->
 <div class="modal-bg" id="call-modal">
-  <div class="modal" style="max-width:430px">
+  <div class="modal" style="max-width:480px">
     <h2 id="call-modal-title">Ny samtale</h2>
     <label>Hvem tok samtalen?</label>
     <select id="cm-person"><option>Aleksander</option><option>Sander</option><option>Åse</option><option>Helene</option></select>
@@ -553,6 +572,10 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
       <div style="flex:1"><label>Varighet (min)</label><input type="number" id="cm-dur" placeholder="0" min="0"></div>
       <div style="flex:1"><label>Retning</label><select id="cm-dir"><option value="inn">📥 Innkommende</option><option value="ut">📤 Utgående</option></select></div>
     </div>
+    <div style="display:flex;gap:12px;margin-top:4px">
+      <div style="flex:1"><label>Segment</label><select id="cm-seg"></select></div>
+      <div style="flex:1"><label>Modul</label><select id="cm-mod"></select></div>
+    </div>
     <label>Notat</label>
     <textarea id="cm-note" placeholder="Hva handlet samtalen om?"></textarea>
     <div class="modal-actions">
@@ -563,8 +586,39 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
   </div>
 </div>
 
+<!-- EXPORT MODAL -->
+<div class="modal-bg" id="export-modal">
+  <div class="export-modal">
+    <h2>📥 Eksporter samtaler</h2>
+    <p>Velg hva du vil eksportere som CSV-fil</p>
+    <div class="export-options">
+      <div class="export-opt" onclick="exportCalls('alle')">
+        <div class="export-opt-icon">📋</div>
+        <div class="export-opt-info">
+          <div class="export-opt-name">Alle samtaler</div>
+          <div class="export-opt-desc">Samlet liste for alle ansatte</div>
+        </div>
+        <button class="export-opt-btn">Last ned</button>
+      </div>
+      <div id="export-person-opts"></div>
+    </div>
+    <div style="margin-top:20px;border-top:1px solid #e4e1d8;padding-top:16px">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#bbb;margin-bottom:10px">Filtrer på periode</div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <div style="flex:1"><label style="font-size:11px;color:#aaa;display:block;margin-bottom:4px">Fra dato</label><input type="date" id="exp-from" style="width:100%;border:1px solid #e4e1d8;border-radius:8px;padding:8px 10px;font-size:13px;font-family:inherit;background:#faf9f6;outline:none;"></div>
+        <div style="flex:1"><label style="font-size:11px;color:#aaa;display:block;margin-bottom:4px">Til dato</label><input type="date" id="exp-to" style="width:100%;border:1px solid #e4e1d8;border-radius:8px;padding:8px 10px;font-size:13px;font-family:inherit;background:#faf9f6;outline:none;"></div>
+      </div>
+    </div>
+    <div class="modal-actions"><button class="btn-sec" onclick="closeExportModal()">Lukk</button></div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 <script>
+// ══ CONSTANTS ══
+const SEGMENTS=['-','Arrangør','Sport','Medlem','Annet'];
+const MODULES=['-','Rubic Medlem','Profil','Fakturering og utlegg','Oppgjørsrapporter','Betaling','Innmelding','Påmelding','Funksjonær/Organizer','Rubic Connect','Rubic Aktivitet','Rubic Lokasjon','Rubic Akkreditering','Swedbank','Skytteradmin','NSFF','Regnskap','Integrasjoner','NIF','Generell henvendelse'];
+
 // ══ LOGIN ══
 const PASSWORD='Direkte2025!';
 function doLogin(){
@@ -627,9 +681,29 @@ const tApi={
   patch:(id,c)=>fetch(`${SB_URL}/rest/v1/direct_calls?id=eq.${id}`,{method:'PATCH',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify(c)}).then(r=>r.json()),
   del:id=>fetch(`${SB_URL}/rest/v1/direct_calls?id=eq.${id}`,{method:'DELETE',headers:H}),
 };
+
+function populateSegmentSelects(){
+  // Quick log
+  const qlSeg=document.getElementById('ql-seg');
+  qlSeg.innerHTML=SEGMENTS.map(s=>`<option value="${s==='-'?'':s}">${s}</option>`).join('');
+  // Call modal
+  const cmSeg=document.getElementById('cm-seg');
+  cmSeg.innerHTML=SEGMENTS.map(s=>`<option value="${s==='-'?'':s}">${s}</option>`).join('');
+  // Module select
+  updateModuleSelect('');
+}
+function updateModuleSelect(seg){
+  const cmMod=document.getElementById('cm-mod');
+  cmMod.innerHTML=MODULES.map(m=>`<option value="${m==='-'?'':m}">${m}</option>`).join('');
+}
+
 async function initTelefon(){
   if(!telInited){
     buildPersonTabs();
+    populateSegmentSelects();
+    // Build export person options
+    const cont=document.getElementById('export-person-opts');
+    cont.innerHTML=TEAM.map((p,i)=>`<div class="export-opt" onclick="exportCalls('${p}')"><div class="export-opt-icon"><span style="background:${TBG[i]};color:${TCLR[i]};width:32px;height:32px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700">${p[0]}</span></div><div class="export-opt-info"><div class="export-opt-name">${p}</div><div class="export-opt-desc">Bare samtaler for ${p}</div></div><button class="export-opt-btn">Last ned</button></div>`).join('');
     try{const d=await tApi.get();if(Array.isArray(d))calls=d;}catch(e){toast('Klarte ikke laste samtaler');}
     telInited=true;
   }
@@ -683,7 +757,14 @@ function renderWeekSec(){
   lst.innerHTML=wc.sort((a,b)=>new Date(b.called_at)-new Date(a.called_at)).map(c=>`
     <div class="call-row">
       <div class="c-dir ${c.direction==='ut'?'c-ut':'c-inn'}">${c.direction==='ut'?'↑':'↓'}</div>
-      <div class="c-info"><div class="c-name">${esc(c.contact_name)}</div>${c.notes?`<div class="c-note">${esc(c.notes)}</div>`:''}</div>
+      <div class="c-info">
+        <div class="c-name">${esc(c.contact_name)}</div>
+        ${c.notes?`<div class="c-note">${esc(c.notes)}</div>`:''}
+        <div class="c-tags">
+          ${c.segment?`<span class="c-tag c-tag-seg">${esc(c.segment)}</span>`:''}
+          ${c.module?`<span class="c-tag c-tag-mod">${esc(c.module)}</span>`:''}
+        </div>
+      </div>
       <div class="c-meta"><div class="c-time">${fmtCT(c.called_at)}</div><div class="c-date">${fmtCD(c.called_at)}</div>${c.duration_min>0?`<div class="c-dur">${c.duration_min} min</div>`:''}</div>
       <button class="c-edit" onclick="openCallModal('${c.id}')" title="Rediger">✎</button>
     </div>`).join('');
@@ -702,8 +783,8 @@ function changeWeek(d){weekOffset+=d;renderWeekSec();}
 async function quickLog(){
   const name=document.getElementById('ql-name').value.trim();
   if(!name){toast('Fyll inn navn/tlf');return;}
-  const p={person:activePerson,contact_name:name,duration_min:parseInt(document.getElementById('ql-dur').value)||0,direction:document.getElementById('ql-dir').value,notes:document.getElementById('ql-note').value.trim(),called_at:new Date().toISOString()};
-  try{const r=await tApi.post(p);if(Array.isArray(r)&&r[0])calls.unshift(r[0]);['ql-name','ql-dur','ql-note'].forEach(id=>document.getElementById(id).value='');renderTelAll();toast('Samtale logget!');}catch(e){toast('Noe gikk galt');}
+  const p={person:activePerson,contact_name:name,duration_min:parseInt(document.getElementById('ql-dur').value)||0,direction:document.getElementById('ql-dir').value,segment:document.getElementById('ql-seg').value||null,module:null,notes:document.getElementById('ql-note').value.trim(),called_at:new Date().toISOString()};
+  try{const r=await tApi.post(p);if(Array.isArray(r)&&r[0])calls.unshift(r[0]);['ql-name','ql-dur','ql-note'].forEach(id=>document.getElementById(id).value='');document.getElementById('ql-seg').value='';renderTelAll();toast('Samtale logget!');}catch(e){toast('Noe gikk galt');}
 }
 function openCallModal(id){
   editCallId=id;
@@ -719,6 +800,8 @@ function openCallModal(id){
     document.getElementById('cm-time').value=dt.getHours().toString().padStart(2,'0')+':'+dt.getMinutes().toString().padStart(2,'0');
     document.getElementById('cm-dur').value=c.duration_min||'';
     document.getElementById('cm-dir').value=c.direction||'inn';
+    document.getElementById('cm-seg').value=c.segment||'';
+    document.getElementById('cm-mod').value=c.module||'';
     document.getElementById('cm-note').value=c.notes||'';
   }else{
     document.getElementById('cm-person').value=activePerson;
@@ -727,6 +810,8 @@ function openCallModal(id){
     document.getElementById('cm-time').value=now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');
     document.getElementById('cm-dur').value='';
     document.getElementById('cm-dir').value='inn';
+    document.getElementById('cm-seg').value='';
+    document.getElementById('cm-mod').value='';
   }
   document.getElementById('call-modal').classList.add('open');
 }
@@ -736,7 +821,7 @@ async function saveCall(){
   const name=document.getElementById('cm-name').value.trim();
   if(!name){toast('Fyll inn kontaktnavn');return;}
   const date=document.getElementById('cm-date').value,time=document.getElementById('cm-time').value||'00:00';
-  const p={person:document.getElementById('cm-person').value,contact_name:name,called_at:new Date(date+'T'+time).toISOString(),duration_min:parseInt(document.getElementById('cm-dur').value)||0,direction:document.getElementById('cm-dir').value,notes:document.getElementById('cm-note').value.trim()};
+  const p={person:document.getElementById('cm-person').value,contact_name:name,called_at:new Date(date+'T'+time).toISOString(),duration_min:parseInt(document.getElementById('cm-dur').value)||0,direction:document.getElementById('cm-dir').value,segment:document.getElementById('cm-seg').value||null,module:document.getElementById('cm-mod').value||null,notes:document.getElementById('cm-note').value.trim()};
   try{
     if(editCallId){const r=await tApi.patch(editCallId,p);if(Array.isArray(r)&&r[0]){const i=calls.findIndex(c=>c.id===editCallId);if(i>-1)calls[i]=r[0];}}
     else{const r=await tApi.post(p);if(Array.isArray(r)&&r[0])calls.unshift(r[0]);}
@@ -746,6 +831,42 @@ async function saveCall(){
 async function deleteCall(){
   if(!editCallId||!confirm('Slett denne samtalen?'))return;
   await tApi.del(editCallId);calls=calls.filter(c=>c.id!==editCallId);closeCallModal();renderTelAll();toast('Slettet');
+}
+
+// ══ EXPORT ══
+function openExportModal(){
+  const now=new Date();
+  const firstDay=new Date(now.getFullYear(),now.getMonth(),1);
+  document.getElementById('exp-from').value=firstDay.toISOString().split('T')[0];
+  document.getElementById('exp-to').value=now.toISOString().split('T')[0];
+  document.getElementById('export-modal').classList.add('open');
+}
+function closeExportModal(){document.getElementById('export-modal').classList.remove('open');}
+document.getElementById('export-modal').addEventListener('click',e=>{if(e.target===document.getElementById('export-modal'))closeExportModal();});
+function exportCalls(who){
+  const from=document.getElementById('exp-from').value;
+  const to=document.getElementById('exp-to').value;
+  let data=who==='alle'?calls:calls.filter(c=>c.person===who);
+  if(from)data=data.filter(c=>c.called_at>=from);
+  if(to)data=data.filter(c=>c.called_at<=to+'T23:59:59');
+  if(!data.length){toast('Ingen samtaler i valgt periode');return;}
+  const headers=['Dato','Tid','Person','Kontakt','Retning','Varighet (min)','Segment','Modul','Notat'];
+  const rows=data.map(c=>{
+    const dt=new Date(c.called_at);
+    const dato=`${dt.getDate().toString().padStart(2,'0')}.${(dt.getMonth()+1).toString().padStart(2,'0')}.${dt.getFullYear()}`;
+    const tid=dt.getHours().toString().padStart(2,'0')+':'+dt.getMinutes().toString().padStart(2,'0');
+    return[dato,tid,c.person||'',c.contact_name||'',c.direction==='ut'?'Utgående':'Innkommende',c.duration_min||0,c.segment||'',c.module||'',c.notes||''].map(v=>`"${String(v).replace(/"/g,'""')}"`).join(';');
+  });
+  const csv='\uFEFF'+[headers.join(';'),...rows].join('\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  const dateStr=new Date().toISOString().split('T')[0];
+  a.download=`telefonlogg_${who==='alle'?'alle':who.toLowerCase()}_${dateStr}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast(`Eksporterte ${data.length} samtaler`);
 }
 
 // ══ ÅRSHJUL ══
@@ -761,9 +882,10 @@ document.addEventListener('keydown',e=>{
   else if(document.getElementById('wheel-modal-bg').classList.contains('open'))confirmClose(closeWheelModal);
   else if(document.getElementById('bursdag-modal-bg').classList.contains('open'))confirmClose(closeBursdagModal);
   else if(document.getElementById('call-modal').classList.contains('open'))closeCallModal();
+  else if(document.getElementById('export-modal').classList.contains('open'))closeExportModal();
 });
 document.querySelectorAll('.modal-bg').forEach(bg=>{
-  if(bg.id==='call-modal')return;
+  if(bg.id==='call-modal'||bg.id==='export-modal')return;
   bg.addEventListener('click',e=>{
     if(e.target!==bg)return;
     if(bg.id==='event-modal-bg')confirmClose(closeEventModal);
@@ -841,12 +963,8 @@ function getEventsForMonth(m,src){return(src||filteredEvents).filter(e=>{const s
 function getPersonsForMonth(m){return persons.filter(p=>{const d=new Date(p.date);return d.getMonth()===m;});}
 function dateToAngle(ds){const d=new Date(ds);d.setHours(12);const s=new Date(currentYear,0,1),e=new Date(currentYear+1,0,1);return((d-s)/(e-s))*2*Math.PI-Math.PI/2;}
 function drawWheel(){ctx.clearRect(0,0,620,620);tooltipData=[];ctx.beginPath();ctx.arc(CX,CY,OR+2,0,2*Math.PI);ctx.fillStyle='#f7f5f0';ctx.fill();for(let m=0;m<12;m++){const sa=(m/12)*2*Math.PI-Math.PI/2,ea=((m+1)/12)*2*Math.PI-Math.PI/2,isSel=selectedMonth===m;ctx.beginPath();ctx.moveTo(CX,CY);ctx.arc(CX,CY,OR,sa,ea);ctx.closePath();ctx.fillStyle=isSel?RING_COLORS[m]+'ff':RING_COLORS[m]+'aa';ctx.fill();ctx.strokeStyle='#f7f5f0';ctx.lineWidth=2.5;ctx.stroke();}if(wheelMode==='arrangementer')drawArrangementArcs();else drawBursdagDots();for(let m=0;m<12;m++){const sa=(m/12)*2*Math.PI-Math.PI/2,ea=((m+1)/12)*2*Math.PI-Math.PI/2;const count=wheelMode==='arrangementer'?getEventsForMonth(m).length:getPersonsForMonth(m).length,isSel=selectedMonth===m;const mid=(sa+ea)/2,lr=(OR+IR)/2-8,tx=CX+lr*Math.cos(mid),ty=CY+lr*Math.sin(mid);ctx.save();ctx.translate(tx,ty);const a=((mid+2*Math.PI)%(2*Math.PI));ctx.rotate(a>Math.PI?mid+Math.PI/2:mid-Math.PI/2);ctx.fillStyle=isSel?'#2c2c28':'#444';ctx.font=`${isSel?'700':'500'} 13px Inter,system-ui`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(MONTHS[m].substring(0,3),0,count?-8:0);if(count){ctx.font='500 10px Inter,system-ui';ctx.fillStyle=isSel?'#2c2c28':'#888';ctx.fillText(count+(wheelMode==='bursdager'?' bursdag':' arr.'),0,8);}ctx.restore();}const todayAngle=dateToAngle(TODAY.toISOString().split('T')[0]);ctx.save();ctx.beginPath();ctx.moveTo(CX+IR*Math.cos(todayAngle),CY+IR*Math.sin(todayAngle));ctx.lineTo(CX+(OR+2)*Math.cos(todayAngle),CY+(OR+2)*Math.sin(todayAngle));ctx.strokeStyle='#2c2c28';ctx.lineWidth=2;ctx.globalAlpha=0.5;ctx.setLineDash([4,3]);ctx.stroke();ctx.restore();ctx.beginPath();ctx.arc(CX+(OR-4)*Math.cos(todayAngle),CY+(OR-4)*Math.sin(todayAngle),4,0,2*Math.PI);ctx.fillStyle='#2c2c28';ctx.globalAlpha=0.7;ctx.fill();ctx.globalAlpha=1;ctx.beginPath();ctx.arc(CX,CY,IR,0,2*Math.PI);ctx.fillStyle='#f7f5f0';ctx.fill();ctx.strokeStyle='#e8e4dc';ctx.lineWidth=1.5;ctx.stroke();}
-function drawArrangementArcs(){const ARC_H=10,ARC_GAP=3,MAX_LAYERS=3,layers=[];const yearEvs=filteredEvents.filter(ev=>!(new Date(ev.start_date).getFullYear()>currentYear||new Date(ev.end_date).getFullYear()<currentYear));yearEvs.forEach(ev=>{let placed=false;for(let i=0;i<layers.length&&i<MAX_LAYERS;i++){const overlap=layers[i].some(e2=>{const s1=new Date(ev.start_date),e1=new Date(ev.end_date),s2=new Date(e2.start_date),e2e=new Date(e2.end_date);return s1<=e2e&&e1>=s2;});if(!overlap){layers[i].push(ev);placed=true;break;}}if(!placed&&layers.length<MAX_LAYERS){layers.push([ev]);placed=true;}});layers.forEach((layer,li)=>{const outerR=OR-1-(li*(ARC_H+ARC_GAP)),innerR=outerR-ARC_H;layer.forEach(ev=>{const s=new Date(ev.start_date),e=new Date(ev.end_date);const cs=new Date(Math.max(s,new Date(currentYear,0,1))),ce=new Date(Math.min(e,new Date(currentYear,11,31)));const sa=dateToAngle(cs.toISOString().split('T')[0]),ea=dateToAngle(ce.toISOString().split('T')[0]);ctx.beginPath();ctx.arc(CX,CY,outerR,sa,ea);ctx.arc(CX,CY,innerR,ea,sa,true);ctx.closePath();ctx.fillStyle=ev.color+'ee';ctx.fill();ctx.strokeStyle='#f7f5f0';ctx.lineWidth=1;ctx.stroke();tooltipData.push({type:'arc',sa,ea,innerR,outerR,text:`${ev.name}
-${fmtDate(ev.start_date)}${ev.start_date!==ev.end_date?' – '+fmtDate(ev.end_date):''}`,id:ev.id});});});filteredEvents.forEach(ev=>{parseHendelser(ev.hendelser).forEach(h=>{if(new Date(h.date).getFullYear()!==currentYear)return;const ang=dateToAngle(h.date),dx=CX+HENDELSE_R*Math.cos(ang),dy=CY+HENDELSE_R*Math.sin(ang);ctx.beginPath();ctx.arc(dx,dy,HENDELSE_DOT_R+1,0,2*Math.PI);ctx.fillStyle='#fff';ctx.fill();ctx.beginPath();ctx.arc(dx,dy,HENDELSE_DOT_R,0,2*Math.PI);ctx.fillStyle=h.color||ev.color;ctx.fill();tooltipData.push({x:dx,y:dy,r:HENDELSE_DOT_R+5,text:`${ev.name}
-${h.name}
-${fmtDate(h.date)}`});});});}
-function drawBursdagDots(){const DOT_R=8,DOT_ORBIT=OR-20;persons.forEach((p,i)=>{const d=new Date(p.date);if(d.getMonth()<0)return;const m=d.getMonth(),sa=(m/12)*2*Math.PI-Math.PI/2,ea=((m+1)/12)*2*Math.PI-Math.PI/2;const daysInMonth=new Date(currentYear,m+1,0).getDate(),dayFrac=(d.getDate()-0.5)/daysInMonth;const ang=sa+(ea-sa)*dayFrac,dx=CX+DOT_ORBIT*Math.cos(ang),dy=CY+DOT_ORBIT*Math.sin(ang);const isToday=daysUntilBursdag(p.date)===0;if(isToday){ctx.beginPath();ctx.arc(dx,dy,DOT_R+4,0,2*Math.PI);ctx.fillStyle='#f0e8ff';ctx.fill();}ctx.beginPath();ctx.arc(dx,dy,DOT_R+1,0,2*Math.PI);ctx.fillStyle='#fff';ctx.fill();ctx.beginPath();ctx.arc(dx,dy,DOT_R,0,2*Math.PI);ctx.fillStyle=isToday?'#6b2fa0':BURSDAG_COLOR;ctx.fill();ctx.font='500 8px Inter,system-ui';ctx.fillStyle='#fff';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(getInitials(p.name),dx,dy);tooltipData.push({x:dx,y:dy,r:DOT_R+6,text:`${p.name}
-${fmtBursdag(p.date)}${isToday?' 🎂':''}`});});}
+function drawArrangementArcs(){const ARC_H=10,ARC_GAP=3,MAX_LAYERS=3,layers=[];const yearEvs=filteredEvents.filter(ev=>!(new Date(ev.start_date).getFullYear()>currentYear||new Date(ev.end_date).getFullYear()<currentYear));yearEvs.forEach(ev=>{let placed=false;for(let i=0;i<layers.length&&i<MAX_LAYERS;i++){const overlap=layers[i].some(e2=>{const s1=new Date(ev.start_date),e1=new Date(ev.end_date),s2=new Date(e2.start_date),e2e=new Date(e2.end_date);return s1<=e2e&&e1>=s2;});if(!overlap){layers[i].push(ev);placed=true;break;}}if(!placed&&layers.length<MAX_LAYERS){layers.push([ev]);placed=true;}});layers.forEach((layer,li)=>{const outerR=OR-1-(li*(ARC_H+ARC_GAP)),innerR=outerR-ARC_H;layer.forEach(ev=>{const s=new Date(ev.start_date),e=new Date(ev.end_date);const cs=new Date(Math.max(s,new Date(currentYear,0,1))),ce=new Date(Math.min(e,new Date(currentYear,11,31)));const sa=dateToAngle(cs.toISOString().split('T')[0]),ea=dateToAngle(ce.toISOString().split('T')[0]);ctx.beginPath();ctx.arc(CX,CY,outerR,sa,ea);ctx.arc(CX,CY,innerR,ea,sa,true);ctx.closePath();ctx.fillStyle=ev.color+'ee';ctx.fill();ctx.strokeStyle='#f7f5f0';ctx.lineWidth=1;ctx.stroke();tooltipData.push({type:'arc',sa,ea,innerR,outerR,text:`${ev.name}\n${fmtDate(ev.start_date)}${ev.start_date!==ev.end_date?' – '+fmtDate(ev.end_date):''}`,id:ev.id});});});filteredEvents.forEach(ev=>{parseHendelser(ev.hendelser).forEach(h=>{if(new Date(h.date).getFullYear()!==currentYear)return;const ang=dateToAngle(h.date),dx=CX+HENDELSE_R*Math.cos(ang),dy=CY+HENDELSE_R*Math.sin(ang);ctx.beginPath();ctx.arc(dx,dy,HENDELSE_DOT_R+1,0,2*Math.PI);ctx.fillStyle='#fff';ctx.fill();ctx.beginPath();ctx.arc(dx,dy,HENDELSE_DOT_R,0,2*Math.PI);ctx.fillStyle=h.color||ev.color;ctx.fill();tooltipData.push({x:dx,y:dy,r:HENDELSE_DOT_R+5,text:`${ev.name}\n${h.name}\n${fmtDate(h.date)}`});});});}
+function drawBursdagDots(){const DOT_R=8,DOT_ORBIT=OR-20;persons.forEach((p,i)=>{const d=new Date(p.date);if(d.getMonth()<0)return;const m=d.getMonth(),sa=(m/12)*2*Math.PI-Math.PI/2,ea=((m+1)/12)*2*Math.PI-Math.PI/2;const daysInMonth=new Date(currentYear,m+1,0).getDate(),dayFrac=(d.getDate()-0.5)/daysInMonth;const ang=sa+(ea-sa)*dayFrac,dx=CX+DOT_ORBIT*Math.cos(ang),dy=CY+DOT_ORBIT*Math.sin(ang);const isToday=daysUntilBursdag(p.date)===0;if(isToday){ctx.beginPath();ctx.arc(dx,dy,DOT_R+4,0,2*Math.PI);ctx.fillStyle='#f0e8ff';ctx.fill();}ctx.beginPath();ctx.arc(dx,dy,DOT_R+1,0,2*Math.PI);ctx.fillStyle='#fff';ctx.fill();ctx.beginPath();ctx.arc(dx,dy,DOT_R,0,2*Math.PI);ctx.fillStyle=isToday?'#6b2fa0':BURSDAG_COLOR;ctx.fill();ctx.font='500 8px Inter,system-ui';ctx.fillStyle='#fff';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(getInitials(p.name),dx,dy);tooltipData.push({x:dx,y:dy,r:DOT_R+6,text:`${p.name}\n${fmtBursdag(p.date)}${isToday?' 🎂':''}`});});}
 canvas.addEventListener('click',e=>{const r=canvas.getBoundingClientRect(),x=(e.clientX-r.left)*(620/r.width)-CX,y=(e.clientY-r.top)*(620/r.height)-CY;const dist=Math.sqrt(x*x+y*y);if(dist<IR||dist>OR)return;let ang=Math.atan2(y,x)+Math.PI/2;if(ang<0)ang+=2*Math.PI;selectedMonth=Math.floor((ang/(2*Math.PI))*12);closeDetail();drawWheel();if(wheelMode==='arrangementer')renderSidebar();});
 function setupTooltip(){const tip=document.getElementById('tooltip');canvas.addEventListener('mousemove',e=>{const r=canvas.getBoundingClientRect(),mx=(e.clientX-r.left)*(620/r.width),my=(e.clientY-r.top)*(620/r.height);const dx=mx-CX,dy=my-CY,dist=Math.sqrt(dx*dx+dy*dy),ang=Math.atan2(dy,dx);const found=tooltipData.find(td=>{if(td.type==='arc'){if(dist<td.innerR||dist>td.outerR)return false;const norm=v=>((v+3*Math.PI)%(2*Math.PI))-Math.PI;let a=norm(ang),sa=norm(td.sa),ea=norm(td.ea);if(sa<=ea)return a>=sa&&a<=ea;return a>=sa||a<=ea;}return Math.sqrt((mx-td.x)**2+(my-td.y)**2)<=td.r;});if(found){tip.style.display='block';tip.innerHTML=found.text.split('\n').join('<br>');tip.style.left=(e.clientX+14)+'px';tip.style.top=(e.clientY-10)+'px';}else tip.style.display='none';});canvas.addEventListener('mouseleave',()=>document.getElementById('tooltip').style.display='none');}
 function nextHendelseText(ev){const up=parseHendelser(ev.hendelser).filter(h=>{const d=new Date(h.date);d.setHours(0,0,0,0);return d>=TODAY;}).sort((a,b)=>a.date.localeCompare(b.date));if(!up.length)return'';const h=up[0],days=daysUntil(h.date);return days===0?`${h.name} i dag`:`${h.name}: ${fmtDate(h.date)}`;}
