@@ -536,6 +536,7 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
       <div class="ql-f ql-sm"><label>Min.</label><input type="number" id="ql-dur" placeholder="5" min="0" max="999"></div>
       <div class="ql-f ql-md"><label>Retning</label><select id="ql-dir"><option value="inn">📥 Innkommende</option><option value="ut">📤 Utgående</option></select></div>
       <div class="ql-f ql-md"><label>Segment</label><select id="ql-seg"><option value="">– Velg –</option></select></div>
+      <div class="ql-f ql-md"><label>Modul</label><select id="ql-mod"><option value="">– Velg –</option></select></div>
       <div class="ql-f ql-grow"><label>Notat</label><input type="text" id="ql-note" placeholder="Hva handlet det om?"></div>
       <button class="btn-qlog" onclick="quickLog()">⚡ Logg raskt</button>
     </div>
@@ -686,6 +687,8 @@ function populateSegmentSelects(){
   // Quick log
   const qlSeg=document.getElementById('ql-seg');
   qlSeg.innerHTML=SEGMENTS.map(s=>`<option value="${s==='-'?'':s}">${s}</option>`).join('');
+  const qlMod=document.getElementById('ql-mod');
+  qlMod.innerHTML=MODULES.map(m=>`<option value="${m==='-'?'':m}">${m}</option>`).join('');
   // Call modal
   const cmSeg=document.getElementById('cm-seg');
   cmSeg.innerHTML=SEGMENTS.map(s=>`<option value="${s==='-'?'':s}">${s}</option>`).join('');
@@ -783,8 +786,8 @@ function changeWeek(d){weekOffset+=d;renderWeekSec();}
 async function quickLog(){
   const name=document.getElementById('ql-name').value.trim();
   if(!name){toast('Fyll inn navn/tlf');return;}
-  const p={person:activePerson,contact_name:name,duration_min:parseInt(document.getElementById('ql-dur').value)||0,direction:document.getElementById('ql-dir').value,segment:document.getElementById('ql-seg').value||null,module:null,notes:document.getElementById('ql-note').value.trim(),called_at:new Date().toISOString()};
-  try{const r=await tApi.post(p);if(Array.isArray(r)&&r[0])calls.unshift(r[0]);['ql-name','ql-dur','ql-note'].forEach(id=>document.getElementById(id).value='');document.getElementById('ql-seg').value='';renderTelAll();toast('Samtale logget!');}catch(e){toast('Noe gikk galt');}
+  const p={person:activePerson,contact_name:name,duration_min:parseInt(document.getElementById('ql-dur').value)||0,direction:document.getElementById('ql-dir').value,segment:document.getElementById('ql-seg').value||null,module:document.getElementById('ql-mod').value||null,notes:document.getElementById('ql-note').value.trim(),called_at:new Date().toISOString()};
+  try{const r=await tApi.post(p);if(Array.isArray(r)&&r[0])calls.unshift(r[0]);['ql-name','ql-dur','ql-note'].forEach(id=>document.getElementById(id).value='');document.getElementById('ql-seg').value='';document.getElementById('ql-mod').value='';renderTelAll();toast('Samtale logget!');}catch(e){toast('Noe gikk galt');}
 }
 function openCallModal(id){
   editCallId=id;
