@@ -5,8 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Verktøy</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-<style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
+<style>* { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: "Inter", system-ui, sans-serif; background: #f7f5f0; color: #1a1a18; min-height: 100vh; }
 #login-screen { position: fixed; inset: 0; background: #f7f5f0; z-index: 999; display: flex; align-items: center; justify-content: center; }
 .login-box { background: #fff; border: 1px solid #e4e1d8; border-radius: 20px; padding: 40px; width: 100%; max-width: 380px; box-shadow: 0 8px 40px rgba(0,0,0,0.08); }
@@ -216,7 +215,7 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
 .empty-state-icon { font-size: 40px; opacity: 0.4; }
 .empty-state-title { font-size: 15px; font-weight: 600; color: #555; }
 .empty-state-desc { font-size: 13px; color: #aaa; max-width: 260px; line-height: 1.6; }
-.toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); background: #2c2c28; color: #f7f5f0; padding: 11px 22px; border-radius: 12px; font-size: 13px; font-weight: 500; z-index: 600; opacity: 0; transition: opacity .3s; pointer-events: none; box-shadow: 0 4px 20px rgba(0,0,0,0.18); }
+.toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); background: #2c2c28; color: #f7f5f0; padding: 11px 22px; border-radius: 12px; font-size: 13px; font-weight: 500; z-index: 700; opacity: 0; transition: opacity .3s; pointer-events: none; box-shadow: 0 4px 20px rgba(0,0,0,0.18); }
 .toast.show { opacity: 1; }
 #tool-telefon { padding-bottom: 80px; }
 .tel-header { background: #fff; border-bottom: 1px solid #e4e1d8; padding: 14px 20px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
@@ -283,7 +282,6 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
 .ov-table tr:last-child td { border-bottom: none; }
 .ov-table tr:hover td { background: #faf9f6; }
 .ov-av { width: 26px; height: 26px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; margin-right: 8px; vertical-align: middle; }
-/* Export modal */
 .export-modal { background: #fff; border-radius: 20px; padding: 28px; width: 100%; max-width: 460px; max-height: 92vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.18); }
 .export-modal h2 { margin-bottom: 6px; font-size: 19px; font-weight: 700; }
 .export-modal p { font-size: 13px; color: #888; margin-bottom: 20px; }
@@ -296,26 +294,85 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
 .export-opt-desc { font-size: 12px; color: #888; margin-top: 2px; }
 .export-opt-btn { background: #2c2c28; color: #f7f5f0; border: none; border-radius: 8px; padding: 7px 14px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit; white-space: nowrap; }
 .export-opt-btn:hover { background: #3d3d38; }
-/* call modal selects */
 #call-modal .modal select { width: 100%; border: 1px solid #e4e1d8; border-radius: 9px; padding: 9px 12px; font-size: 13px; font-family: inherit; background: #faf9f6; outline: none; color: #1a1a18; transition: border .15s; cursor: pointer; }
 #call-modal .modal select:focus { border-color: #aaa; background: #fff; }
+/* ARRANGØR PANEL */
+#org-panel-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.2); z-index: 299; display: none; }
+#org-panel-overlay.open { display: block; }
+#org-panel { position: fixed; top: 0; right: 0; width: 480px; height: 100vh; background: #fff; border-left: 1px solid #e4e1d8; z-index: 300; display: flex; flex-direction: column; transform: translateX(100%); transition: transform .3s cubic-bezier(.4,0,.2,1); box-shadow: -8px 0 40px rgba(0,0,0,0.10); }
+#org-panel.open { transform: translateX(0); }
+.org-panel-header { padding: 20px 24px; border-bottom: 1px solid #e4e1d8; display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.org-avatar { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; flex-shrink: 0; }
+.org-panel-name { font-size: 17px; font-weight: 700; flex: 1; }
+.org-panel-sub { font-size: 12px; color: #aaa; margin-top: 2px; }
+.org-panel-body { flex: 1; overflow-y: auto; padding: 20px 24px; display: flex; flex-direction: column; gap: 20px; }
+.org-section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #bbb; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
+.org-contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.org-contact-item { background: #faf9f6; border: 1px solid #ece9e1; border-radius: 10px; padding: 10px 12px; }
+.org-contact-lbl { font-size: 10px; color: #aaa; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 3px; }
+.org-contact-val { font-size: 13px; color: #1a1a18; font-weight: 500; word-break: break-all; }
+.org-contact-empty { font-size: 12px; color: #ccc; font-style: italic; }
+.org-arr-list { display: flex; flex-direction: column; gap: 6px; }
+.org-arr-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: #faf9f6; border: 1px solid #ece9e1; border-radius: 10px; cursor: pointer; transition: background .15s; }
+.org-arr-item:hover { background: #f2efe7; }
+.org-arr-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.org-arr-name { font-size: 13px; font-weight: 600; flex: 1; }
+.org-arr-date { font-size: 11px; color: #aaa; }
+.org-arr-live { font-size: 9px; background: #d4f0e4; color: #1a7a4a; border-radius: 5px; padding: 2px 6px; font-weight: 600; }
+.org-note-list { display: flex; flex-direction: column; gap: 8px; }
+.org-note-item { background: #faf9f6; border: 1px solid #ece9e1; border-radius: 12px; padding: 12px 14px; }
+.org-note-top { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.org-note-type { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 6px; text-transform: uppercase; letter-spacing: .05em; }
+.org-note-date { font-size: 11px; color: #aaa; flex: 1; text-align: right; }
+.org-note-del { background: none; border: none; color: #ddd; cursor: pointer; font-size: 14px; transition: color .15s; padding: 0; }
+.org-note-del:hover { color: #2c2c28; }
+.org-note-text { font-size: 13px; color: #444; line-height: 1.6; white-space: pre-wrap; }
+.org-empty { font-size: 13px; color: #ccc; text-align: center; padding: 20px; }
+.note-modal { background: #fff; border-radius: 20px; padding: 28px; width: 100%; max-width: 440px; max-height: 92vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.18); }
+.note-modal h2 { margin-bottom: 20px; font-size: 19px; font-weight: 700; }
+.note-modal label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .07em; color: #aaa; display: block; margin-top: 16px; margin-bottom: 5px; }
+.note-modal input,.note-modal textarea,.note-modal select { width: 100%; border: 1px solid #e4e1d8; border-radius: 10px; padding: 10px 12px; font-size: 14px; font-family: inherit; background: #faf9f6; outline: none; color: #1a1a18; transition: border .15s; }
+.note-modal input:focus,.note-modal textarea:focus,.note-modal select:focus { border-color: #aaa; background: #fff; }
+.note-modal textarea { height: 110px; resize: vertical; }
+.org-modal { background: #fff; border-radius: 20px; padding: 28px; width: 100%; max-width: 500px; max-height: 92vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.18); }
+.org-modal h2 { margin-bottom: 20px; font-size: 19px; font-weight: 700; }
+.org-modal label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .07em; color: #aaa; display: block; margin-top: 16px; margin-bottom: 5px; }
+.org-modal input,.org-modal textarea { width: 100%; border: 1px solid #e4e1d8; border-radius: 10px; padding: 10px 12px; font-size: 14px; font-family: inherit; background: #faf9f6; outline: none; color: #1a1a18; transition: border .15s; }
+.org-modal input:focus { border-color: #aaa; background: #fff; }
+.org-modal .row { display: flex; gap: 12px; }
+.org-modal .row > div { flex: 1; }
+.link-evt-list { display: flex; flex-direction: column; gap: 5px; max-height: 200px; overflow-y: auto; margin-top: 6px; }
+.link-evt-row { display: flex; align-items: center; gap: 8px; padding: 7px 10px; background: #faf9f6; border-radius: 8px; border: 1px solid #ece9e1; font-size: 13px; }
+.link-evt-row input[type=checkbox] { accent-color: #5A7FBB; flex-shrink: 0; }
+.link-evt-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.link-evt-name { flex: 1; font-weight: 500; }
+.link-evt-year { font-size: 11px; color: #aaa; }
+.det-org-section { background: #f5f2ff; border: 1px solid #e0d4f8; border-radius: 12px; padding: 12px 16px; display: flex; align-items: center; gap: 12px; margin-top: 4px; }
+.det-org-av { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+.det-org-name { font-size: 13px; font-weight: 600; flex: 1; }
+.det-org-btn { background: #6b2fa0; color: #fff; border: none; border-radius: 8px; padding: 6px 12px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit; white-space: nowrap; transition: background .15s; }
+.det-org-btn:hover { background: #5a2588; }
+.det-org-link { background: none; border: 1px dashed #ccc; border-radius: 8px; padding: 6px 12px; font-size: 12px; font-weight: 500; cursor: pointer; font-family: inherit; color: #888; transition: all .15s; }
+.det-org-link:hover { background: #f0ede6; color: #555; }
+.ntype-mote { background: #e8f0ff; color: #2f4fa0; }
+.ntype-evaluering { background: #e8fff4; color: #1a6640; }
+.ntype-opplaering { background: #fff4e0; color: #8a5a00; }
+.ntype-intern { background: #f0ede6; color: #666; }
+.ntype-custom { background: #f0e8ff; color: #6b2fa0; }
 @media(max-width:680px){
   .wheel-wrap{width:92vw;height:92vw;}
   .wheel-wrap canvas#wheel{width:100%!important;height:100%!important;}
   .below-wheel{grid-template-columns:1fr;}
   .topbar-right{gap:6px;}
-  .wheel-mode-toggle button,.view-toggle button{padding:7px 10px;font-size:12px;}
-  .btn-primary{padding:8px 12px;font-size:12px;}
   .tel-stats{grid-template-columns:1fr 1fr;}
   .module-grid{grid-template-columns:1fr;}
   .quick-log{flex-direction:column;align-items:stretch;}
   .btn-qlog{width:100%;text-align:center;}
+  #org-panel{width:100%;}
 }
 </style>
 </head>
 <body>
-
-<!-- LOGIN -->
 <div id="login-screen">
   <div class="login-box">
     <h1>🔐 Tilgang kreves</h1>
@@ -326,8 +383,6 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
     <button class="btn-login" onclick="doLogin()">Logg inn</button>
   </div>
 </div>
-
-<!-- MODULE SELECTOR -->
 <div id="module-selector">
   <div class="module-grid">
     <div class="module-grid-hdr"><h2>Velg verktøy</h2><p>Hva vil du jobbe med i dag?</p></div>
@@ -341,12 +396,10 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
       <div class="module-accent-bar" style="background:#4BA87D"></div>
       <div class="module-icon">📞</div>
       <div class="module-name">Telefonlogg</div>
-      <div class="module-desc">Logg direkte samtaler som ikke vises i Zendesk eller Unifon. Oversikt per person og uke.</div>
+      <div class="module-desc">Logg direkte samtaler som ikke vises i Zendesk eller Unifon.</div>
     </div>
   </div>
 </div>
-
-<!-- TOP NAV -->
 <nav id="app-nav" class="hidden">
   <span style="font-size:15px;font-weight:600;margin-right:4px">🧰</span>
   <button class="nav-mod-btn" onclick="openModuleSelector()">
@@ -442,6 +495,10 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
       <h2 id="det-name"></h2>
     </div>
     <div class="detail-dates" id="det-dates"></div>
+    <div class="detail-section" id="det-org-section">
+      <div class="detail-section-title">Arrangør</div>
+      <div id="det-org-content"></div>
+    </div>
     <div class="detail-section" id="det-hendelser-section">
       <div class="detail-section-title" id="det-hendelser-title">Hendelser</div>
       <div class="hendelse-list" id="det-hendelser"></div>
@@ -454,13 +511,14 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
   </div>
 </div>
 <div class="tooltip" id="tooltip"></div>
+<!-- EVENT MODAL -->
 <div class="modal-bg" id="event-modal-bg">
   <div class="modal">
     <h2 id="event-modal-title">Nytt element</h2>
     <label id="lbl-name">Navn</label><input id="f-name" type="text">
     <div class="row">
-      <div><label id="lbl-start-date">Startdato</label><input id="f-start" type="date" onchange="onStartChange()"></div>
-      <div id="end-date-col"><label>Sluttdato</label><input id="f-end" type="date"></div>
+      <div><label>Startdato</label><input id="f-start" type="date" onchange="onStartChange()"></div>
+      <div><label>Sluttdato</label><input id="f-end" type="date"></div>
     </div>
     <label>Farge</label><div class="color-grid" id="color-grid"></div>
     <div style="display:flex;align-items:center;gap:10px;margin-top:12px">
@@ -478,6 +536,7 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
     <div class="modal-actions"><button class="btn-sec" onclick="closeEventModal()">Avbryt</button><button class="btn-primary" onclick="saveEvent()">Lagre</button></div>
   </div>
 </div>
+<!-- WHEEL MODAL -->
 <div class="modal-bg" id="wheel-modal-bg">
   <div class="modal">
     <h2 id="wheel-modal-title">Nytt årshjul</h2>
@@ -505,6 +564,7 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
     </div>
   </div>
 </div>
+<!-- BURSDAG MODAL -->
 <div class="modal-bg" id="bursdag-modal-bg">
   <div class="bmodal">
     <h2 id="bmodal-title">Legg til kollega</h2>
@@ -517,15 +577,68 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
     </div>
   </div>
 </div>
+<!-- ARRANGØR MODAL -->
+<div class="modal-bg" id="org-modal-bg">
+  <div class="org-modal">
+    <h2 id="org-modal-title">Ny arrangør</h2>
+    <label>Navn</label><input type="text" id="om-name" placeholder="f.eks. Norway Cup">
+    <div class="row">
+      <div><label>Kontaktperson</label><input type="text" id="om-contact" placeholder="Ola Nordmann"></div>
+      <div><label>Telefon</label><input type="text" id="om-phone" placeholder="98765432"></div>
+    </div>
+    <label>E-post</label><input type="text" id="om-email" placeholder="kontakt@example.no">
+    <label>Farge</label><div class="color-grid" id="org-color-grid"></div>
+    <div class="modal-section">
+      <div class="modal-section-title">Koble arrangementer</div>
+      <input type="text" id="om-search" placeholder="Søk etter arrangement…" oninput="filterLinkEvts()" style="border:1px solid #e4e1d8;border-radius:10px;padding:9px 12px;font-size:13px;width:100%;font-family:inherit;background:#faf9f6;outline:none;color:#1a1a18;margin-bottom:2px;">
+      <div class="link-evt-list" id="om-evt-list"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-del" id="om-del-btn" style="display:none;margin-right:auto" onclick="deleteOrg()">Slett arrangør</button>
+      <button class="btn-sec" onclick="closeOrgModal()">Avbryt</button>
+      <button class="btn-primary" onclick="saveOrg()">Lagre</button>
+    </div>
+  </div>
+</div>
+<!-- NOTAT MODAL -->
+<div class="modal-bg" id="note-modal-bg">
+  <div class="note-modal">
+    <h2 id="note-modal-title">Nytt notat</h2>
+    <label>Notattype</label>
+    <select id="nm-type"></select>
+    <label>Dato</label><input type="date" id="nm-date">
+    <label>Tekst</label><textarea id="nm-text" placeholder="Skriv notat her…"></textarea>
+    <div class="modal-actions">
+      <button class="btn-del" id="nm-del-btn" style="display:none;margin-right:auto" onclick="deleteNote()">Slett</button>
+      <button class="btn-sec" onclick="closeNoteModal()">Avbryt</button>
+      <button class="btn-primary" onclick="saveNote()">Lagre</button>
+    </div>
+  </div>
+</div>
 <div class="loading-overlay" id="loading-overlay"><div class="loading-spinner"></div><div class="loading-text">Laster inn data…</div></div>
 </div>
 
-<!-- TELEFON LOGGER -->
+<!-- ARRANGØR SIDEPANEL -->
+<div id="org-panel-overlay" onclick="closeOrgPanel()"></div>
+<div id="org-panel">
+  <div class="org-panel-header">
+    <div class="org-avatar" id="op-avatar"></div>
+    <div style="flex:1;min-width:0;">
+      <div class="org-panel-name" id="op-name"></div>
+      <div class="org-panel-sub" id="op-sub"></div>
+    </div>
+    <button class="btn-sec" onclick="openOrgModal(currentOrgId)" style="font-size:12px;padding:6px 12px;">Rediger</button>
+    <button onclick="closeOrgPanel()" style="background:none;border:none;font-size:20px;cursor:pointer;color:#aaa;padding:0 0 0 8px;">×</button>
+  </div>
+  <div class="org-panel-body" id="op-body"></div>
+</div>
+
+<!-- TELEFON -->
 <div id="tool-telefon">
   <div class="tel-header">
     <div class="person-tabs" id="person-tabs"></div>
     <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
-      <button class="btn-sec" onclick="openExportModal()" style="display:flex;align-items:center;gap:6px;font-size:13px;">📥 Eksporter</button>
+      <button class="btn-sec" onclick="openExportModal()" style="font-size:13px;">📥 Eksporter</button>
       <button class="btn-primary" onclick="openCallModal(null)">+ Ny samtale</button>
     </div>
   </div>
@@ -556,7 +669,6 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
     </div>
   </div>
 </div>
-
 <!-- CALL MODAL -->
 <div class="modal-bg" id="call-modal">
   <div class="modal" style="max-width:480px">
@@ -586,7 +698,6 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
     </div>
   </div>
 </div>
-
 <!-- EXPORT MODAL -->
 <div class="modal-bg" id="export-modal">
   <div class="export-modal">
@@ -595,10 +706,7 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
     <div class="export-options">
       <div class="export-opt" onclick="exportCalls('alle')">
         <div class="export-opt-icon">📋</div>
-        <div class="export-opt-info">
-          <div class="export-opt-name">Alle samtaler</div>
-          <div class="export-opt-desc">Samlet liste for alle ansatte</div>
-        </div>
+        <div class="export-opt-info"><div class="export-opt-name">Alle samtaler</div><div class="export-opt-desc">Samlet liste for alle ansatte</div></div>
         <button class="export-opt-btn">Last ned</button>
       </div>
       <div id="export-person-opts"></div>
@@ -613,60 +721,17 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
     <div class="modal-actions"><button class="btn-sec" onclick="closeExportModal()">Lukk</button></div>
   </div>
 </div>
-
 <div class="toast" id="toast"></div>
-<script>
-// ══ CONSTANTS ══
-const SEGMENTS=['-','Arrangør','Sport','Medlem','Annet'];
+<script>const SEGMENTS=['-','Arrangør','Sport','Medlem','Annet'];
 const MODULES=['-','Rubic Medlem','Profil','Fakturering og utlegg','Oppgjørsrapporter','Betaling','Innmelding','Påmelding','Funksjonær/Organizer','Rubic Connect','Rubic Aktivitet','Rubic Lokasjon','Rubic Akkreditering','Swedbank','Skytteradmin','NSFF','Regnskap','Integrasjoner','NIF','Generell henvendelse'];
-
-// ══ LOGIN ══
+const DEFAULT_NOTE_TYPES=['Møte','Evaluering','Opplæring','Intern','Annet'];
 const PASSWORD='Direkte2025!';
-function doLogin(){
-  const v=document.getElementById('login-input').value.trim();
-  const errEl=document.getElementById('login-error');
-  if(v===PASSWORD){
-    localStorage.setItem('vt_auth','1');
-    const ls=document.getElementById('login-screen');
-    ls.style.opacity='0';
-    ls.style.transition='opacity 0.3s';
-    setTimeout(()=>{ls.style.display='none';openModuleSelector();},300);
-  } else {
-    errEl.textContent='Feil passord – prøv igjen.';
-    document.getElementById('login-input').value='';
-    document.getElementById('login-input').focus();
-    setTimeout(()=>errEl.textContent='',3000);
-  }
-}
-window.addEventListener('load',()=>{
-  if(localStorage.getItem('vt_auth')==='1'){
-    document.getElementById('login-screen').style.display='none';
-    openModuleSelector();
-  } else {
-    document.getElementById('login-screen').style.display='flex';
-    setTimeout(()=>document.getElementById('login-input').focus(),100);
-  }
-});
-
-// ══ MODULES ══
+function doLogin(){const v=document.getElementById('login-input').value.trim(),errEl=document.getElementById('login-error');if(v===PASSWORD){localStorage.setItem('vt_auth','1');const ls=document.getElementById('login-screen');ls.style.opacity='0';ls.style.transition='opacity 0.3s';setTimeout(()=>{ls.style.display='none';openModuleSelector();},300);}else{errEl.textContent='Feil passord – prøv igjen.';document.getElementById('login-input').value='';document.getElementById('login-input').focus();setTimeout(()=>errEl.textContent='',3000);}}
+window.addEventListener('load',()=>{if(localStorage.getItem('vt_auth')==='1'){document.getElementById('login-screen').style.display='none';openModuleSelector();}else{document.getElementById('login-screen').style.display='flex';setTimeout(()=>document.getElementById('login-input').focus(),100);}});
 let currentModule=null;
 function openModuleSelector(){document.getElementById('module-selector').classList.add('open');document.getElementById('app-nav').classList.add('hidden');}
-function switchModule(mod){
-  currentModule=mod;
-  document.getElementById('module-selector').classList.remove('open');
-  document.getElementById('app-nav').classList.remove('hidden');
-  ['arshjul','telefon'].forEach(m=>{
-    document.getElementById('tool-'+m).classList.toggle('active-tool',m===mod);
-    document.getElementById('mc-'+m).classList.toggle('active-module',m===mod);
-  });
-  const dot=document.getElementById('nav-dot');
-  if(mod==='arshjul'){dot.style.background='#5A7FBB';document.getElementById('nav-module-name').textContent='Årshjul';document.getElementById('nav-title').textContent='Årshjul';initArshjul();}
-  else{dot.style.background='#4BA87D';document.getElementById('nav-module-name').textContent='Telefonlogg';document.getElementById('nav-title').textContent='Telefonlogg';initTelefon();}
-  window.scrollTo(0,0);
-}
+function switchModule(mod){currentModule=mod;document.getElementById('module-selector').classList.remove('open');document.getElementById('app-nav').classList.remove('hidden');['arshjul','telefon'].forEach(m=>{document.getElementById('tool-'+m).classList.toggle('active-tool',m===mod);document.getElementById('mc-'+m).classList.toggle('active-module',m===mod);});const dot=document.getElementById('nav-dot');if(mod==='arshjul'){dot.style.background='#5A7FBB';document.getElementById('nav-module-name').textContent='Årshjul';document.getElementById('nav-title').textContent='Årshjul';initArshjul();}else{dot.style.background='#4BA87D';document.getElementById('nav-module-name').textContent='Telefonlogg';document.getElementById('nav-title').textContent='Telefonlogg';initTelefon();}window.scrollTo(0,0);}
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
-
-// ══ TELEFON ══
 const TEAM=['Aleksander','Sander','Åse','Helene'];
 const TCLR=['#5A7FBB','#4BA87D','#D4845A','#B87BAC'];
 const TBG=['#e8f0ff','#e8fff4','#fff4e8','#f5e8ff'];
@@ -676,45 +741,10 @@ const SB_URL='https://cxqvenjholhtijnrnwau.supabase.co';
 const SB_KEY='sb_publishable_pn7_PfMvVPVpI421gQtWmQ_tyDGgmFc';
 const H={'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY};
 let activePerson=TEAM[0],calls=[],weekOffset=0,editCallId=null,telInited=false;
-const tApi={
-  get:()=>fetch(`${SB_URL}/rest/v1/direct_calls?order=called_at.desc`,{headers:H}).then(r=>r.json()),
-  post:c=>fetch(`${SB_URL}/rest/v1/direct_calls`,{method:'POST',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify(c)}).then(r=>r.json()),
-  patch:(id,c)=>fetch(`${SB_URL}/rest/v1/direct_calls?id=eq.${id}`,{method:'PATCH',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify(c)}).then(r=>r.json()),
-  del:id=>fetch(`${SB_URL}/rest/v1/direct_calls?id=eq.${id}`,{method:'DELETE',headers:H}),
-};
-
-function populateSegmentSelects(){
-  // Quick log
-  const qlSeg=document.getElementById('ql-seg');
-  qlSeg.innerHTML=SEGMENTS.map(s=>`<option value="${s==='-'?'':s}">${s}</option>`).join('');
-  const qlMod=document.getElementById('ql-mod');
-  qlMod.innerHTML=MODULES.map(m=>`<option value="${m==='-'?'':m}">${m}</option>`).join('');
-  // Call modal
-  const cmSeg=document.getElementById('cm-seg');
-  cmSeg.innerHTML=SEGMENTS.map(s=>`<option value="${s==='-'?'':s}">${s}</option>`).join('');
-  // Module select
-  updateModuleSelect('');
-}
-function updateModuleSelect(seg){
-  const cmMod=document.getElementById('cm-mod');
-  cmMod.innerHTML=MODULES.map(m=>`<option value="${m==='-'?'':m}">${m}</option>`).join('');
-}
-
-async function initTelefon(){
-  if(!telInited){
-    buildPersonTabs();
-    populateSegmentSelects();
-    // Build export person options
-    const cont=document.getElementById('export-person-opts');
-    cont.innerHTML=TEAM.map((p,i)=>`<div class="export-opt" onclick="exportCalls('${p}')"><div class="export-opt-icon"><span style="background:${TBG[i]};color:${TCLR[i]};width:32px;height:32px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700">${p[0]}</span></div><div class="export-opt-info"><div class="export-opt-name">${p}</div><div class="export-opt-desc">Bare samtaler for ${p}</div></div><button class="export-opt-btn">Last ned</button></div>`).join('');
-    try{const d=await tApi.get();if(Array.isArray(d))calls=d;}catch(e){toast('Klarte ikke laste samtaler');}
-    telInited=true;
-  }
-  renderTelAll();
-}
-function buildPersonTabs(){
-  document.getElementById('person-tabs').innerHTML=TEAM.map((p,i)=>`<button class="person-tab${p===activePerson?' active':''}" id="ptab-${p}" onclick="setAP('${p}')"><span class="pt-av" style="background:${TBG[i]};color:${TCLR[i]}">${p[0]}</span>${p}</button>`).join('');
-}
+const tApi={get:()=>fetch(`${SB_URL}/rest/v1/direct_calls?order=called_at.desc`,{headers:H}).then(r=>r.json()),post:c=>fetch(`${SB_URL}/rest/v1/direct_calls`,{method:'POST',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify(c)}).then(r=>r.json()),patch:(id,c)=>fetch(`${SB_URL}/rest/v1/direct_calls?id=eq.${id}`,{method:'PATCH',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify(c)}).then(r=>r.json()),del:id=>fetch(`${SB_URL}/rest/v1/direct_calls?id=eq.${id}`,{method:'DELETE',headers:H})};
+function populateSegmentSelects(){const qlSeg=document.getElementById('ql-seg');qlSeg.innerHTML=SEGMENTS.map(s=>`<option value="${s==='-'?'':s}">${s}</option>`).join('');const qlMod=document.getElementById('ql-mod');qlMod.innerHTML=MODULES.map(m=>`<option value="${m==='-'?'':m}">${m}</option>`).join('');document.getElementById('cm-seg').innerHTML=SEGMENTS.map(s=>`<option value="${s==='-'?'':s}">${s}</option>`).join('');document.getElementById('cm-mod').innerHTML=MODULES.map(m=>`<option value="${m==='-'?'':m}">${m}</option>`).join('');}
+async function initTelefon(){if(!telInited){buildPersonTabs();populateSegmentSelects();document.getElementById('export-person-opts').innerHTML=TEAM.map((p,i)=>`<div class="export-opt" onclick="exportCalls('${p}')"><div class="export-opt-icon"><span style="background:${TBG[i]};color:${TCLR[i]};width:32px;height:32px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700">${p[0]}</span></div><div class="export-opt-info"><div class="export-opt-name">${p}</div><div class="export-opt-desc">Bare samtaler for ${p}</div></div><button class="export-opt-btn">Last ned</button></div>`).join('');try{const d=await tApi.get();if(Array.isArray(d))calls=d;}catch(e){toast('Klarte ikke laste samtaler');}telInited=true;}renderTelAll();}
+function buildPersonTabs(){document.getElementById('person-tabs').innerHTML=TEAM.map((p,i)=>`<button class="person-tab${p===activePerson?' active':''}" id="ptab-${p}" onclick="setAP('${p}')"><span class="pt-av" style="background:${TBG[i]};color:${TCLR[i]}">${p[0]}</span>${p}</button>`).join('');}
 function setAP(name){activePerson=name;TEAM.forEach(p=>{const el=document.getElementById('ptab-'+p);if(el)el.classList.toggle('active',p===name);});renderTelAll();}
 function renderTelAll(){renderTelStats();renderWeekSec();renderOv();}
 function myC(){return calls.filter(c=>c.person===activePerson);}
@@ -726,185 +756,50 @@ function fmtMin(m){if(!m)return'–';return m<60?m+' min':Math.floor(m/60)+'t '+
 function fmtCD(iso){const d=new Date(iso);return`${d.getDate()}. ${MOS[d.getMonth()]}`;}
 function fmtCT(iso){const d=new Date(iso);return d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0');}
 function esc(s){return s?(s+'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):''}
-function renderTelStats(){
-  const mc=myC(),ws=getWS(0),we=getWE(ws);
-  const tw=mc.filter(c=>{const d=new Date(c.called_at);d.setHours(0,0,0,0);return d>=ws&&d<=we;});
-  const tot=mc.reduce((s,c)=>s+(c.duration_min||0),0);
-  const last=mc[0];
-  const pi=TEAM.indexOf(activePerson),col=TCLR[pi];
-  document.getElementById('tel-stats').innerHTML=`
-    <div class="tel-stat"><div class="tel-stat-lbl">Totalt</div><div class="tel-stat-val" style="color:${col}">${mc.length}</div><div class="tel-stat-sub">samtaler totalt</div></div>
-    <div class="tel-stat"><div class="tel-stat-lbl">Denne uken</div><div class="tel-stat-val" style="color:${col}">${tw.length}</div><div class="tel-stat-sub">${wkR(ws)}</div></div>
-    <div class="tel-stat"><div class="tel-stat-lbl">Total tid</div><div class="tel-stat-val" style="color:${col};font-size:${tot>=600?'18px':'26px'}">${fmtMin(tot)}</div><div class="tel-stat-sub">${mc.filter(c=>c.duration_min>0).length} med varighet</div></div>
-    <div class="tel-stat"><div class="tel-stat-lbl">Siste samtale</div><div class="tel-stat-val" style="font-size:16px;color:${col};margin-top:4px">${last?fmtCD(last.called_at):'–'}</div><div class="tel-stat-sub">${last?esc(last.contact_name):'ingen ennå'}</div></div>`;
-}
-function renderWeekSec(){
-  const ws=getWS(weekOffset),we=getWE(ws);
-  document.getElementById('wk-num').textContent='Uke '+getWN(ws);
-  document.getElementById('wk-range').textContent=wkR(ws);
-  const mc=myC();
-  const wc=mc.filter(c=>{const d=new Date(c.called_at);d.setHours(0,0,0,0);return d>=ws&&d<=we;});
-  const pi=TEAM.indexOf(activePerson),col=TCLR[pi];
-  const dc=[];
-  for(let i=0;i<7;i++){const d=new Date(ws);d.setDate(d.getDate()+i);d.setHours(0,0,0,0);const de=new Date(d);de.setHours(23,59,59);dc.push(mc.filter(c=>{const cd=new Date(c.called_at);return cd>=d&&cd<=de;}).length);}
-  const mx=Math.max(...dc,1);
-  const todMs=new Date().setHours(0,0,0,0);
-  document.getElementById('week-bars').innerHTML=DNO.map((d,i)=>{
-    const h=Math.max(4,Math.round((dc[i]/mx)*40));
-    const td=new Date(ws);td.setDate(td.getDate()+i);
-    const isT=td.setHours(0,0,0,0)===todMs;
-    return`<div class="wb-col"><div class="wb-fill" style="height:${h}px;background:${isT?col:col+'55'}"></div><div class="wb-lbl">${d[0].toUpperCase()}${d[1]}</div></div>`;
-  }).join('');
-  const lst=document.getElementById('week-calls');
-  if(!wc.length){lst.innerHTML=`<div class="no-calls">Ingen samtaler denne uken for ${activePerson}</div>`;return;}
-  lst.innerHTML=wc.sort((a,b)=>new Date(b.called_at)-new Date(a.called_at)).map(c=>`
-    <div class="call-row">
-      <div class="c-dir ${c.direction==='ut'?'c-ut':'c-inn'}">${c.direction==='ut'?'↑':'↓'}</div>
-      <div class="c-info">
-        <div class="c-name">${esc(c.contact_name)}</div>
-        ${c.notes?`<div class="c-note">${esc(c.notes)}</div>`:''}
-        <div class="c-tags">
-          ${c.segment?`<span class="c-tag c-tag-seg">${esc(c.segment)}</span>`:''}
-          ${c.module?`<span class="c-tag c-tag-mod">${esc(c.module)}</span>`:''}
-        </div>
-      </div>
-      <div class="c-meta"><div class="c-time">${fmtCT(c.called_at)}</div><div class="c-date">${fmtCD(c.called_at)}</div>${c.duration_min>0?`<div class="c-dur">${c.duration_min} min</div>`:''}</div>
-      <button class="c-edit" onclick="openCallModal('${c.id}')" title="Rediger">✎</button>
-    </div>`).join('');
-}
-function renderOv(){
-  const ws=getWS(0),we=getWE(ws);
-  document.getElementById('ov-tbody').innerHTML=TEAM.map((p,i)=>{
-    const pc=calls.filter(c=>c.person===p);
-    const wc=pc.filter(c=>{const d=new Date(c.called_at);d.setHours(0,0,0,0);return d>=ws&&d<=we;});
-    const tot=pc.reduce((s,c)=>s+(c.duration_min||0),0);
-    const last=[...pc].sort((a,b)=>new Date(b.called_at)-new Date(a.called_at))[0];
-    return`<tr><td><span class="ov-av" style="background:${TBG[i]};color:${TCLR[i]}">${p[0]}</span>${p}</td><td><strong>${pc.length}</strong></td><td>${wc.length}</td><td>${last?fmtCD(last.called_at):'–'}</td><td>${fmtMin(tot)}</td></tr>`;
-  }).join('');
-}
+function renderTelStats(){const mc=myC(),ws=getWS(0),we=getWE(ws),tw=mc.filter(c=>{const d=new Date(c.called_at);d.setHours(0,0,0,0);return d>=ws&&d<=we;}),tot=mc.reduce((s,c)=>s+(c.duration_min||0),0),last=mc[0],pi=TEAM.indexOf(activePerson),col=TCLR[pi];document.getElementById('tel-stats').innerHTML=`<div class="tel-stat"><div class="tel-stat-lbl">Totalt</div><div class="tel-stat-val" style="color:${col}">${mc.length}</div><div class="tel-stat-sub">samtaler totalt</div></div><div class="tel-stat"><div class="tel-stat-lbl">Denne uken</div><div class="tel-stat-val" style="color:${col}">${tw.length}</div><div class="tel-stat-sub">${wkR(ws)}</div></div><div class="tel-stat"><div class="tel-stat-lbl">Total tid</div><div class="tel-stat-val" style="color:${col};font-size:${tot>=600?'18px':'26px'}">${fmtMin(tot)}</div><div class="tel-stat-sub">${mc.filter(c=>c.duration_min>0).length} med varighet</div></div><div class="tel-stat"><div class="tel-stat-lbl">Siste samtale</div><div class="tel-stat-val" style="font-size:16px;color:${col};margin-top:4px">${last?fmtCD(last.called_at):'–'}</div><div class="tel-stat-sub">${last?esc(last.contact_name):'ingen ennå'}</div></div>`;}
+function renderWeekSec(){const ws=getWS(weekOffset),we=getWE(ws);document.getElementById('wk-num').textContent='Uke '+getWN(ws);document.getElementById('wk-range').textContent=wkR(ws);const mc=myC(),wc=mc.filter(c=>{const d=new Date(c.called_at);d.setHours(0,0,0,0);return d>=ws&&d<=we;}),pi=TEAM.indexOf(activePerson),col=TCLR[pi],dc=[];for(let i=0;i<7;i++){const d=new Date(ws);d.setDate(d.getDate()+i);d.setHours(0,0,0,0);const de=new Date(d);de.setHours(23,59,59);dc.push(mc.filter(c=>{const cd=new Date(c.called_at);return cd>=d&&cd<=de;}).length);}const mx=Math.max(...dc,1),todMs=new Date().setHours(0,0,0,0);document.getElementById('week-bars').innerHTML=DNO.map((d,i)=>{const h=Math.max(4,Math.round((dc[i]/mx)*40)),td=new Date(ws);td.setDate(td.getDate()+i);const isT=td.setHours(0,0,0,0)===todMs;return`<div class="wb-col"><div class="wb-fill" style="height:${h}px;background:${isT?col:col+'55'}"></div><div class="wb-lbl">${d[0].toUpperCase()}${d[1]}</div></div>`;}).join('');const lst=document.getElementById('week-calls');if(!wc.length){lst.innerHTML=`<div class="no-calls">Ingen samtaler denne uken for ${activePerson}</div>`;return;}lst.innerHTML=wc.sort((a,b)=>new Date(b.called_at)-new Date(a.called_at)).map(c=>`<div class="call-row"><div class="c-dir ${c.direction==='ut'?'c-ut':'c-inn'}">${c.direction==='ut'?'↑':'↓'}</div><div class="c-info"><div class="c-name">${esc(c.contact_name)}</div>${c.notes?`<div class="c-note">${esc(c.notes)}</div>`:''}<div class="c-tags">${c.segment?`<span class="c-tag c-tag-seg">${esc(c.segment)}</span>`:''}${c.module?`<span class="c-tag c-tag-mod">${esc(c.module)}</span>`:''}</div></div><div class="c-meta"><div class="c-time">${fmtCT(c.called_at)}</div><div class="c-date">${fmtCD(c.called_at)}</div>${c.duration_min>0?`<div class="c-dur">${c.duration_min} min</div>`:''}</div><button class="c-edit" onclick="openCallModal('${c.id}')" title="Rediger">✎</button></div>`).join('');}
+function renderOv(){const ws=getWS(0),we=getWE(ws);document.getElementById('ov-tbody').innerHTML=TEAM.map((p,i)=>{const pc=calls.filter(c=>c.person===p),wc=pc.filter(c=>{const d=new Date(c.called_at);d.setHours(0,0,0,0);return d>=ws&&d<=we;}),tot=pc.reduce((s,c)=>s+(c.duration_min||0),0),last=[...pc].sort((a,b)=>new Date(b.called_at)-new Date(a.called_at))[0];return`<tr><td><span class="ov-av" style="background:${TBG[i]};color:${TCLR[i]}">${p[0]}</span>${p}</td><td><strong>${pc.length}</strong></td><td>${wc.length}</td><td>${last?fmtCD(last.called_at):'–'}</td><td>${fmtMin(tot)}</td></tr>`;}).join('');}
 function changeWeek(d){weekOffset+=d;renderWeekSec();}
-async function quickLog(){
-  const name=document.getElementById('ql-name').value.trim();
-  if(!name){toast('Fyll inn navn/tlf');return;}
-  const p={person:activePerson,contact_name:name,duration_min:parseInt(document.getElementById('ql-dur').value)||0,direction:document.getElementById('ql-dir').value,segment:document.getElementById('ql-seg').value||null,module:document.getElementById('ql-mod').value||null,notes:document.getElementById('ql-note').value.trim(),called_at:new Date().toISOString()};
-  try{const r=await tApi.post(p);if(Array.isArray(r)&&r[0])calls.unshift(r[0]);['ql-name','ql-dur','ql-note'].forEach(id=>document.getElementById(id).value='');document.getElementById('ql-seg').value='';document.getElementById('ql-mod').value='';renderTelAll();toast('Samtale logget!');}catch(e){toast('Noe gikk galt');}
-}
-function openCallModal(id){
-  editCallId=id;
-  const now=new Date();
-  document.getElementById('call-modal-title').textContent=id?'Rediger samtale':'Ny samtale';
-  document.getElementById('cm-del-btn').style.display=id?'block':'none';
-  if(id){
-    const c=calls.find(x=>x.id===id);
-    document.getElementById('cm-person').value=c.person;
-    document.getElementById('cm-name').value=c.contact_name;
-    const dt=new Date(c.called_at);
-    document.getElementById('cm-date').value=dt.toISOString().split('T')[0];
-    document.getElementById('cm-time').value=dt.getHours().toString().padStart(2,'0')+':'+dt.getMinutes().toString().padStart(2,'0');
-    document.getElementById('cm-dur').value=c.duration_min||'';
-    document.getElementById('cm-dir').value=c.direction||'inn';
-    document.getElementById('cm-seg').value=c.segment||'';
-    document.getElementById('cm-mod').value=c.module||'';
-    document.getElementById('cm-note').value=c.notes||'';
-  }else{
-    document.getElementById('cm-person').value=activePerson;
-    ['cm-name','cm-note'].forEach(id=>document.getElementById(id).value='');
-    document.getElementById('cm-date').value=now.toISOString().split('T')[0];
-    document.getElementById('cm-time').value=now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');
-    document.getElementById('cm-dur').value='';
-    document.getElementById('cm-dir').value='inn';
-    document.getElementById('cm-seg').value='';
-    document.getElementById('cm-mod').value='';
-  }
-  document.getElementById('call-modal').classList.add('open');
-}
+async function quickLog(){const name=document.getElementById('ql-name').value.trim();if(!name){toast('Fyll inn navn/tlf');return;}const p={person:activePerson,contact_name:name,duration_min:parseInt(document.getElementById('ql-dur').value)||0,direction:document.getElementById('ql-dir').value,segment:document.getElementById('ql-seg').value||null,module:document.getElementById('ql-mod').value||null,notes:document.getElementById('ql-note').value.trim(),called_at:new Date().toISOString()};try{const r=await tApi.post(p);if(Array.isArray(r)&&r[0])calls.unshift(r[0]);['ql-name','ql-dur','ql-note'].forEach(id=>document.getElementById(id).value='');document.getElementById('ql-seg').value='';document.getElementById('ql-mod').value='';renderTelAll();toast('Samtale logget!');}catch(e){toast('Noe gikk galt');}}
+function openCallModal(id){editCallId=id;const now=new Date();document.getElementById('call-modal-title').textContent=id?'Rediger samtale':'Ny samtale';document.getElementById('cm-del-btn').style.display=id?'block':'none';if(id){const c=calls.find(x=>x.id===id);document.getElementById('cm-person').value=c.person;document.getElementById('cm-name').value=c.contact_name;const dt=new Date(c.called_at);document.getElementById('cm-date').value=dt.toISOString().split('T')[0];document.getElementById('cm-time').value=dt.getHours().toString().padStart(2,'0')+':'+dt.getMinutes().toString().padStart(2,'0');document.getElementById('cm-dur').value=c.duration_min||'';document.getElementById('cm-dir').value=c.direction||'inn';document.getElementById('cm-seg').value=c.segment||'';document.getElementById('cm-mod').value=c.module||'';document.getElementById('cm-note').value=c.notes||'';}else{document.getElementById('cm-person').value=activePerson;['cm-name','cm-note'].forEach(id=>document.getElementById(id).value='');document.getElementById('cm-date').value=now.toISOString().split('T')[0];document.getElementById('cm-time').value=now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');document.getElementById('cm-dur').value='';document.getElementById('cm-dir').value='inn';document.getElementById('cm-seg').value='';document.getElementById('cm-mod').value='';}document.getElementById('call-modal').classList.add('open');}
 function closeCallModal(){document.getElementById('call-modal').classList.remove('open');editCallId=null;}
 document.getElementById('call-modal').addEventListener('click',e=>{if(e.target===document.getElementById('call-modal'))closeCallModal();});
-async function saveCall(){
-  const name=document.getElementById('cm-name').value.trim();
-  if(!name){toast('Fyll inn kontaktnavn');return;}
-  const date=document.getElementById('cm-date').value,time=document.getElementById('cm-time').value||'00:00';
-  const p={person:document.getElementById('cm-person').value,contact_name:name,called_at:new Date(date+'T'+time).toISOString(),duration_min:parseInt(document.getElementById('cm-dur').value)||0,direction:document.getElementById('cm-dir').value,segment:document.getElementById('cm-seg').value||null,module:document.getElementById('cm-mod').value||null,notes:document.getElementById('cm-note').value.trim()};
-  try{
-    if(editCallId){const r=await tApi.patch(editCallId,p);if(Array.isArray(r)&&r[0]){const i=calls.findIndex(c=>c.id===editCallId);if(i>-1)calls[i]=r[0];}}
-    else{const r=await tApi.post(p);if(Array.isArray(r)&&r[0])calls.unshift(r[0]);}
-    closeCallModal();renderTelAll();toast(editCallId?'Oppdatert':'Lagret');
-  }catch(e){toast('Noe gikk galt');}
-}
-async function deleteCall(){
-  if(!editCallId||!confirm('Slett denne samtalen?'))return;
-  await tApi.del(editCallId);calls=calls.filter(c=>c.id!==editCallId);closeCallModal();renderTelAll();toast('Slettet');
-}
-
-// ══ EXPORT ══
-function openExportModal(){
-  const now=new Date();
-  const firstDay=new Date(now.getFullYear(),now.getMonth(),1);
-  document.getElementById('exp-from').value=firstDay.toISOString().split('T')[0];
-  document.getElementById('exp-to').value=now.toISOString().split('T')[0];
-  document.getElementById('export-modal').classList.add('open');
-}
+async function saveCall(){const name=document.getElementById('cm-name').value.trim();if(!name){toast('Fyll inn kontaktnavn');return;}const date=document.getElementById('cm-date').value,time=document.getElementById('cm-time').value||'00:00',p={person:document.getElementById('cm-person').value,contact_name:name,called_at:new Date(date+'T'+time).toISOString(),duration_min:parseInt(document.getElementById('cm-dur').value)||0,direction:document.getElementById('cm-dir').value,segment:document.getElementById('cm-seg').value||null,module:document.getElementById('cm-mod').value||null,notes:document.getElementById('cm-note').value.trim()};try{if(editCallId){const r=await tApi.patch(editCallId,p);if(Array.isArray(r)&&r[0]){const i=calls.findIndex(c=>c.id===editCallId);if(i>-1)calls[i]=r[0];}}else{const r=await tApi.post(p);if(Array.isArray(r)&&r[0])calls.unshift(r[0]);}closeCallModal();renderTelAll();toast(editCallId?'Oppdatert':'Lagret');}catch(e){toast('Noe gikk galt');}}
+async function deleteCall(){if(!editCallId||!confirm('Slett denne samtalen?'))return;await tApi.del(editCallId);calls=calls.filter(c=>c.id!==editCallId);closeCallModal();renderTelAll();toast('Slettet');}
+function openExportModal(){const now=new Date();document.getElementById('exp-from').value=new Date(now.getFullYear(),now.getMonth(),1).toISOString().split('T')[0];document.getElementById('exp-to').value=now.toISOString().split('T')[0];document.getElementById('export-modal').classList.add('open');}
 function closeExportModal(){document.getElementById('export-modal').classList.remove('open');}
 document.getElementById('export-modal').addEventListener('click',e=>{if(e.target===document.getElementById('export-modal'))closeExportModal();});
-function exportCalls(who){
-  const from=document.getElementById('exp-from').value;
-  const to=document.getElementById('exp-to').value;
-  let data=who==='alle'?calls:calls.filter(c=>c.person===who);
-  if(from)data=data.filter(c=>c.called_at>=from);
-  if(to)data=data.filter(c=>c.called_at<=to+'T23:59:59');
-  if(!data.length){toast('Ingen samtaler i valgt periode');return;}
-  const headers=['Dato','Tid','Person','Kontakt','Retning','Varighet (min)','Segment','Modul','Notat'];
-  const rows=data.map(c=>{
-    const dt=new Date(c.called_at);
-    const dato=`${dt.getDate().toString().padStart(2,'0')}.${(dt.getMonth()+1).toString().padStart(2,'0')}.${dt.getFullYear()}`;
-    const tid=dt.getHours().toString().padStart(2,'0')+':'+dt.getMinutes().toString().padStart(2,'0');
-    return[dato,tid,c.person||'',c.contact_name||'',c.direction==='ut'?'Utgående':'Innkommende',c.duration_min||0,c.segment||'',c.module||'',c.notes||''].map(v=>`"${String(v).replace(/"/g,'""')}"`).join(';');
-  });
-  const csv='\uFEFF'+[headers.join(';'),...rows].join('\n');
-  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url;
-  const dateStr=new Date().toISOString().split('T')[0];
-  a.download=`telefonlogg_${who==='alle'?'alle':who.toLowerCase()}_${dateStr}.csv`;
-  a.click();
-  URL.revokeObjectURL(url);
-  toast(`Eksporterte ${data.length} samtaler`);
-}
-
-// ══ ÅRSHJUL ══
+function exportCalls(who){const from=document.getElementById('exp-from').value,to=document.getElementById('exp-to').value;let data=who==='alle'?calls:calls.filter(c=>c.person===who);if(from)data=data.filter(c=>c.called_at>=from);if(to)data=data.filter(c=>c.called_at<=to+'T23:59:59');if(!data.length){toast('Ingen samtaler i valgt periode');return;}const headers=['Dato','Tid','Person','Kontakt','Retning','Varighet (min)','Segment','Modul','Notat'],rows=data.map(c=>{const dt=new Date(c.called_at),dato=`${dt.getDate().toString().padStart(2,'0')}.${(dt.getMonth()+1).toString().padStart(2,'0')}.${dt.getFullYear()}`,tid=dt.getHours().toString().padStart(2,'0')+':'+dt.getMinutes().toString().padStart(2,'0');return[dato,tid,c.person||'',c.contact_name||'',c.direction==='ut'?'Utgående':'Innkommende',c.duration_min||0,c.segment||'',c.module||'',c.notes||''].map(v=>`"${String(v).replace(/"/g,'""')}"`).join(';');});const csv='\uFEFF'+[headers.join(';'),...rows].join('\n'),blob=new Blob([csv],{type:'text/csv;charset=utf-8;'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`telefonlogg_${who==='alle'?'alle':who.toLowerCase()}_${new Date().toISOString().split('T')[0]}.csv`;a.click();URL.revokeObjectURL(url);toast(`Eksporterte ${data.length} samtaler`);}
+// ÅRSHJUL
 let arshjulInited=false;
 function initArshjul(){if(!arshjulInited){arshjulInited=true;init();}}
 function showLoading(v){document.getElementById('loading-overlay').style.display=v?'flex':'none';}
 let modalDirty=false;
 function markDirty(){modalDirty=true;}
 function confirmClose(fn){if(modalDirty&&!confirm('Du har ulagrede endringer. Vil du lukke uten å lagre?'))return;modalDirty=false;fn();}
-document.addEventListener('keydown',e=>{
-  if(e.key!=='Escape')return;
-  if(document.getElementById('event-modal-bg').classList.contains('open'))confirmClose(closeEventModal);
-  else if(document.getElementById('wheel-modal-bg').classList.contains('open'))confirmClose(closeWheelModal);
-  else if(document.getElementById('bursdag-modal-bg').classList.contains('open'))confirmClose(closeBursdagModal);
-  else if(document.getElementById('call-modal').classList.contains('open'))closeCallModal();
-  else if(document.getElementById('export-modal').classList.contains('open'))closeExportModal();
-});
-document.querySelectorAll('.modal-bg').forEach(bg=>{
-  if(bg.id==='call-modal'||bg.id==='export-modal')return;
-  bg.addEventListener('click',e=>{
-    if(e.target!==bg)return;
-    if(bg.id==='event-modal-bg')confirmClose(closeEventModal);
-    else if(bg.id==='wheel-modal-bg')confirmClose(closeWheelModal);
-    else if(bg.id==='bursdag-modal-bg')confirmClose(closeBursdagModal);
-  });
-});
+document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;if(document.getElementById('org-panel').classList.contains('open'))closeOrgPanel();else if(document.getElementById('note-modal-bg').classList.contains('open'))closeNoteModal();else if(document.getElementById('org-modal-bg').classList.contains('open'))closeOrgModal();else if(document.getElementById('event-modal-bg').classList.contains('open'))confirmClose(closeEventModal);else if(document.getElementById('wheel-modal-bg').classList.contains('open'))confirmClose(closeWheelModal);else if(document.getElementById('bursdag-modal-bg').classList.contains('open'))confirmClose(closeBursdagModal);else if(document.getElementById('call-modal').classList.contains('open'))closeCallModal();else if(document.getElementById('export-modal').classList.contains('open'))closeExportModal();});
+document.querySelectorAll('.modal-bg').forEach(bg=>{if(['call-modal','export-modal','org-modal-bg','note-modal-bg'].includes(bg.id))return;bg.addEventListener('click',e=>{if(e.target!==bg)return;if(bg.id==='event-modal-bg')confirmClose(closeEventModal);else if(bg.id==='wheel-modal-bg')confirmClose(closeWheelModal);else if(bg.id==='bursdag-modal-bg')confirmClose(closeBursdagModal);});});
+['org-modal-bg','note-modal-bg'].forEach(id=>{document.getElementById(id).addEventListener('click',e=>{if(e.target===document.getElementById(id)){if(id==='org-modal-bg')closeOrgModal();else closeNoteModal();}});});
 const api={
   getWheels:()=>fetch(`${SB_URL}/rest/v1/wheels?order=created_at.asc`,{headers:H}).then(r=>r.json()),
   saveWheel:w=>fetch(`${SB_URL}/rest/v1/wheels`,{method:'POST',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify(w)}).then(r=>r.json()),
   updateWheel:(id,w)=>fetch(`${SB_URL}/rest/v1/wheels?id=eq.${id}`,{method:'PATCH',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify(w)}).then(r=>r.json()),
   deleteWheel:id=>fetch(`${SB_URL}/rest/v1/wheels?id=eq.${id}`,{method:'DELETE',headers:H}),
   getEvents:wid=>fetch(`${SB_URL}/rest/v1/events?wheel_id=eq.${wid}&order=start_date.asc`,{headers:H}).then(r=>r.json()),
+  getAllEvents:()=>fetch(`${SB_URL}/rest/v1/events?order=start_date.asc`,{headers:H}).then(r=>r.json()),
   saveEvent:e=>fetch(`${SB_URL}/rest/v1/events`,{method:'POST',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify(e)}).then(r=>r.json()),
   updateEvent:(id,e)=>fetch(`${SB_URL}/rest/v1/events?id=eq.${id}`,{method:'PATCH',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify(e)}).then(r=>r.json()),
   deleteEvent:id=>fetch(`${SB_URL}/rest/v1/events?id=eq.${id}`,{method:'DELETE',headers:H}),
+  getOrgs:()=>fetch(`${SB_URL}/rest/v1/organizers?order=name.asc`,{headers:H}).then(r=>r.json()),
+  saveOrg:o=>fetch(`${SB_URL}/rest/v1/organizers`,{method:'POST',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify(o)}).then(r=>r.json()),
+  updateOrg:(id,o)=>fetch(`${SB_URL}/rest/v1/organizers?id=eq.${id}`,{method:'PATCH',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify(o)}).then(r=>r.json()),
+  deleteOrg:id=>fetch(`${SB_URL}/rest/v1/organizers?id=eq.${id}`,{method:'DELETE',headers:H}),
+  getNotes:oid=>fetch(`${SB_URL}/rest/v1/org_notes?organizer_id=eq.${oid}&order=note_date.desc`,{headers:H}).then(r=>r.json()),
+  saveNote:n=>fetch(`${SB_URL}/rest/v1/org_notes`,{method:'POST',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify(n)}).then(r=>r.json()),
+  updateNote:(id,n)=>fetch(`${SB_URL}/rest/v1/org_notes?id=eq.${id}`,{method:'PATCH',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify(n)}).then(r=>r.json()),
+  deleteNote:id=>fetch(`${SB_URL}/rest/v1/org_notes?id=eq.${id}`,{method:'DELETE',headers:H}),
+  getNoteTypes:()=>fetch(`${SB_URL}/rest/v1/note_types?order=name.asc`,{headers:H}).then(r=>r.json()),
+  saveNoteType:t=>fetch(`${SB_URL}/rest/v1/note_types`,{method:'POST',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify(t)}).then(r=>r.json()),
 };
 const MONTHS=['Januar','Februar','Mars','April','Mai','Juni','Juli','August','September','Oktober','November','Desember'];
 const COLORS=['#C9624F','#D4845A','#D4A24C','#C9B84C','#8FB84C','#4BA87D','#3a8a6a','#4AABB8','#5A7FBB','#6A6FBB','#B87BAC','#D4627A','#7B6FBF','#6B9E3A','#4a7fb5','#C47A40','#888780','#5a5a5a','#A0522D','#2E7D6B'];
@@ -914,18 +809,38 @@ const AVATAR_TEXT=['#6b2fa0','#2f4fa0','#2fa06b','#a07a2f','#a02f6b','#4aa02f','
 const BURSDAG_COLOR='#a855f7';
 const WARN_DAYS=7;
 let currentYear=new Date().getFullYear();
-let wheels=[],currentWheelId=null,events=[],filteredEvents=[];
+let wheels=[],currentWheelId=null,events=[],allEvents=[],filteredEvents=[];
 let selectedMonth=null,selectedId=null,editingId=null,editingWheelId=null;
-let selectedColor=COLORS[0];
-let pendingHendelser=[],currentView='wheel';
-let wheelMode='arrangementer';
+let selectedColor=COLORS[0],pendingHendelser=[],currentView='wheel',wheelMode='arrangementer';
 const TODAY=new Date();TODAY.setHours(0,0,0,0);
 const CX=310,CY=310,OR=295,IR=118,HENDELSE_R=265,HENDELSE_DOT_R=5;
-let tooltipData=[];
-let persons=[];
-let editingPersonIdx=null;
+let tooltipData=[],persons=[],editingPersonIdx=null;
+let organizers=[],currentOrgId=null,orgNotes=[],noteTypes=[],editingNoteId=null,editingOrgId=null,orgColorSelected=COLORS[0],linkedEvtIds=new Set(),orgModalForEventId=null;
+async function loadOrgs(){try{const d=await api.getOrgs();if(Array.isArray(d))organizers=d;}catch(e){console.warn('Could not load organizers',e);}}
+async function loadNoteTypes(){try{const d=await api.getNoteTypes();if(Array.isArray(d)&&d.length)noteTypes=d.map(t=>t.name);else noteTypes=[...DEFAULT_NOTE_TYPES];}catch(e){noteTypes=[...DEFAULT_NOTE_TYPES];}}
+function getOrgForEvent(ev){return organizers.find(o=>o.id===ev.organizer_id)||null;}
+function orgInitials(name){const p=name.trim().split(/\s+/);return p.length>=2?(p[0][0]+p[p.length-1][0]).toUpperCase():name.substring(0,2).toUpperCase();}
+function orgAvatarStyle(color){return`background:${color}22;color:${color};`;}
+function renderDetOrgSection(ev){const org=getOrgForEvent(ev),w=cw(),cont=document.getElementById('det-org-content'),sec=document.getElementById('det-org-section');if(w&&w.readonly){sec.style.display='none';return;}sec.style.display='block';if(org){cont.innerHTML=`<div class="det-org-section"><div class="det-org-av" style="${orgAvatarStyle(org.color)}">${orgInitials(org.name)}</div><div class="det-org-name">${esc(org.name)}</div><button class="det-org-btn" onclick="openOrgPanel('${org.id}')">Åpne profil →</button></div>`;}else{cont.innerHTML=`<div style="display:flex;gap:8px;align-items:center"><button class="det-org-link" onclick="openOrgModal(null,'${ev.id}')">+ Koble til arrangør</button><span style="font-size:12px;color:#aaa">Ingen arrangør koblet</span></div>`;}}
+async function openOrgPanel(orgId){currentOrgId=orgId;const org=organizers.find(o=>o.id===orgId);if(!org)return;document.getElementById('op-avatar').style.cssText=orgAvatarStyle(org.color);document.getElementById('op-avatar').textContent=orgInitials(org.name);document.getElementById('op-name').textContent=org.name;const orgEvts=allEvents.filter(e=>e.organizer_id===orgId);document.getElementById('op-sub').textContent=`${orgEvts.length} arrangement${orgEvts.length!==1?'er':''}`;document.getElementById('org-panel').classList.add('open');document.getElementById('org-panel-overlay').classList.add('open');await renderOrgPanelBody(org,orgEvts);}
+async function renderOrgPanelBody(org,orgEvts){let notes=[];try{const d=await api.getNotes(org.id);if(Array.isArray(d))notes=d;}catch(e){}orgNotes=notes;const body=document.getElementById('op-body');let html='';html+=`<div><div class="org-section-title">Kontaktinfo</div><div class="org-contact-grid"><div class="org-contact-item"><div class="org-contact-lbl">Kontaktperson</div><div class="${org.contact_name?'org-contact-val':'org-contact-empty'}">${esc(org.contact_name)||'Ikke registrert'}</div></div><div class="org-contact-item"><div class="org-contact-lbl">Telefon</div><div class="${org.phone?'org-contact-val':'org-contact-empty'}">${esc(org.phone)||'Ikke registrert'}</div></div><div class="org-contact-item" style="grid-column:1/-1"><div class="org-contact-lbl">E-post</div><div class="${org.email?'org-contact-val':'org-contact-empty'}">${esc(org.email)||'Ikke registrert'}</div></div></div></div>`;html+=`<div><div class="org-section-title">Arrangementer (${orgEvts.length})</div>`;if(orgEvts.length){const sorted=[...orgEvts].sort((a,b)=>new Date(b.start_date)-new Date(a.start_date));html+=`<div class="org-arr-list">`;sorted.forEach(ev=>{const live=isActiveNow(ev);html+=`<div class="org-arr-item" onclick="showDetail('${ev.id}');closeOrgPanel()"><div class="org-arr-dot" style="background:${ev.color}"></div><div class="org-arr-name">${esc(ev.name)}</div><div class="org-arr-date">${new Date(ev.start_date).getFullYear()}</div>${live?'<span class="org-arr-live">Pågår nå</span>':''}</div>`;});html+=`</div>`;}else html+=`<div class="org-empty">Ingen arrangementer koblet ennå</div>`;html+=`</div>`;html+=`<div><div class="org-section-title">Notatlogg (${notes.length}) <button class="btn-primary" style="font-size:11px;padding:5px 10px;" onclick="openNoteModal(null)">+ Nytt notat</button></div>`;if(notes.length){html+=`<div class="org-note-list">`;notes.forEach(n=>{const tc=getNoteTypeColor(n.note_type);html+=`<div class="org-note-item"><div class="org-note-top"><span class="org-note-type ${tc}">${esc(n.note_type)}</span><span class="org-note-date">${fmtDate(n.note_date)}</span><button class="org-note-del" onclick="openNoteModal('${n.id}')">✎</button></div><div class="org-note-text">${esc(n.note_text)}</div></div>`;});html+=`</div>`;}else html+=`<div class="org-empty">Ingen notater ennå. Trykk + Nytt notat.</div>`;html+=`</div>`;body.innerHTML=html;}
+function closeOrgPanel(){document.getElementById('org-panel').classList.remove('open');document.getElementById('org-panel-overlay').classList.remove('open');currentOrgId=null;}
+function getNoteTypeColor(type){const map={'Møte':'ntype-mote','Evaluering':'ntype-evaluering','Opplæring':'ntype-opplaering','Intern':'ntype-intern'};return map[type]||'ntype-custom';}
+function openNoteModal(noteId){editingNoteId=noteId;document.getElementById('note-modal-title').textContent=noteId?'Rediger notat':'Nytt notat';document.getElementById('nm-del-btn').style.display=noteId?'block':'none';const sel=document.getElementById('nm-type');sel.innerHTML=noteTypes.map(t=>`<option>${t}</option>`).join('')+`<option value="__new__">+ Ny type…</option>`;if(noteId){const n=orgNotes.find(x=>x.id===noteId);if(n){sel.value=n.note_type;document.getElementById('nm-date').value=n.note_date;document.getElementById('nm-text').value=n.note_text||'';}}else{sel.value=noteTypes[0]||'Møte';document.getElementById('nm-date').value=new Date().toISOString().split('T')[0];document.getElementById('nm-text').value='';}sel.onchange=()=>{if(sel.value==='__new__'){const nn=prompt('Navn på ny notattype:');if(nn&&nn.trim()){const t=nn.trim();if(!noteTypes.includes(t)){noteTypes.push(t);api.saveNoteType({name:t}).catch(()=>{});}sel.innerHTML=noteTypes.map(x=>`<option>${x}</option>`).join('')+`<option value="__new__">+ Ny type…</option>`;sel.value=t;}}};document.getElementById('note-modal-bg').classList.add('open');}
+function closeNoteModal(){document.getElementById('note-modal-bg').classList.remove('open');editingNoteId=null;}
+async function saveNote(){const type=document.getElementById('nm-type').value,date=document.getElementById('nm-date').value,text=document.getElementById('nm-text').value.trim();if(!date||!text){toast('Fyll ut dato og tekst');return;}const payload={organizer_id:currentOrgId,note_type:type,note_date:date,note_text:text};try{if(editingNoteId){await api.updateNote(editingNoteId,payload);const i=orgNotes.findIndex(n=>n.id===editingNoteId);if(i>-1)orgNotes[i]={...orgNotes[i],...payload};}else{const r=await api.saveNote(payload);if(Array.isArray(r)&&r[0])orgNotes.unshift(r[0]);}closeNoteModal();const org=organizers.find(o=>o.id===currentOrgId),orgEvts=allEvents.filter(e=>e.organizer_id===currentOrgId);if(org)await renderOrgPanelBody(org,orgEvts);toast(editingNoteId?'Notat oppdatert':'Notat lagret');}catch(e){toast('Noe gikk galt');}}
+async function deleteNote(){if(!editingNoteId||!confirm('Slett dette notatet?'))return;await api.deleteNote(editingNoteId);orgNotes=orgNotes.filter(n=>n.id!==editingNoteId);closeNoteModal();const org=organizers.find(o=>o.id===currentOrgId),orgEvts=allEvents.filter(e=>e.organizer_id===currentOrgId);if(org)await renderOrgPanelBody(org,orgEvts);toast('Notat slettet');}
+function openOrgModal(orgId,forEventId){editingOrgId=orgId;orgModalForEventId=forEventId||null;document.getElementById('org-modal-title').textContent=orgId?'Rediger arrangør':'Ny arrangør';document.getElementById('om-del-btn').style.display=orgId?'block':'none';if(orgId){const org=organizers.find(o=>o.id===orgId);document.getElementById('om-name').value=org.name||'';document.getElementById('om-contact').value=org.contact_name||'';document.getElementById('om-phone').value=org.phone||'';document.getElementById('om-email').value=org.email||'';orgColorSelected=org.color||COLORS[0];linkedEvtIds=new Set(allEvents.filter(e=>e.organizer_id===orgId).map(e=>e.id));}else{['om-name','om-contact','om-phone','om-email'].forEach(id=>document.getElementById(id).value='');orgColorSelected=COLORS[0];linkedEvtIds=new Set(forEventId?[forEventId]:[]);}buildOrgColorGrid();renderLinkEvtList('');document.getElementById('org-modal-bg').classList.add('open');setTimeout(()=>document.getElementById('om-name').focus(),100);}
+function closeOrgModal(){document.getElementById('org-modal-bg').classList.remove('open');editingOrgId=null;orgModalForEventId=null;}
+function buildOrgColorGrid(){document.getElementById('org-color-grid').innerHTML=COLORS.map(c=>`<div class="color-swatch${c===orgColorSelected?' selected':''}" style="background:${c}" onclick="pickOrgColor('${c}')"></div>`).join('');}
+function pickOrgColor(c){orgColorSelected=c;document.querySelectorAll('#org-color-grid .color-swatch').forEach(s=>{s.classList.remove('selected');if(rgbToHex(s.style.backgroundColor).toLowerCase()===c.toLowerCase())s.classList.add('selected');});}
+function filterLinkEvts(){renderLinkEvtList(document.getElementById('om-search').value.toLowerCase());}
+function renderLinkEvtList(q){const list=document.getElementById('om-evt-list'),filtered=allEvents.filter(e=>!q||e.name.toLowerCase().includes(q));if(!filtered.length){list.innerHTML=`<div style="font-size:13px;color:#ccc;padding:8px;">Ingen arrangementer funnet</div>`;return;}list.innerHTML=filtered.map(e=>`<label class="link-evt-row"><input type="checkbox" ${linkedEvtIds.has(e.id)?'checked':''} onchange="toggleLinkEvt('${e.id}',this.checked)"><div class="link-evt-dot" style="background:${e.color}"></div><span class="link-evt-name">${esc(e.name)}</span><span class="link-evt-year">${new Date(e.start_date).getFullYear()}</span></label>`).join('');}
+function toggleLinkEvt(id,checked){if(checked)linkedEvtIds.add(id);else linkedEvtIds.delete(id);}
+async function saveOrg(){const name=document.getElementById('om-name').value.trim();if(!name){toast('Gi arrangøren et navn');return;}const payload={name,color:orgColorSelected,contact_name:document.getElementById('om-contact').value.trim()||null,phone:document.getElementById('om-phone').value.trim()||null,email:document.getElementById('om-email').value.trim()||null};try{let orgId=editingOrgId;if(editingOrgId){const r=await api.updateOrg(editingOrgId,payload);if(Array.isArray(r)&&r[0]){const i=organizers.findIndex(o=>o.id===editingOrgId);organizers[i]=r[0];}}else{const r=await api.saveOrg(payload);if(Array.isArray(r)&&r[0]){organizers.push(r[0]);orgId=r[0].id;}}const prevLinked=allEvents.filter(e=>e.organizer_id===orgId).map(e=>e.id),toUnlink=prevLinked.filter(id=>!linkedEvtIds.has(id)),toLink=[...linkedEvtIds].filter(id=>!prevLinked.includes(id));await Promise.all([...toUnlink.map(id=>api.updateEvent(id,{organizer_id:null})),...toLink.map(id=>api.updateEvent(id,{organizer_id:orgId}))]);toUnlink.forEach(id=>{const e=allEvents.find(x=>x.id===id);if(e)e.organizer_id=null;});toLink.forEach(id=>{const e=allEvents.find(x=>x.id===id);if(e)e.organizer_id=orgId;});[...toUnlink,...toLink].forEach(id=>{const e=events.find(x=>x.id===id);if(e){const ae=allEvents.find(x=>x.id===id);if(ae)e.organizer_id=ae.organizer_id;}});closeOrgModal();if(selectedId){const ev=events.find(e=>e.id===selectedId);if(ev)renderDetOrgSection(ev);}toast(editingOrgId?'Arrangør oppdatert':'Arrangør opprettet');if(currentOrgId===orgId){const org=organizers.find(o=>o.id===orgId),orgEvts=allEvents.filter(e=>e.organizer_id===orgId);if(org)renderOrgPanelBody(org,orgEvts);}}catch(e){toast('Noe gikk galt');console.error(e);}}
+async function deleteOrg(){if(!editingOrgId||!confirm('Slett denne arrangøren? Notater slettes, men arrangementer beholdes.'))return;const linked=allEvents.filter(e=>e.organizer_id===editingOrgId);await Promise.all(linked.map(e=>api.updateEvent(e.id,{organizer_id:null})));linked.forEach(e=>{e.organizer_id=null;const ev=events.find(x=>x.id===e.id);if(ev)ev.organizer_id=null;});await api.deleteOrg(editingOrgId);organizers=organizers.filter(o=>o.id!==editingOrgId);closeOrgModal();closeOrgPanel();if(selectedId){const ev=events.find(e=>e.id===selectedId);if(ev)renderDetOrgSection(ev);}toast('Arrangør slettet');}
 async function loadPersons(){try{const d=await fetch(`${SB_URL}/rest/v1/persons?order=date.asc`,{headers:H}).then(r=>r.json());if(Array.isArray(d))persons=d;}catch(e){toast('Klarte ikke laste bursdager.');}}
-async function savePerson(){const name=document.getElementById('b-name').value.trim();const date=document.getElementById('b-date').value;if(!name||!date){toast('Fyll ut navn og dato');return;}try{if(editingPersonIdx!==null){const p=persons[editingPersonIdx];const res=await fetch(`${SB_URL}/rest/v1/persons?id=eq.${p.id}`,{method:'PATCH',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify({name,date})}).then(r=>r.json());if(Array.isArray(res)&&res[0])persons[editingPersonIdx]=res[0];}else{const res=await fetch(`${SB_URL}/rest/v1/persons`,{method:'POST',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify({name,date,cake:false})}).then(r=>r.json());if(Array.isArray(res)&&res[0])persons.push(res[0]);}closeBursdagModal();if(wheelMode==='bursdager'){drawWheel();renderBursdagPanel();}toast(editingPersonIdx!==null?'Oppdatert':'Kollega lagt til');}catch(e){toast('Noe gikk galt');}}
+async function savePerson(){const name=document.getElementById('b-name').value.trim(),date=document.getElementById('b-date').value;if(!name||!date){toast('Fyll ut navn og dato');return;}try{if(editingPersonIdx!==null){const p=persons[editingPersonIdx],res=await fetch(`${SB_URL}/rest/v1/persons?id=eq.${p.id}`,{method:'PATCH',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify({name,date})}).then(r=>r.json());if(Array.isArray(res)&&res[0])persons[editingPersonIdx]=res[0];}else{const res=await fetch(`${SB_URL}/rest/v1/persons`,{method:'POST',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify({name,date,cake:false})}).then(r=>r.json());if(Array.isArray(res)&&res[0])persons.push(res[0]);}closeBursdagModal();if(wheelMode==='bursdager'){drawWheel();renderBursdagPanel();}toast(editingPersonIdx!==null?'Oppdatert':'Kollega lagt til');}catch(e){toast('Noe gikk galt');}}
 async function deletePerson(){if(editingPersonIdx===null)return;const p=persons[editingPersonIdx];if(!confirm('Slett '+p.name+'?'))return;await fetch(`${SB_URL}/rest/v1/persons?id=eq.${p.id}`,{method:'DELETE',headers:H});persons.splice(editingPersonIdx,1);closeBursdagModal();if(wheelMode==='bursdager'){drawWheel();renderBursdagPanel();}toast('Slettet');}
 function openBursdagModal(idx){editingPersonIdx=idx;document.getElementById('bmodal-title').textContent=idx===null?'Legg til kollega':'Rediger kollega';document.getElementById('b-delete-btn').style.display=idx!==null?'block':'none';document.getElementById('b-name').value=idx!==null?persons[idx].name:'';document.getElementById('b-date').value=idx!==null?persons[idx].date:'';modalDirty=false;document.getElementById('bursdag-modal-bg').classList.add('open');setTimeout(()=>{['b-name','b-date'].forEach(id=>{document.getElementById(id).addEventListener('input',markDirty,{once:true});});},100);}
 function closeBursdagModal(){document.getElementById('bursdag-modal-bg').classList.remove('open');editingPersonIdx=null;}
@@ -936,17 +851,17 @@ function fmtBursdag(ds){const d=new Date(ds);return`${d.getDate()}. ${MONTHS[d.g
 function getBadge(ds){const days=daysUntilBursdag(ds),passed=bursdagPassed(ds);if(days===0)return['badge-today','I dag'];if(!passed&&days<=7)return['badge-soon',`Om ${days} dager`];if(!passed&&days<=31)return['badge-upcoming',`${days} dager`];if(passed)return['badge-passed','Passert'];return['badge-upcoming',`${days} dager`];}
 function getInitials(name){const p=name.trim().split(/\s+/);return p.length>=2?(p[0][0]+p[p.length-1][0]).toUpperCase():name.substring(0,2).toUpperCase();}
 function avatarStyle(idx){const i=idx%AVATAR_COLORS.length;return`background:${AVATAR_COLORS[i]};color:${AVATAR_TEXT[i]};`;}
-function setWheelMode(mode){wheelMode=mode;document.getElementById('btn-mode-arr').classList.toggle('active',mode==='arrangementer');document.getElementById('btn-mode-bursdag').classList.toggle('active',mode==='bursdager');const arrBelow=document.getElementById('below-wheel-arr');const bdBelow=document.getElementById('below-wheel-bursdag');const wheelTabs=document.getElementById('wheel-tabs');const filterBar=document.getElementById('filter-bar');const btnNew=document.getElementById('btn-new-event');const mainToggle=document.getElementById('main-view-toggle');const countdown=document.getElementById('countdown');if(mode==='bursdager'){arrBelow.style.display='none';bdBelow.style.display='flex';wheelTabs.style.display='none';filterBar.style.display='none';btnNew.style.display='none';countdown.style.display='none';mainToggle.style.display='none';document.getElementById('center-name').textContent='Bursdager';document.getElementById('view-wheel').style.display='flex';document.getElementById('view-list').style.display='none';drawWheel();renderBursdagPanel();}else{arrBelow.style.display='grid';bdBelow.style.display='none';wheelTabs.style.display='flex';filterBar.style.display='flex';btnNew.style.display='flex';mainToggle.style.display='flex';applyWheelSettings();applyFilter();}}
-function renderBursdagPanel(){const todayPeople=persons.filter(p=>daysUntilBursdag(p.date)===0);const todayBanner=document.getElementById('bursdag-today-banner');if(todayPeople.length){todayBanner.style.display='flex';document.getElementById('today-banner-text').innerHTML=`<strong>${todayPeople.map(p=>p.name).join(' & ')}</strong> har bursdag i dag!`;launchConfetti();}else todayBanner.style.display='none';const sorted=[...persons].map((p,i)=>({...p,_idx:i})).sort((a,b)=>{const da=bursdagThisYear(a.date),db=bursdagThisYear(b.date),pa=da<TODAY,pb=db<TODAY;if(pa&&!pb)return 1;if(!pa&&pb)return-1;return da-db;});const upcoming=sorted.filter(p=>!bursdagPassed(p.date)&&daysUntilBursdag(p.date)>0);const soonBanner=document.getElementById('bursdag-soon-banner');if(upcoming.length){const next=upcoming[0],days=daysUntilBursdag(next.date);if(days<=WARN_DAYS){soonBanner.style.display='flex';document.getElementById('soon-banner-text').innerHTML=`Husk: <strong>${next.name}</strong> har bursdag ${fmtBursdag(next.date)}!`;document.getElementById('soon-banner-days').textContent=days;}else soonBanner.style.display='none';}else soonBanner.style.display='none';const listEl=document.getElementById('bursdag-list');if(!persons.length){listEl.innerHTML='<div class="empty-state"><div class="empty-state-icon">🎂</div><div class="empty-state-title">Ingen kollegaer ennå</div><div class="empty-state-desc">Trykk + Legg til for å registrere bursdager.</div></div>';return;}listEl.innerHTML=sorted.map(p=>{const[bc,bt]=getBadge(p.date),isToday=daysUntilBursdag(p.date)===0;return`<div class="b-person"${isToday?' style="background:#fdf4ff;border-radius:10px;padding:6px 8px;margin:-6px -8px"':''}><div class="b-avatar" style="${avatarStyle(p._idx)}">${getInitials(p.name)}</div><div class="b-info"><div class="b-name">${p.name}${isToday?' 🎂':''}</div><div class="b-date">${fmtBursdag(p.date)}</div></div><span class="b-badge ${bc}">${bt}</span><button class="b-del-btn" onclick="openBursdagModal(${p._idx})" title="Rediger">✎</button></div>`;}).join('');}
+function setWheelMode(mode){wheelMode=mode;document.getElementById('btn-mode-arr').classList.toggle('active',mode==='arrangementer');document.getElementById('btn-mode-bursdag').classList.toggle('active',mode==='bursdager');const arrBelow=document.getElementById('below-wheel-arr'),bdBelow=document.getElementById('below-wheel-bursdag'),wheelTabs=document.getElementById('wheel-tabs'),filterBar=document.getElementById('filter-bar'),btnNew=document.getElementById('btn-new-event'),mainToggle=document.getElementById('main-view-toggle'),countdown=document.getElementById('countdown');if(mode==='bursdager'){arrBelow.style.display='none';bdBelow.style.display='flex';wheelTabs.style.display='none';filterBar.style.display='none';btnNew.style.display='none';countdown.style.display='none';mainToggle.style.display='none';document.getElementById('center-name').textContent='Bursdager';document.getElementById('view-wheel').style.display='flex';document.getElementById('view-list').style.display='none';drawWheel();renderBursdagPanel();}else{arrBelow.style.display='grid';bdBelow.style.display='none';wheelTabs.style.display='flex';filterBar.style.display='flex';btnNew.style.display='flex';mainToggle.style.display='flex';applyWheelSettings();applyFilter();}}
+function renderBursdagPanel(){const todayPeople=persons.filter(p=>daysUntilBursdag(p.date)===0),todayBanner=document.getElementById('bursdag-today-banner');if(todayPeople.length){todayBanner.style.display='flex';document.getElementById('today-banner-text').innerHTML=`<strong>${todayPeople.map(p=>p.name).join(' & ')}</strong> har bursdag i dag!`;launchConfetti();}else todayBanner.style.display='none';const sorted=[...persons].map((p,i)=>({...p,_idx:i})).sort((a,b)=>{const da=bursdagThisYear(a.date),db=bursdagThisYear(b.date),pa=da<TODAY,pb=db<TODAY;if(pa&&!pb)return 1;if(!pa&&pb)return-1;return da-db;}),upcoming=sorted.filter(p=>!bursdagPassed(p.date)&&daysUntilBursdag(p.date)>0),soonBanner=document.getElementById('bursdag-soon-banner');if(upcoming.length){const next=upcoming[0],days=daysUntilBursdag(next.date);if(days<=WARN_DAYS){soonBanner.style.display='flex';document.getElementById('soon-banner-text').innerHTML=`Husk: <strong>${next.name}</strong> har bursdag ${fmtBursdag(next.date)}!`;document.getElementById('soon-banner-days').textContent=days;}else soonBanner.style.display='none';}else soonBanner.style.display='none';const listEl=document.getElementById('bursdag-list');if(!persons.length){listEl.innerHTML='<div class="empty-state"><div class="empty-state-icon">🎂</div><div class="empty-state-title">Ingen kollegaer ennå</div><div class="empty-state-desc">Trykk + Legg til for å registrere bursdager.</div></div>';return;}listEl.innerHTML=sorted.map(p=>{const[bc,bt]=getBadge(p.date),isToday=daysUntilBursdag(p.date)===0;return`<div class="b-person"${isToday?' style="background:#fdf4ff;border-radius:10px;padding:6px 8px;margin:-6px -8px"':''}><div class="b-avatar" style="${avatarStyle(p._idx)}">${getInitials(p.name)}</div><div class="b-info"><div class="b-name">${p.name}${isToday?' 🎂':''}</div><div class="b-date">${fmtBursdag(p.date)}</div></div><span class="b-badge ${bc}">${bt}</span><button class="b-del-btn" onclick="openBursdagModal(${p._idx})" title="Rediger">✎</button></div>`;}).join('');}
 function launchConfetti(){const canvas=document.getElementById('confetti-canvas'),ctx=canvas.getContext('2d');canvas.width=canvas.offsetWidth;canvas.height=canvas.offsetHeight;const pieces=Array.from({length:80},()=>({x:Math.random()*canvas.width,y:Math.random()*canvas.height-canvas.height,w:6+Math.random()*6,h:10+Math.random()*8,color:['#fff','#f0e8ff','#d4a8ff','#ffec8b','#ffd0f0'][Math.floor(Math.random()*5)],rot:Math.random()*360,speed:1.5+Math.random()*2,spin:2+Math.random()*3}));let frame=0;function draw(){if(frame>180)return;frame++;ctx.clearRect(0,0,canvas.width,canvas.height);pieces.forEach(p=>{p.y+=p.speed;p.rot+=p.spin;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot*Math.PI/180);ctx.fillStyle=p.color;ctx.globalAlpha=Math.max(0,1-frame/160);ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.restore();});requestAnimationFrame(draw);}draw();}
 function cw(){return wheels.find(w=>w.id===currentWheelId)||null;}
-async function init(){showLoading(true);const safetyTimer=setTimeout(()=>showLoading(false),8000);try{await loadPersons();setYear(currentYear);buildMonthFilter();setupTooltip();const ws=await api.getWheels();if(Array.isArray(ws)&&ws.length){wheels=ws;currentWheelId=ws[0].id;}else if(Array.isArray(ws)&&ws.length===0){const res=await api.saveWheel({name:'Arrangementer',color:'#5A7FBB',countdown_label:'Neste arrangement',item_label:'Arrangement',event_label:'Hendelse',default_view:'wheel',readonly:false,single_day:false,show_notes:true,show_hendelser:true});if(Array.isArray(res)&&res[0]){wheels=[res[0]];currentWheelId=res[0].id;}}renderWheelTabs();await loadEvents();}catch(e){toast('Nettverksfeil: '+e.message);}finally{clearTimeout(safetyTimer);showLoading(false);}}
+async function init(){showLoading(true);const safetyTimer=setTimeout(()=>showLoading(false),8000);try{await Promise.all([loadPersons(),loadOrgs(),loadNoteTypes()]);setYear(currentYear);buildMonthFilter();setupTooltip();const ws=await api.getWheels();if(Array.isArray(ws)&&ws.length){wheels=ws;currentWheelId=ws[0].id;}else if(Array.isArray(ws)&&ws.length===0){const res=await api.saveWheel({name:'Arrangementer',color:'#5A7FBB',countdown_label:'Neste arrangement',item_label:'Arrangement',event_label:'Hendelse',default_view:'wheel',readonly:false,single_day:false,show_notes:true,show_hendelser:true});if(Array.isArray(res)&&res[0]){wheels=[res[0]];currentWheelId=res[0].id;}}renderWheelTabs();try{const ae=await api.getAllEvents();if(Array.isArray(ae))allEvents=ae;}catch(e){}await loadEvents();}catch(e){toast('Nettverksfeil: '+e.message);}finally{clearTimeout(safetyTimer);showLoading(false);}}
 function setYear(y){currentYear=y;document.getElementById('yr-label').textContent=y;document.getElementById('center-year').textContent=y;}
 function changeYear(d){setYear(currentYear+d);applyFilter();if(wheelMode==='bursdager'){drawWheel();renderBursdagPanel();}}
-async function loadEvents(){if(!currentWheelId)return;try{const data=await api.getEvents(currentWheelId);if(Array.isArray(data)){events=data;applyWheelSettings();applyFilter();}}catch(e){toast('Klarte ikke laste elementer.');}}
+async function loadEvents(){if(!currentWheelId)return;try{const data=await api.getEvents(currentWheelId);if(Array.isArray(data)){events=data;events.forEach(ev=>{const i=allEvents.findIndex(x=>x.id===ev.id);if(i>-1)allEvents[i]=ev;else allEvents.push(ev);});applyWheelSettings();applyFilter();}}catch(e){toast('Klarte ikke laste elementer.');}}
 function applyWheelSettings(){const w=cw();if(!w)return;document.getElementById('btn-new-event').style.display=w.readonly?'none':'flex';document.getElementById('center-name').textContent=w.name;document.getElementById('panel-evt-title').textContent=w.item_label||'Elementer';setView(currentView==='wheel'||currentView==='list'?currentView:w.default_view||'wheel');}
 function buildMonthFilter(){const sel=document.getElementById('filter-month');MONTHS.forEach((m,i)=>{const o=document.createElement('option');o.value=i;o.textContent=m;sel.appendChild(o);});}
-function applyFilter(){const ft=document.getElementById('filter-text').value.toLowerCase(),fm=document.getElementById('filter-month').value;filteredEvents=events.filter(e=>{const nameMatch=e.name.toLowerCase().includes(ft);const yearMatch=new Date(e.start_date).getFullYear()===currentYear||new Date(e.end_date).getFullYear()===currentYear;const monthMatch=fm===''||getEventsForMonth(parseInt(fm),events).some(ev=>ev.id===e.id);return nameMatch&&yearMatch&&monthMatch;});updateCountdown();drawWheel();renderSidebar();renderLegend();renderTimeline();}
+function applyFilter(){const ft=document.getElementById('filter-text').value.toLowerCase(),fm=document.getElementById('filter-month').value;filteredEvents=events.filter(e=>{const nameMatch=e.name.toLowerCase().includes(ft),yearMatch=new Date(e.start_date).getFullYear()===currentYear||new Date(e.end_date).getFullYear()===currentYear,monthMatch=fm===''||getEventsForMonth(parseInt(fm),events).some(ev=>ev.id===e.id);return nameMatch&&yearMatch&&monthMatch;});updateCountdown();drawWheel();renderSidebar();renderLegend();renderTimeline();}
 function updateCountdown(){const w=cw(),cd=document.getElementById('countdown');if(wheelMode==='bursdager'){cd.style.display='none';return;}const next=nextUpcoming(filteredEvents);if(!next||daysUntil(next.start_date)<0){cd.style.display='none';return;}const days=daysUntil(next.start_date);cd.style.display='flex';document.getElementById('cd-dot').style.background=next.color;document.getElementById('cd-days').textContent=days;const label=w?w.countdown_label:'Neste arrangement';document.getElementById('cd-text').innerHTML=days===0?`<strong>${next.name}</strong> starter i dag!`:`${label}: <strong>${next.name}</strong> - ${fmtDate(next.start_date)}`;}
 function nextUpcoming(evList){return evList.filter(e=>{const s=new Date(e.start_date);s.setHours(0,0,0,0);return s>=TODAY;}).sort((a,b)=>new Date(a.start_date)-new Date(b.start_date))[0]||null;}
 function daysUntil(d){const dt=new Date(d);dt.setHours(0,0,0,0);return Math.round((dt-TODAY)/86400000);}
@@ -965,34 +880,34 @@ const canvas=document.getElementById('wheel'),ctx=canvas.getContext('2d');
 function getEventsForMonth(m,src){return(src||filteredEvents).filter(e=>{const s=new Date(e.start_date),en=new Date(e.end_date);s.setHours(12);en.setHours(12);for(let d=new Date(s);d<=en;d.setDate(d.getDate()+1))if(d.getFullYear()===currentYear&&d.getMonth()===m)return true;return false;});}
 function getPersonsForMonth(m){return persons.filter(p=>{const d=new Date(p.date);return d.getMonth()===m;});}
 function dateToAngle(ds){const d=new Date(ds);d.setHours(12);const s=new Date(currentYear,0,1),e=new Date(currentYear+1,0,1);return((d-s)/(e-s))*2*Math.PI-Math.PI/2;}
-function drawWheel(){ctx.clearRect(0,0,620,620);tooltipData=[];ctx.beginPath();ctx.arc(CX,CY,OR+2,0,2*Math.PI);ctx.fillStyle='#f7f5f0';ctx.fill();for(let m=0;m<12;m++){const sa=(m/12)*2*Math.PI-Math.PI/2,ea=((m+1)/12)*2*Math.PI-Math.PI/2,isSel=selectedMonth===m;ctx.beginPath();ctx.moveTo(CX,CY);ctx.arc(CX,CY,OR,sa,ea);ctx.closePath();ctx.fillStyle=isSel?RING_COLORS[m]+'ff':RING_COLORS[m]+'aa';ctx.fill();ctx.strokeStyle='#f7f5f0';ctx.lineWidth=2.5;ctx.stroke();}if(wheelMode==='arrangementer')drawArrangementArcs();else drawBursdagDots();for(let m=0;m<12;m++){const sa=(m/12)*2*Math.PI-Math.PI/2,ea=((m+1)/12)*2*Math.PI-Math.PI/2;const count=wheelMode==='arrangementer'?getEventsForMonth(m).length:getPersonsForMonth(m).length,isSel=selectedMonth===m;const mid=(sa+ea)/2,lr=(OR+IR)/2-8,tx=CX+lr*Math.cos(mid),ty=CY+lr*Math.sin(mid);ctx.save();ctx.translate(tx,ty);const a=((mid+2*Math.PI)%(2*Math.PI));ctx.rotate(a>Math.PI?mid+Math.PI/2:mid-Math.PI/2);ctx.fillStyle=isSel?'#2c2c28':'#444';ctx.font=`${isSel?'700':'500'} 13px Inter,system-ui`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(MONTHS[m].substring(0,3),0,count?-8:0);if(count){ctx.font='500 10px Inter,system-ui';ctx.fillStyle=isSel?'#2c2c28':'#888';ctx.fillText(count+(wheelMode==='bursdager'?' bursdag':' arr.'),0,8);}ctx.restore();}const todayAngle=dateToAngle(TODAY.toISOString().split('T')[0]);ctx.save();ctx.beginPath();ctx.moveTo(CX+IR*Math.cos(todayAngle),CY+IR*Math.sin(todayAngle));ctx.lineTo(CX+(OR+2)*Math.cos(todayAngle),CY+(OR+2)*Math.sin(todayAngle));ctx.strokeStyle='#2c2c28';ctx.lineWidth=2;ctx.globalAlpha=0.5;ctx.setLineDash([4,3]);ctx.stroke();ctx.restore();ctx.beginPath();ctx.arc(CX+(OR-4)*Math.cos(todayAngle),CY+(OR-4)*Math.sin(todayAngle),4,0,2*Math.PI);ctx.fillStyle='#2c2c28';ctx.globalAlpha=0.7;ctx.fill();ctx.globalAlpha=1;ctx.beginPath();ctx.arc(CX,CY,IR,0,2*Math.PI);ctx.fillStyle='#f7f5f0';ctx.fill();ctx.strokeStyle='#e8e4dc';ctx.lineWidth=1.5;ctx.stroke();}
-function drawArrangementArcs(){const ARC_H=10,ARC_GAP=3,MAX_LAYERS=3,layers=[];const yearEvs=filteredEvents.filter(ev=>!(new Date(ev.start_date).getFullYear()>currentYear||new Date(ev.end_date).getFullYear()<currentYear));yearEvs.forEach(ev=>{let placed=false;for(let i=0;i<layers.length&&i<MAX_LAYERS;i++){const overlap=layers[i].some(e2=>{const s1=new Date(ev.start_date),e1=new Date(ev.end_date),s2=new Date(e2.start_date),e2e=new Date(e2.end_date);return s1<=e2e&&e1>=s2;});if(!overlap){layers[i].push(ev);placed=true;break;}}if(!placed&&layers.length<MAX_LAYERS){layers.push([ev]);placed=true;}});layers.forEach((layer,li)=>{const outerR=OR-1-(li*(ARC_H+ARC_GAP)),innerR=outerR-ARC_H;layer.forEach(ev=>{const s=new Date(ev.start_date),e=new Date(ev.end_date);const cs=new Date(Math.max(s,new Date(currentYear,0,1))),ce=new Date(Math.min(e,new Date(currentYear,11,31)));const sa=dateToAngle(cs.toISOString().split('T')[0]),ea=dateToAngle(ce.toISOString().split('T')[0]);ctx.beginPath();ctx.arc(CX,CY,outerR,sa,ea);ctx.arc(CX,CY,innerR,ea,sa,true);ctx.closePath();ctx.fillStyle=ev.color+'ee';ctx.fill();ctx.strokeStyle='#f7f5f0';ctx.lineWidth=1;ctx.stroke();tooltipData.push({type:'arc',sa,ea,innerR,outerR,text:`${ev.name}\n${fmtDate(ev.start_date)}${ev.start_date!==ev.end_date?' – '+fmtDate(ev.end_date):''}`,id:ev.id});});});filteredEvents.forEach(ev=>{parseHendelser(ev.hendelser).forEach(h=>{if(new Date(h.date).getFullYear()!==currentYear)return;const ang=dateToAngle(h.date),dx=CX+HENDELSE_R*Math.cos(ang),dy=CY+HENDELSE_R*Math.sin(ang);ctx.beginPath();ctx.arc(dx,dy,HENDELSE_DOT_R+1,0,2*Math.PI);ctx.fillStyle='#fff';ctx.fill();ctx.beginPath();ctx.arc(dx,dy,HENDELSE_DOT_R,0,2*Math.PI);ctx.fillStyle=h.color||ev.color;ctx.fill();tooltipData.push({x:dx,y:dy,r:HENDELSE_DOT_R+5,text:`${ev.name}\n${h.name}\n${fmtDate(h.date)}`});});});}
-function drawBursdagDots(){const DOT_R=8,DOT_ORBIT=OR-20;persons.forEach((p,i)=>{const d=new Date(p.date);if(d.getMonth()<0)return;const m=d.getMonth(),sa=(m/12)*2*Math.PI-Math.PI/2,ea=((m+1)/12)*2*Math.PI-Math.PI/2;const daysInMonth=new Date(currentYear,m+1,0).getDate(),dayFrac=(d.getDate()-0.5)/daysInMonth;const ang=sa+(ea-sa)*dayFrac,dx=CX+DOT_ORBIT*Math.cos(ang),dy=CY+DOT_ORBIT*Math.sin(ang);const isToday=daysUntilBursdag(p.date)===0;if(isToday){ctx.beginPath();ctx.arc(dx,dy,DOT_R+4,0,2*Math.PI);ctx.fillStyle='#f0e8ff';ctx.fill();}ctx.beginPath();ctx.arc(dx,dy,DOT_R+1,0,2*Math.PI);ctx.fillStyle='#fff';ctx.fill();ctx.beginPath();ctx.arc(dx,dy,DOT_R,0,2*Math.PI);ctx.fillStyle=isToday?'#6b2fa0':BURSDAG_COLOR;ctx.fill();ctx.font='500 8px Inter,system-ui';ctx.fillStyle='#fff';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(getInitials(p.name),dx,dy);tooltipData.push({x:dx,y:dy,r:DOT_R+6,text:`${p.name}\n${fmtBursdag(p.date)}${isToday?' 🎂':''}`});});}
-canvas.addEventListener('click',e=>{const r=canvas.getBoundingClientRect(),x=(e.clientX-r.left)*(620/r.width)-CX,y=(e.clientY-r.top)*(620/r.height)-CY;const dist=Math.sqrt(x*x+y*y);if(dist<IR||dist>OR)return;let ang=Math.atan2(y,x)+Math.PI/2;if(ang<0)ang+=2*Math.PI;selectedMonth=Math.floor((ang/(2*Math.PI))*12);closeDetail();drawWheel();if(wheelMode==='arrangementer')renderSidebar();});
-function setupTooltip(){const tip=document.getElementById('tooltip');canvas.addEventListener('mousemove',e=>{const r=canvas.getBoundingClientRect(),mx=(e.clientX-r.left)*(620/r.width),my=(e.clientY-r.top)*(620/r.height);const dx=mx-CX,dy=my-CY,dist=Math.sqrt(dx*dx+dy*dy),ang=Math.atan2(dy,dx);const found=tooltipData.find(td=>{if(td.type==='arc'){if(dist<td.innerR||dist>td.outerR)return false;const norm=v=>((v+3*Math.PI)%(2*Math.PI))-Math.PI;let a=norm(ang),sa=norm(td.sa),ea=norm(td.ea);if(sa<=ea)return a>=sa&&a<=ea;return a>=sa||a<=ea;}return Math.sqrt((mx-td.x)**2+(my-td.y)**2)<=td.r;});if(found){tip.style.display='block';tip.innerHTML=found.text.split('\n').join('<br>');tip.style.left=(e.clientX+14)+'px';tip.style.top=(e.clientY-10)+'px';}else tip.style.display='none';});canvas.addEventListener('mouseleave',()=>document.getElementById('tooltip').style.display='none');}
+function drawWheel(){ctx.clearRect(0,0,620,620);tooltipData=[];ctx.beginPath();ctx.arc(CX,CY,OR+2,0,2*Math.PI);ctx.fillStyle='#f7f5f0';ctx.fill();for(let m=0;m<12;m++){const sa=(m/12)*2*Math.PI-Math.PI/2,ea=((m+1)/12)*2*Math.PI-Math.PI/2,isSel=selectedMonth===m;ctx.beginPath();ctx.moveTo(CX,CY);ctx.arc(CX,CY,OR,sa,ea);ctx.closePath();ctx.fillStyle=isSel?RING_COLORS[m]+'ff':RING_COLORS[m]+'aa';ctx.fill();ctx.strokeStyle='#f7f5f0';ctx.lineWidth=2.5;ctx.stroke();}if(wheelMode==='arrangementer')drawArrangementArcs();else drawBursdagDots();for(let m=0;m<12;m++){const sa=(m/12)*2*Math.PI-Math.PI/2,ea=((m+1)/12)*2*Math.PI-Math.PI/2,count=wheelMode==='arrangementer'?getEventsForMonth(m).length:getPersonsForMonth(m).length,isSel=selectedMonth===m,mid=(sa+ea)/2,lr=(OR+IR)/2-8,tx=CX+lr*Math.cos(mid),ty=CY+lr*Math.sin(mid);ctx.save();ctx.translate(tx,ty);const a=((mid+2*Math.PI)%(2*Math.PI));ctx.rotate(a>Math.PI?mid+Math.PI/2:mid-Math.PI/2);ctx.fillStyle=isSel?'#2c2c28':'#444';ctx.font=`${isSel?'700':'500'} 13px Inter,system-ui`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(MONTHS[m].substring(0,3),0,count?-8:0);if(count){ctx.font='500 10px Inter,system-ui';ctx.fillStyle=isSel?'#2c2c28':'#888';ctx.fillText(count+(wheelMode==='bursdager'?' bursdag':' arr.'),0,8);}ctx.restore();}const todayAngle=dateToAngle(TODAY.toISOString().split('T')[0]);ctx.save();ctx.beginPath();ctx.moveTo(CX+IR*Math.cos(todayAngle),CY+IR*Math.sin(todayAngle));ctx.lineTo(CX+(OR+2)*Math.cos(todayAngle),CY+(OR+2)*Math.sin(todayAngle));ctx.strokeStyle='#2c2c28';ctx.lineWidth=2;ctx.globalAlpha=0.5;ctx.setLineDash([4,3]);ctx.stroke();ctx.restore();ctx.beginPath();ctx.arc(CX+(OR-4)*Math.cos(todayAngle),CY+(OR-4)*Math.sin(todayAngle),4,0,2*Math.PI);ctx.fillStyle='#2c2c28';ctx.globalAlpha=0.7;ctx.fill();ctx.globalAlpha=1;ctx.beginPath();ctx.arc(CX,CY,IR,0,2*Math.PI);ctx.fillStyle='#f7f5f0';ctx.fill();ctx.strokeStyle='#e8e4dc';ctx.lineWidth=1.5;ctx.stroke();}
+function drawArrangementArcs(){const ARC_H=10,ARC_GAP=3,MAX_LAYERS=3,layers=[];const yearEvs=filteredEvents.filter(ev=>!(new Date(ev.start_date).getFullYear()>currentYear||new Date(ev.end_date).getFullYear()<currentYear));yearEvs.forEach(ev=>{let placed=false;for(let i=0;i<layers.length&&i<MAX_LAYERS;i++){const overlap=layers[i].some(e2=>{const s1=new Date(ev.start_date),e1=new Date(ev.end_date),s2=new Date(e2.start_date),e2e=new Date(e2.end_date);return s1<=e2e&&e1>=s2;});if(!overlap){layers[i].push(ev);placed=true;break;}}if(!placed&&layers.length<MAX_LAYERS){layers.push([ev]);placed=true;}});layers.forEach((layer,li)=>{const outerR=OR-1-(li*(ARC_H+ARC_GAP)),innerR=outerR-ARC_H;layer.forEach(ev=>{const s=new Date(ev.start_date),e=new Date(ev.end_date),cs=new Date(Math.max(s,new Date(currentYear,0,1))),ce=new Date(Math.min(e,new Date(currentYear,11,31))),sa=dateToAngle(cs.toISOString().split('T')[0]),ea=dateToAngle(ce.toISOString().split('T')[0]);ctx.beginPath();ctx.arc(CX,CY,outerR,sa,ea);ctx.arc(CX,CY,innerR,ea,sa,true);ctx.closePath();ctx.fillStyle=ev.color+'ee';ctx.fill();ctx.strokeStyle='#f7f5f0';ctx.lineWidth=1;ctx.stroke();tooltipData.push({type:'arc',sa,ea,innerR,outerR,text:`${ev.name}\n${fmtDate(ev.start_date)}${ev.start_date!==ev.end_date?' – '+fmtDate(ev.end_date):''}`,id:ev.id});});});filteredEvents.forEach(ev=>{parseHendelser(ev.hendelser).forEach(h=>{if(new Date(h.date).getFullYear()!==currentYear)return;const ang=dateToAngle(h.date),dx=CX+HENDELSE_R*Math.cos(ang),dy=CY+HENDELSE_R*Math.sin(ang);ctx.beginPath();ctx.arc(dx,dy,HENDELSE_DOT_R+1,0,2*Math.PI);ctx.fillStyle='#fff';ctx.fill();ctx.beginPath();ctx.arc(dx,dy,HENDELSE_DOT_R,0,2*Math.PI);ctx.fillStyle=h.color||ev.color;ctx.fill();tooltipData.push({x:dx,y:dy,r:HENDELSE_DOT_R+5,text:`${ev.name}\n${h.name}\n${fmtDate(h.date)}`});});});}
+function drawBursdagDots(){const DOT_R=8,DOT_ORBIT=OR-20;persons.forEach((p,i)=>{const d=new Date(p.date);if(d.getMonth()<0)return;const m=d.getMonth(),sa=(m/12)*2*Math.PI-Math.PI/2,ea=((m+1)/12)*2*Math.PI-Math.PI/2,daysInMonth=new Date(currentYear,m+1,0).getDate(),dayFrac=(d.getDate()-0.5)/daysInMonth,ang=sa+(ea-sa)*dayFrac,dx=CX+DOT_ORBIT*Math.cos(ang),dy=CY+DOT_ORBIT*Math.sin(ang),isToday=daysUntilBursdag(p.date)===0;if(isToday){ctx.beginPath();ctx.arc(dx,dy,DOT_R+4,0,2*Math.PI);ctx.fillStyle='#f0e8ff';ctx.fill();}ctx.beginPath();ctx.arc(dx,dy,DOT_R+1,0,2*Math.PI);ctx.fillStyle='#fff';ctx.fill();ctx.beginPath();ctx.arc(dx,dy,DOT_R,0,2*Math.PI);ctx.fillStyle=isToday?'#6b2fa0':BURSDAG_COLOR;ctx.fill();ctx.font='500 8px Inter,system-ui';ctx.fillStyle='#fff';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(getInitials(p.name),dx,dy);tooltipData.push({x:dx,y:dy,r:DOT_R+6,text:`${p.name}\n${fmtBursdag(p.date)}${isToday?' 🎂':''}`});});}
+canvas.addEventListener('click',e=>{const r=canvas.getBoundingClientRect(),x=(e.clientX-r.left)*(620/r.width)-CX,y=(e.clientY-r.top)*(620/r.height)-CY,dist=Math.sqrt(x*x+y*y);if(dist<IR||dist>OR)return;let ang=Math.atan2(y,x)+Math.PI/2;if(ang<0)ang+=2*Math.PI;selectedMonth=Math.floor((ang/(2*Math.PI))*12);closeDetail();drawWheel();if(wheelMode==='arrangementer')renderSidebar();});
+function setupTooltip(){const tip=document.getElementById('tooltip');canvas.addEventListener('mousemove',e=>{const r=canvas.getBoundingClientRect(),mx=(e.clientX-r.left)*(620/r.width),my=(e.clientY-r.top)*(620/r.height),dx=mx-CX,dy=my-CY,dist=Math.sqrt(dx*dx+dy*dy),ang=Math.atan2(dy,dx),found=tooltipData.find(td=>{if(td.type==='arc'){if(dist<td.innerR||dist>td.outerR)return false;const norm=v=>((v+3*Math.PI)%(2*Math.PI))-Math.PI;let a=norm(ang),sa=norm(td.sa),ea=norm(td.ea);if(sa<=ea)return a>=sa&&a<=ea;return a>=sa||a<=ea;}return Math.sqrt((mx-td.x)**2+(my-td.y)**2)<=td.r;});if(found){tip.style.display='block';tip.innerHTML=found.text.split('\n').join('<br>');tip.style.left=(e.clientX+14)+'px';tip.style.top=(e.clientY-10)+'px';}else tip.style.display='none';});canvas.addEventListener('mouseleave',()=>document.getElementById('tooltip').style.display='none');}
 function nextHendelseText(ev){const up=parseHendelser(ev.hendelser).filter(h=>{const d=new Date(h.date);d.setHours(0,0,0,0);return d>=TODAY;}).sort((a,b)=>a.date.localeCompare(b.date));if(!up.length)return'';const h=up[0],days=daysUntil(h.date);return days===0?`${h.name} i dag`:`${h.name}: ${fmtDate(h.date)}`;}
 function renderSidebar(){const w=cw(),list=document.getElementById('evt-list');if(selectedMonth===null){document.getElementById('sel-month').textContent='—';document.getElementById('sel-count').textContent='';list.innerHTML='<p class="empty">Klikk på en måned</p>';return;}const evts=getEventsForMonth(selectedMonth);document.getElementById('sel-month').textContent=MONTHS[selectedMonth];document.getElementById('sel-count').textContent=evts.length?evts.length+' '+(w?.item_label||'element')+(evts.length>1?'er':''):'Ingen elementer';list.innerHTML=evts.length?evts.map(ev=>{const live=isActiveNow(ev),nh=nextHendelseText(ev);return`<div class="evt-item${live?' active-now':''}" style="border-left-color:${ev.color}"><div class="evt-item-body" onclick="showDetail('${ev.id}')"><div class="en">${ev.name}${live?'<span class="badge-live">Pågår nå</span>':''}</div><div class="ed">${fmtDate(ev.start_date)}${ev.start_date!==ev.end_date?' – '+fmtDate(ev.end_date):''}</div>${nh?`<div class="next-h">↑ ${nh}</div>`:''}</div></div>`;}).join(''):`<div class="empty-state"><div class="empty-state-icon">📭</div><div class="empty-state-title">Ingen elementer</div><div class="empty-state-desc">Ingen arrangementer i ${MONTHS[selectedMonth].toLowerCase()} ennå.</div></div>`;}
-function renderLegend(){const leg=document.getElementById('legend');const items=filteredEvents.filter(e=>new Date(e.start_date).getFullYear()===currentYear||new Date(e.end_date).getFullYear()===currentYear);leg.innerHTML=items.length?items.map(e=>`<div class="leg-item"><div class="leg-dot" style="background:${e.color}"></div><span>${e.name}</span></div>`).join(''):'<p class="empty">Ingen elementer ennå</p>';}
-function toggleLegend(){const leg=document.getElementById('legend'),btn=document.getElementById('legend-btn');const vis=leg.style.display!=='none';leg.style.display=vis?'none':'flex';btn.textContent=vis?'Vis':'Skjul';}
+function renderLegend(){const leg=document.getElementById('legend'),items=filteredEvents.filter(e=>new Date(e.start_date).getFullYear()===currentYear||new Date(e.end_date).getFullYear()===currentYear);leg.innerHTML=items.length?items.map(e=>`<div class="leg-item"><div class="leg-dot" style="background:${e.color}"></div><span>${e.name}</span></div>`).join(''):'<p class="empty">Ingen elementer ennå</p>';}
+function toggleLegend(){const leg=document.getElementById('legend'),btn=document.getElementById('legend-btn'),vis=leg.style.display!=='none';leg.style.display=vis?'none':'flex';btn.textContent=vis?'Vis':'Skjul';}
 function calcProgress(startDate,endDate){const s=new Date(startDate);s.setHours(0,0,0,0);const e=new Date(endDate);e.setHours(23,59,59,0);if(TODAY<s)return 0;if(TODAY>e)return 100;return Math.round(((TODAY-s)/(e-s))*100);}
-function renderTimeline(){const w=cw(),cont=document.getElementById('timeline-items');const items=filteredEvents.filter(e=>new Date(e.start_date).getFullYear()===currentYear||new Date(e.end_date).getFullYear()===currentYear);if(!items.length){cont.innerHTML='<div class="empty-state"><div class="empty-state-icon">📭</div><div class="empty-state-title">Ingen elementer funnet</div><div class="empty-state-desc">Ingen arrangementer å vise. Prøv å endre filter eller legg til nye elementer.</div></div>';return;}const byMonth={};items.forEach(ev=>{const m=new Date(ev.start_date).getMonth();if(!byMonth[m])byMonth[m]=[];byMonth[m].push(ev);});cont.innerHTML=Object.keys(byMonth).sort((a,b)=>a-b).map(m=>{const monthEvs=byMonth[m].sort((a,b)=>new Date(a.start_date)-new Date(b.start_date));const rows=monthEvs.map((ev,idx)=>{const live=isActiveNow(ev);const isMultiDay=ev.start_date!==ev.end_date;const progress=isMultiDay?calcProgress(ev.start_date,ev.end_date):null;const days=daysUntil(ev.start_date);const hendelser=w?.show_hendelser!==false?parseHendelser(ev.hendelser).sort((a,b)=>a.date.localeCompare(b.date)):[];const isLast=idx===monthEvs.length-1;let badgeHtml='';if(live)badgeHtml+=`<span class="tl-badge tl-badge-live">Pågår nå</span>`;else if(days>0&&days<=14)badgeHtml+=`<span class="tl-badge tl-badge-soon">Om ${days} dager</span>`;let progressHtml='';if(isMultiDay&&progress!==null){progressHtml=`<div class="tl-progress-wrap"><div class="tl-progress-labels"><span>Fremdrift</span><span>${progress}%</span></div><div class="tl-progress-bar"><div class="tl-progress-fill" style="width:${progress}%;background:${ev.color}"></div></div></div>`;}let hendelserHtml='';if(hendelser.length){hendelserHtml=`<div class="tl-hendelser">${hendelser.map(h=>{const hd=new Date(h.date);hd.setHours(0,0,0,0);const isUpcoming=hd>=TODAY;return`<div class="tl-h-row"><div class="tl-h-dot${isUpcoming?' upcoming':''}"></div><span class="tl-h-date${isUpcoming?' upcoming':''}">${fmtDate(h.date)}</span><span class="tl-h-name${isUpcoming?' upcoming':''}">${h.name}${isUpcoming?' →':''}</span></div>`;}).join('')}</div>`;}return`<div class="tl-track"><div class="tl-spine"><div class="tl-node" style="background:${ev.color};box-shadow:0 0 0 2px ${ev.color}33;border-color:#f7f5f0"></div>${!isLast?'<div class="tl-spine-line"></div>':''}</div><div class="tl-body"><div class="tl-card${live?' active-now':''}" onclick="showDetail('${ev.id}')"><div class="tl-card-top"><div><div class="tl-name">${live?'<span class="pulse-dot"></span>':''}${ev.name}</div><div class="tl-dates">${fmtDate(ev.start_date)}${ev.start_date!==ev.end_date?' – '+fmtDate(ev.end_date):''}</div></div>${badgeHtml?`<div class="tl-badge-row">${badgeHtml}</div>`:''}</div>${progressHtml}${hendelserHtml}</div></div></div>`;}).join('');return`<div class="tl-month-group"><div class="tl-month-header">${MONTHS[m]} ${currentYear}</div>${rows}</div>`;}).join('');}
+function renderTimeline(){const w=cw(),cont=document.getElementById('timeline-items'),items=filteredEvents.filter(e=>new Date(e.start_date).getFullYear()===currentYear||new Date(e.end_date).getFullYear()===currentYear);if(!items.length){cont.innerHTML='<div class="empty-state"><div class="empty-state-icon">📭</div><div class="empty-state-title">Ingen elementer funnet</div><div class="empty-state-desc">Ingen arrangementer å vise.</div></div>';return;}const byMonth={};items.forEach(ev=>{const m=new Date(ev.start_date).getMonth();if(!byMonth[m])byMonth[m]=[];byMonth[m].push(ev);});cont.innerHTML=Object.keys(byMonth).sort((a,b)=>a-b).map(m=>{const monthEvs=byMonth[m].sort((a,b)=>new Date(a.start_date)-new Date(b.start_date));const rows=monthEvs.map((ev,idx)=>{const live=isActiveNow(ev),isMultiDay=ev.start_date!==ev.end_date,progress=isMultiDay?calcProgress(ev.start_date,ev.end_date):null,days=daysUntil(ev.start_date),hendelser=w?.show_hendelser!==false?parseHendelser(ev.hendelser).sort((a,b)=>a.date.localeCompare(b.date)):[],isLast=idx===monthEvs.length-1;let badgeHtml='';if(live)badgeHtml+=`<span class="tl-badge tl-badge-live">Pågår nå</span>`;else if(days>0&&days<=14)badgeHtml+=`<span class="tl-badge tl-badge-soon">Om ${days} dager</span>`;let progressHtml='';if(isMultiDay&&progress!==null)progressHtml=`<div class="tl-progress-wrap"><div class="tl-progress-labels"><span>Fremdrift</span><span>${progress}%</span></div><div class="tl-progress-bar"><div class="tl-progress-fill" style="width:${progress}%;background:${ev.color}"></div></div></div>`;let hendelserHtml='';if(hendelser.length)hendelserHtml=`<div class="tl-hendelser">${hendelser.map(h=>{const hd=new Date(h.date);hd.setHours(0,0,0,0);const isUpcoming=hd>=TODAY;return`<div class="tl-h-row"><div class="tl-h-dot${isUpcoming?' upcoming':''}"></div><span class="tl-h-date${isUpcoming?' upcoming':''}">${fmtDate(h.date)}</span><span class="tl-h-name${isUpcoming?' upcoming':''}">${h.name}${isUpcoming?' →':''}</span></div>`;}).join('')}</div>`;return`<div class="tl-track"><div class="tl-spine"><div class="tl-node" style="background:${ev.color};box-shadow:0 0 0 2px ${ev.color}33;border-color:#f7f5f0"></div>${!isLast?'<div class="tl-spine-line"></div>':''}</div><div class="tl-body"><div class="tl-card${live?' active-now':''}" onclick="showDetail('${ev.id}')"><div class="tl-card-top"><div><div class="tl-name">${live?'<span class="pulse-dot"></span>':''}${ev.name}</div><div class="tl-dates">${fmtDate(ev.start_date)}${ev.start_date!==ev.end_date?' – '+fmtDate(ev.end_date):''}</div></div>${badgeHtml?`<div class="tl-badge-row">${badgeHtml}</div>`:''}</div>${progressHtml}${hendelserHtml}</div></div></div>`;}).join('');return`<div class="tl-month-group"><div class="tl-month-header">${MONTHS[m]} ${currentYear}</div>${rows}</div>`;}).join('');}
 function parseHendelser(raw){if(!raw)return[];try{return JSON.parse(raw);}catch{return[];}}
-function showDetail(id){selectedId=id;const ev=events.find(e=>e.id===id),w=cw();if(!ev)return;document.getElementById('det-dot').style.background=ev.color;document.getElementById('det-name').textContent=ev.name;document.getElementById('det-dates').textContent=fmtDate(ev.start_date)+(ev.start_date!==ev.end_date?' – '+fmtDate(ev.end_date):'');document.getElementById('det-notes').textContent=ev.notes||'(Ingen notater)';document.getElementById('det-notes-section').style.display=w?.show_notes!==false?'block':'none';document.getElementById('det-hendelser-title').textContent=w?.event_label||'Hendelser';renderDetailHendelser(ev,w);const ro=w?.readonly;document.getElementById('det-actions').innerHTML=ro?`<button class="btn-sec" onclick="closeDetail()">Lukk</button>`:`<button class="btn-sec" onclick="editSelected()">Rediger</button><button class="btn-del" onclick="deleteSelected()">Slett</button><button class="btn-sec" onclick="closeDetail()">Lukk</button>`;const card=document.getElementById('detail-card');card.style.display='block';setTimeout(()=>card.scrollIntoView({behavior:'smooth',block:'nearest'}),50);}
+function showDetail(id){selectedId=id;const ev=events.find(e=>e.id===id),w=cw();if(!ev)return;document.getElementById('det-dot').style.background=ev.color;document.getElementById('det-name').textContent=ev.name;document.getElementById('det-dates').textContent=fmtDate(ev.start_date)+(ev.start_date!==ev.end_date?' – '+fmtDate(ev.end_date):'');document.getElementById('det-notes').textContent=ev.notes||'(Ingen notater)';document.getElementById('det-notes-section').style.display=w?.show_notes!==false?'block':'none';document.getElementById('det-hendelser-title').textContent=w?.event_label||'Hendelser';renderDetailHendelser(ev,w);renderDetOrgSection(ev);const ro=w?.readonly;document.getElementById('det-actions').innerHTML=ro?`<button class="btn-sec" onclick="closeDetail()">Lukk</button>`:`<button class="btn-sec" onclick="editSelected()">Rediger</button><button class="btn-del" onclick="deleteSelected()">Slett</button><button class="btn-sec" onclick="closeDetail()">Lukk</button>`;const card=document.getElementById('detail-card');card.style.display='block';setTimeout(()=>card.scrollIntoView({behavior:'smooth',block:'nearest'}),50);}
 function renderDetailHendelser(ev,w){const hendelser=parseHendelser(ev.hendelser),section=document.getElementById('det-hendelser-section');if(!hendelser.length||w?.show_hendelser===false){section.style.display='none';return;}section.style.display='block';document.getElementById('det-hendelser').innerHTML=hendelser.sort((a,b)=>a.date.localeCompare(b.date)).map((h,i)=>`<div class="hendelse-row"><span class="h-date">${fmtDate(h.date)}</span><span class="h-name">${h.name}</span>${w?.readonly?'':`<button class="h-del" onclick="deleteHendelse('${ev.id}',${i})">×</button>`}</div>`).join('');}
 async function deleteHendelse(evId,idx){const ev=events.find(e=>e.id===evId);if(!ev)return;const h=parseHendelser(ev.hendelser);h.splice(idx,1);ev.hendelser=JSON.stringify(h);await api.updateEvent(evId,{hendelser:ev.hendelser});renderDetailHendelser(ev,cw());renderTimeline();toast('Hendelse slettet');}
 function closeDetail(){document.getElementById('detail-card').style.display='none';selectedId=null;}
 function editSelected(){if(selectedId)openEventModal(selectedId);}
-async function deleteSelected(){if(!selectedId||!confirm('Slett dette elementet?'))return;await api.deleteEvent(selectedId);events=events.filter(e=>e.id!==selectedId);closeDetail();applyFilter();toast('Element slettet');}
+async function deleteSelected(){if(!selectedId||!confirm('Slett dette elementet?'))return;await api.deleteEvent(selectedId);events=events.filter(e=>e.id!==selectedId);allEvents=allEvents.filter(e=>e.id!==selectedId);closeDetail();applyFilter();toast('Element slettet');}
 function openEventModal(id){const w=cw();editingId=id;pendingHendelser=[];document.getElementById('event-modal-title').textContent=id?`Rediger ${w?.item_label||'element'}`:`Nytt ${w?.item_label||'element'}`;document.getElementById('lbl-name').textContent=(w?.item_label||'Element')+' navn';document.getElementById('lbl-hendelse').textContent=w?.event_label||'Hendelser';document.getElementById('hendelser-section').style.display=w?.show_hendelser!==false?'block':'none';document.getElementById('notes-section').style.display=w?.show_notes!==false?'block':'none';if(id){const ev=events.find(e=>e.id===id);document.getElementById('f-name').value=ev.name;document.getElementById('f-start').value=ev.start_date;document.getElementById('f-end').value=ev.end_date;document.getElementById('f-end').min=ev.start_date;document.getElementById('f-notes').value=ev.notes||'';selectedColor=ev.color;pendingHendelser=[...parseHendelser(ev.hendelser)];}else{['f-name','f-start','f-end','f-notes'].forEach(i=>document.getElementById(i).value='');selectedColor=COLORS[0];}buildColorGrid();renderPendingHendelser();modalDirty=false;document.getElementById('event-modal-bg').classList.add('open');setTimeout(()=>{['f-name','f-start','f-end','f-notes'].forEach(id=>{document.getElementById(id).addEventListener('input',markDirty,{once:true});});},100);}
 function closeEventModal(){document.getElementById('event-modal-bg').classList.remove('open');editingId=null;pendingHendelser=[];}
 function buildColorGrid(){document.getElementById('color-grid').innerHTML=COLORS.map(c=>`<div class="color-swatch${c===selectedColor?' selected':''}" style="background:${c}" onclick="pickColor('${c}')"></div>`).join('');const cc=document.getElementById('custom-color');cc.value=selectedColor;cc.oninput=e=>{selectedColor=e.target.value;document.querySelectorAll('#color-grid .color-swatch').forEach(s=>s.classList.remove('selected'));};}
 function pickColor(c){selectedColor=c;document.querySelectorAll('#color-grid .color-swatch').forEach(s=>{s.classList.remove('selected');if(rgbToHex(s.style.backgroundColor).toLowerCase()===c.toLowerCase())s.classList.add('selected');});document.getElementById('custom-color').value=c;}
 function onStartChange(){const start=document.getElementById('f-start').value,endEl=document.getElementById('f-end');endEl.min=start;if(!endEl.value||endEl.value<start)endEl.value=start;}
 function rgbToHex(rgb){const m=rgb.match(/\d+/g);if(!m)return rgb;return'#'+m.slice(0,3).map(x=>parseInt(x).toString(16).padStart(2,'0')).join('');}
-function addHendelse(){const w=cw(),d=document.getElementById('h-date').value,n=document.getElementById('h-name').value.trim();if(!d||!n){toast('Fyll ut dato og navn');return;}const colorEl=document.getElementById('h-color');pendingHendelser.push({date:d,name:n,...(w?.hendelse_color&&colorEl?{color:colorEl.value}:{})});document.getElementById('h-date').value='';document.getElementById('h-name').value='';renderPendingHendelser();}
+function addHendelse(){const w=cw(),d=document.getElementById('h-date').value,n=document.getElementById('h-name').value.trim();if(!d||!n){toast('Fyll ut dato og navn');return;}pendingHendelser.push({date:d,name:n});document.getElementById('h-date').value='';document.getElementById('h-name').value='';renderPendingHendelser();}
 function removeHendelse(i){pendingHendelser.splice(i,1);renderPendingHendelser();}
-function renderPendingHendelser(){document.getElementById('h-preview').innerHTML=pendingHendelser.map((h,i)=>`<div class="hp-row">${h.color?`<div style="width:9px;height:9px;border-radius:50%;background:${h.color};flex-shrink:0"></div>`:''}<span><b>${fmtDate(h.date)}</b> – ${h.name}</span><button onclick="removeHendelse(${i})">×</button></div>`).join('');}
-async function saveEvent(){const name=document.getElementById('f-name').value.trim(),start=document.getElementById('f-start').value,end=document.getElementById('f-end').value,notes=document.getElementById('f-notes').value.trim();if(!name){toast('Fyll ut navn');return;}if(!start){toast('Fyll ut dato');return;}try{const payload={name,start_date:start,end_date:end||start,color:selectedColor,notes,hendelser:JSON.stringify(pendingHendelser),wheel_id:currentWheelId};if(editingId){const res=await api.updateEvent(editingId,payload);if(Array.isArray(res)&&res[0]){const i=events.findIndex(e=>e.id===editingId);if(i>-1)events[i]=res[0];}else{const data=await api.getEvents(currentWheelId);if(Array.isArray(data))events=data;}}else{const res=await api.saveEvent(payload);if(Array.isArray(res)&&res[0])events.push(res[0]);else{const data=await api.getEvents(currentWheelId);if(Array.isArray(data))events=data;}}closeEventModal();applyFilter();toast(editingId?'Oppdatert':'Lagt til');}catch(e){toast('Noe gikk galt');console.error(e);}}
+function renderPendingHendelser(){document.getElementById('h-preview').innerHTML=pendingHendelser.map((h,i)=>`<div class="hp-row"><span><b>${fmtDate(h.date)}</b> – ${h.name}</span><button onclick="removeHendelse(${i})">×</button></div>`).join('');}
+async function saveEvent(){const name=document.getElementById('f-name').value.trim(),start=document.getElementById('f-start').value,end=document.getElementById('f-end').value,notes=document.getElementById('f-notes').value.trim();if(!name){toast('Fyll ut navn');return;}if(!start){toast('Fyll ut dato');return;}try{const payload={name,start_date:start,end_date:end||start,color:selectedColor,notes,hendelser:JSON.stringify(pendingHendelser),wheel_id:currentWheelId};if(editingId){const res=await api.updateEvent(editingId,payload);if(Array.isArray(res)&&res[0]){const i=events.findIndex(e=>e.id===editingId);if(i>-1)events[i]=res[0];const ai=allEvents.findIndex(e=>e.id===editingId);if(ai>-1)allEvents[ai]=res[0];}}else{const res=await api.saveEvent(payload);if(Array.isArray(res)&&res[0]){events.push(res[0]);allEvents.push(res[0]);}}closeEventModal();applyFilter();toast(editingId?'Oppdatert':'Lagt til');}catch(e){toast('Noe gikk galt');console.error(e);}}
 function fmtDate(d){if(!d)return'';const[y,m,day]=d.split('-');return`${parseInt(day)}. ${MONTHS[parseInt(m)-1].toLowerCase()} ${y}`;}
 </script>
 </body>
