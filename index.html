@@ -359,6 +359,18 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
 .ntype-opplaering { background: #fff4e0; color: #8a5a00; }
 .ntype-intern { background: #f0ede6; color: #666; }
 .ntype-custom { background: #f0e8ff; color: #6b2fa0; }
+/* ARRANGØR OVERSIKT */
+.org-list-item { display:flex;align-items:center;gap:10px;padding:10px 14px;background:#fff;border:1px solid #ece9e1;border-radius:12px;cursor:pointer;transition:all .15s; }
+.org-list-item:hover { background:#f5f2ea;border-color:#ccc; }
+.org-list-item.active { background:#2c2c28;border-color:#2c2c28;color:#f7f5f0; }
+.org-list-item.active .org-li-sub { color:rgba(247,245,240,0.6); }
+.org-li-av { width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0; }
+.org-li-name { font-size:13px;font-weight:600;flex:1; }
+.org-li-sub { font-size:11px;color:#aaa;margin-top:1px; }
+.org-profile-card { background:#fff;border:1px solid #ece9e1;border-radius:16px;overflow:hidden; }
+.org-profile-header { padding:20px 24px;border-bottom:1px solid #ece9e1;display:flex;align-items:center;gap:14px; }
+.org-profile-av { width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0; }
+.org-profile-body { padding:20px 24px;display:flex;flex-direction:column;gap:20px; }
 @media(max-width:680px){
   .wheel-wrap{width:92vw;height:92vw;}
   .wheel-wrap canvas#wheel{width:100%!important;height:100%!important;}
@@ -422,12 +434,14 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
         <span id="yr-label"></span>
         <button onclick="changeYear(1)">→</button>
       </div>
-    </div>
-    <div class="topbar-right">
-      <div class="wheel-mode-toggle">
-        <button id="btn-mode-arr" class="active" onclick="setWheelMode('arrangementer')"><div class="mdot" style="background:#5A7FBB"></div>Arrangementer</button>
-        <button id="btn-mode-bursdag" onclick="setWheelMode('bursdager')"><div class="mdot" style="background:#a855f7"></div>Bursdager</button>
+      <div style="display:flex;border:1px solid #e4e1d8;border-radius:10px;overflow:hidden;background:#fff;">
+        <button id="btn-view-hjul" onclick="setArshjulView('hjul')" style="background:#2c2c28;color:#f7f5f0;border:none;padding:7px 16px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;">Årshjul</button>
+        <button id="btn-view-arrangorer" onclick="setArshjulView('arrangorer')" style="background:none;border:none;padding:7px 16px;font-size:13px;font-weight:500;color:#888;cursor:pointer;font-family:inherit;">Arrangører</button>
+        <button id="btn-view-bursdager" onclick="setArshjulView('bursdager')" style="background:none;border:none;padding:7px 16px;font-size:13px;font-weight:500;color:#888;cursor:pointer;font-family:inherit;">Bursdager</button>
       </div>
+    </div>
+    <div class="topbar-right" id="topbar-right-hjul">
+
       <div class="view-toggle" id="main-view-toggle">
         <button id="btn-wheel" class="active" onclick="setView('wheel')">Hjul</button>
         <button id="btn-list" onclick="setView('list')">Tidslinje</button>
@@ -612,6 +626,23 @@ canvas#wheel { position: absolute; top: 0; left: 0; cursor: pointer; }
       <button class="btn-del" id="nm-del-btn" style="display:none;margin-right:auto" onclick="deleteNote()">Slett</button>
       <button class="btn-sec" onclick="closeNoteModal()">Avbryt</button>
       <button class="btn-primary" onclick="saveNote()">Lagre</button>
+    </div>
+  </div>
+</div>
+<!-- ARRANGØR OVERSIKT VIEW -->
+<div id="view-arrangorer" style="display:none;width:100%;max-width:980px;gap:20px;flex-direction:row;align-items:flex-start;min-height:600px;">
+  <div style="width:260px;flex-shrink:0;display:flex;flex-direction:column;gap:10px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#bbb;">Arrangører</div>
+      <button class="btn-primary" style="font-size:12px;padding:6px 12px;" onclick="openOrgModal(null)">+ Ny</button>
+    </div>
+    <div id="org-list-sidebar"></div>
+  </div>
+  <div style="flex:1;min-width:0;" id="org-profile-area">
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 24px;gap:12px;text-align:center;background:#fff;border:1px solid #ece9e1;border-radius:16px;">
+      <div style="font-size:36px;opacity:0.3;">🏆</div>
+      <div style="font-size:15px;font-weight:600;color:#555;">Velg en arrangør</div>
+      <div style="font-size:13px;color:#aaa;">Klikk på en arrangør til venstre for å se profil og notater</div>
     </div>
   </div>
 </div>
@@ -839,7 +870,7 @@ function pickOrgColor(c){orgColorSelected=c;document.querySelectorAll('#org-colo
 function filterLinkEvts(){renderLinkEvtList(document.getElementById('om-search').value.toLowerCase());}
 function renderLinkEvtList(q){const list=document.getElementById('om-evt-list'),filtered=allEvents.filter(e=>!q||e.name.toLowerCase().includes(q));if(!filtered.length){list.innerHTML=`<div style="font-size:13px;color:#ccc;padding:8px;">Ingen arrangementer funnet</div>`;return;}list.innerHTML=filtered.map(e=>`<label class="link-evt-row"><input type="checkbox" ${linkedEvtIds.has(e.id)?'checked':''} onchange="toggleLinkEvt('${e.id}',this.checked)"><div class="link-evt-dot" style="background:${e.color}"></div><span class="link-evt-name">${esc(e.name)}</span><span class="link-evt-year">${new Date(e.start_date).getFullYear()}</span></label>`).join('');}
 function toggleLinkEvt(id,checked){if(checked)linkedEvtIds.add(id);else linkedEvtIds.delete(id);}
-async function saveOrg(){const name=document.getElementById('om-name').value.trim();if(!name){toast('Gi arrangøren et navn');return;}const payload={name,color:orgColorSelected,contact_name:document.getElementById('om-contact').value.trim()||null,phone:document.getElementById('om-phone').value.trim()||null,email:document.getElementById('om-email').value.trim()||null};try{let orgId=editingOrgId;if(editingOrgId){const r=await api.updateOrg(editingOrgId,payload);if(Array.isArray(r)&&r[0]){const i=organizers.findIndex(o=>o.id===editingOrgId);organizers[i]=r[0];}}else{const r=await api.saveOrg(payload);if(Array.isArray(r)&&r[0]){organizers.push(r[0]);orgId=r[0].id;}}const prevLinked=allEvents.filter(e=>e.organizer_id===orgId).map(e=>e.id),toUnlink=prevLinked.filter(id=>!linkedEvtIds.has(id)),toLink=[...linkedEvtIds].filter(id=>!prevLinked.includes(id));await Promise.all([...toUnlink.map(id=>api.updateEvent(id,{organizer_id:null})),...toLink.map(id=>api.updateEvent(id,{organizer_id:orgId}))]);toUnlink.forEach(id=>{const e=allEvents.find(x=>x.id===id);if(e)e.organizer_id=null;});toLink.forEach(id=>{const e=allEvents.find(x=>x.id===id);if(e)e.organizer_id=orgId;});[...toUnlink,...toLink].forEach(id=>{const e=events.find(x=>x.id===id);if(e){const ae=allEvents.find(x=>x.id===id);if(ae)e.organizer_id=ae.organizer_id;}});closeOrgModal();if(selectedId){const ev=events.find(e=>e.id===selectedId);if(ev)renderDetOrgSection(ev);}toast(editingOrgId?'Arrangør oppdatert':'Arrangør opprettet');if(currentOrgId===orgId){const org=organizers.find(o=>o.id===orgId),orgEvts=allEvents.filter(e=>e.organizer_id===orgId);if(org)renderOrgPanelBody(org,orgEvts);}}catch(e){toast('Noe gikk galt');console.error(e);}}
+async function saveOrg(){const name=document.getElementById('om-name').value.trim();if(!name){toast('Gi arrangøren et navn');return;}const payload={name,color:orgColorSelected,contact_name:document.getElementById('om-contact').value.trim()||null,phone:document.getElementById('om-phone').value.trim()||null,email:document.getElementById('om-email').value.trim()||null};try{let orgId=editingOrgId;if(editingOrgId){const r=await api.updateOrg(editingOrgId,payload);if(Array.isArray(r)&&r[0]){const i=organizers.findIndex(o=>o.id===editingOrgId);organizers[i]=r[0];}}else{const r=await api.saveOrg(payload);if(Array.isArray(r)&&r[0]){organizers.push(r[0]);orgId=r[0].id;}}const prevLinked=allEvents.filter(e=>e.organizer_id===orgId).map(e=>e.id),toUnlink=prevLinked.filter(id=>!linkedEvtIds.has(id)),toLink=[...linkedEvtIds].filter(id=>!prevLinked.includes(id));await Promise.all([...toUnlink.map(id=>api.updateEvent(id,{organizer_id:null})),...toLink.map(id=>api.updateEvent(id,{organizer_id:orgId}))]);toUnlink.forEach(id=>{const e=allEvents.find(x=>x.id===id);if(e)e.organizer_id=null;});toLink.forEach(id=>{const e=allEvents.find(x=>x.id===id);if(e)e.organizer_id=orgId;});[...toUnlink,...toLink].forEach(id=>{const e=events.find(x=>x.id===id);if(e){const ae=allEvents.find(x=>x.id===id);if(ae)e.organizer_id=ae.organizer_id;}});closeOrgModal();if(selectedId){const ev=events.find(e=>e.id===selectedId);if(ev)renderDetOrgSection(ev);}toast(editingOrgId?'Arrangør oppdatert':'Arrangør opprettet');if(currentOrgId===orgId){const org=organizers.find(o=>o.id===orgId),orgEvts=allEvents.filter(e=>e.organizer_id===orgId);if(org)renderOrgPanelBody(org,orgEvts);}if(document.getElementById('view-arrangorer').style.display!=='none'){renderOrgListSidebar();if(activeOrgListId)showOrgProfile(activeOrgListId);}}catch(e){toast('Noe gikk galt');console.error(e);}}
 async function deleteOrg(){if(!editingOrgId||!confirm('Slett denne arrangøren? Notater slettes, men arrangementer beholdes.'))return;const linked=allEvents.filter(e=>e.organizer_id===editingOrgId);await Promise.all(linked.map(e=>api.updateEvent(e.id,{organizer_id:null})));linked.forEach(e=>{e.organizer_id=null;const ev=events.find(x=>x.id===e.id);if(ev)ev.organizer_id=null;});await api.deleteOrg(editingOrgId);organizers=organizers.filter(o=>o.id!==editingOrgId);closeOrgModal();closeOrgPanel();if(selectedId){const ev=events.find(e=>e.id===selectedId);if(ev)renderDetOrgSection(ev);}toast('Arrangør slettet');}
 async function loadPersons(){try{const d=await fetch(`${SB_URL}/rest/v1/persons?order=date.asc`,{headers:H}).then(r=>r.json());if(Array.isArray(d))persons=d;}catch(e){toast('Klarte ikke laste bursdager.');}}
 async function savePerson(){const name=document.getElementById('b-name').value.trim(),date=document.getElementById('b-date').value;if(!name||!date){toast('Fyll ut navn og dato');return;}try{if(editingPersonIdx!==null){const p=persons[editingPersonIdx],res=await fetch(`${SB_URL}/rest/v1/persons?id=eq.${p.id}`,{method:'PATCH',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify({name,date})}).then(r=>r.json());if(Array.isArray(res)&&res[0])persons[editingPersonIdx]=res[0];}else{const res=await fetch(`${SB_URL}/rest/v1/persons`,{method:'POST',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify({name,date,cake:false})}).then(r=>r.json());if(Array.isArray(res)&&res[0])persons.push(res[0]);}closeBursdagModal();if(wheelMode==='bursdager'){drawWheel();renderBursdagPanel();}toast(editingPersonIdx!==null?'Oppdatert':'Kollega lagt til');}catch(e){toast('Noe gikk galt');}}
@@ -911,6 +942,143 @@ function removeHendelse(i){pendingHendelser.splice(i,1);renderPendingHendelser()
 function renderPendingHendelser(){document.getElementById('h-preview').innerHTML=pendingHendelser.map((h,i)=>`<div class="hp-row"><span><b>${fmtDate(h.date)}</b> – ${h.name}</span><button onclick="removeHendelse(${i})">×</button></div>`).join('');}
 async function saveEvent(){const name=document.getElementById('f-name').value.trim(),start=document.getElementById('f-start').value,end=document.getElementById('f-end').value,notes=document.getElementById('f-notes').value.trim();if(!name){toast('Fyll ut navn');return;}if(!start){toast('Fyll ut dato');return;}try{const payload={name,start_date:start,end_date:end||start,color:selectedColor,notes,hendelser:JSON.stringify(pendingHendelser),wheel_id:currentWheelId};if(editingId){const res=await api.updateEvent(editingId,payload);if(Array.isArray(res)&&res[0]){const i=events.findIndex(e=>e.id===editingId);if(i>-1)events[i]=res[0];const ai=allEvents.findIndex(e=>e.id===editingId);if(ai>-1)allEvents[ai]=res[0];}}else{const res=await api.saveEvent(payload);if(Array.isArray(res)&&res[0]){events.push(res[0]);allEvents.push(res[0]);}}closeEventModal();applyFilter();toast(editingId?'Oppdatert':'Lagt til');}catch(e){toast('Noe gikk galt');console.error(e);}}
 function fmtDate(d){if(!d)return'';const[y,m,day]=d.split('-');return`${parseInt(day)}. ${MONTHS[parseInt(m)-1].toLowerCase()} ${y}`;}
+
+// ARRANGØR OVERSIKT
+let activeOrgListId=null;
+function setArshjulView(view){
+  // Update button styles
+  ['hjul','arrangorer','bursdager'].forEach(v=>{
+    const btn=document.getElementById('btn-view-'+v);
+    if(!btn)return;
+    btn.style.background=v===view?'#2c2c28':'none';
+    btn.style.color=v===view?'#f7f5f0':'#888';
+  });
+  // Hide all views first
+  const hjulEls=['view-wheel','view-list','wheel-tabs','filter-bar','countdown','topbar-right-hjul'];
+  hjulEls.forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
+  document.getElementById('detail-card').style.display='none';
+  document.getElementById('view-arrangorer').style.display='none';
+  document.getElementById('below-wheel-bursdag').style.display='none';
+  // Show correct view
+  if(view==='hjul'){
+    hjulEls.forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='';});
+    setView(currentView);
+  } else if(view==='arrangorer'){
+    document.getElementById('view-arrangorer').style.display='flex';
+    renderOrgListSidebar();
+    if(activeOrgListId)showOrgProfile(activeOrgListId);
+  } else if(view==='bursdager'){
+    document.getElementById('view-wheel').style.display='flex';
+    document.getElementById('below-wheel-bursdag').style.display='flex';
+    drawWheel();
+    renderBursdagPanel();
+    // Switch wheel drawing mode
+    wheelMode='bursdager';
+    document.getElementById('center-name').textContent='Bursdager';
+    drawWheel();
+    renderBursdagPanel();
+  }
+  if(view!=='bursdager')wheelMode='arrangementer';
+}
+function renderOrgListSidebar(){
+  const cont=document.getElementById('org-list-sidebar');
+  if(!organizers.length){cont.innerHTML=`<div style="font-size:13px;color:#ccc;padding:12px;text-align:center;">Ingen arrangører ennå.<br>Trykk + Ny for å starte.</div>`;return;}
+  cont.innerHTML=organizers.map(o=>{
+    const evCount=allEvents.filter(e=>e.organizer_id===o.id).length;
+    const isActive=o.id===activeOrgListId;
+    return`<div class="org-list-item${isActive?' active':''}" onclick="showOrgProfile('${o.id}')">
+      <div class="org-li-av" style="background:${o.color}22;color:${o.color};">${orgInitials(o.name)}</div>
+      <div style="flex:1;min-width:0;">
+        <div class="org-li-name">${esc(o.name)}</div>
+        <div class="org-li-sub">${evCount} arrangement${evCount!==1?'er':''}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+async function showOrgProfile(orgId){
+  activeOrgListId=orgId;
+  renderOrgListSidebar();
+  const org=organizers.find(o=>o.id===orgId);
+  if(!org)return;
+  const orgEvts=[...allEvents].filter(e=>e.organizer_id===orgId).sort((a,b)=>new Date(b.start_date)-new Date(a.start_date));
+  let notes=[];
+  try{const d=await api.getNotes(orgId);if(Array.isArray(d))notes=d;}catch(e){}
+  // If panel is for same org, also update orgNotes for note modal
+  if(currentOrgId===orgId)orgNotes=notes;
+  else{currentOrgId=orgId;orgNotes=notes;}
+  const area=document.getElementById('org-profile-area');
+  let html=`<div class="org-profile-card">`;
+  // Header
+  html+=`<div class="org-profile-header">
+    <div class="org-profile-av" style="background:${org.color}22;color:${org.color};">${orgInitials(org.name)}</div>
+    <div style="flex:1;">
+      <div style="font-size:18px;font-weight:700;">${esc(org.name)}</div>
+      <div style="font-size:12px;color:#aaa;margin-top:2px;">${orgEvts.length} arrangement${orgEvts.length!==1?'er':''} · ${notes.length} notat${notes.length!==1?'er':''}</div>
+    </div>
+    <button class="btn-sec" onclick="openOrgModal('${org.id}')" style="font-size:12px;padding:6px 12px;">Rediger</button>
+  </div>`;
+  html+=`<div class="org-profile-body">`;
+  // Kontaktinfo
+  html+=`<div><div class="org-section-title">Kontaktinfo</div><div class="org-contact-grid">
+    <div class="org-contact-item"><div class="org-contact-lbl">Kontaktperson</div><div class="${org.contact_name?'org-contact-val':'org-contact-empty'}">${esc(org.contact_name)||'Ikke registrert'}</div></div>
+    <div class="org-contact-item"><div class="org-contact-lbl">Telefon</div><div class="${org.phone?'org-contact-val':'org-contact-empty'}">${esc(org.phone)||'Ikke registrert'}</div></div>
+    <div class="org-contact-item" style="grid-column:1/-1"><div class="org-contact-lbl">E-post</div><div class="${org.email?'org-contact-val':'org-contact-empty'}">${esc(org.email)||'Ikke registrert'}</div></div>
+  </div></div>`;
+  // Arrangementer
+  html+=`<div><div class="org-section-title">Arrangementer (${orgEvts.length})</div>`;
+  if(orgEvts.length){
+    html+=`<div class="org-arr-list">`;
+    orgEvts.forEach(ev=>{
+      const live=isActiveNow(ev);
+      html+=`<div class="org-arr-item" onclick="setArshjulView('hjul');setTimeout(()=>showDetail('${ev.id}'),100);">
+        <div class="org-arr-dot" style="background:${ev.color}"></div>
+        <div class="org-arr-name">${esc(ev.name)}</div>
+        <div class="org-arr-date">${new Date(ev.start_date).getFullYear()}</div>
+        ${live?'<span class="org-arr-live">Pågår nå</span>':''}
+      </div>`;
+    });
+    html+=`</div>`;
+  }else html+=`<div class="org-empty">Ingen arrangementer koblet ennå</div>`;
+  html+=`</div>`;
+  // Notatlogg
+  html+=`<div><div class="org-section-title">Notatlogg (${notes.length}) <button class="btn-primary" style="font-size:11px;padding:5px 10px;" onclick="openNoteModalInline()">+ Nytt notat</button></div>`;
+  if(notes.length){
+    html+=`<div class="org-note-list">`;
+    notes.forEach(n=>{
+      const tc=getNoteTypeColor(n.note_type);
+      html+=`<div class="org-note-item">
+        <div class="org-note-top">
+          <span class="org-note-type ${tc}">${esc(n.note_type)}</span>
+          <span class="org-note-date">${fmtDate(n.note_date)}</span>
+          <button class="org-note-del" onclick="openNoteModalInline('${n.id}')">✎</button>
+        </div>
+        <div class="org-note-text">${esc(n.note_text)}</div>
+      </div>`;
+    });
+    html+=`</div>`;
+  }else html+=`<div class="org-empty">Ingen notater ennå. Trykk + Nytt notat.</div>`;
+  html+=`</div></div></div>`;
+  area.innerHTML=html;
+}
+function openNoteModalInline(noteId){
+  // Uses same note modal but refreshes org profile on save
+  openNoteModal(noteId||null);
+}
+// Override saveNote to also refresh org profile view if open
+const _origSaveNote=saveNote;
+saveNote=async function(){
+  await _origSaveNote();
+  if(document.getElementById('view-arrangorer').style.display!=='none'&&activeOrgListId){
+    await showOrgProfile(activeOrgListId);
+  }
+};
+const _origDeleteNote=deleteNote;
+deleteNote=async function(){
+  await _origDeleteNote();
+  if(document.getElementById('view-arrangorer').style.display!=='none'&&activeOrgListId){
+    await showOrgProfile(activeOrgListId);
+  }
+};
 </script>
 </body>
 </html>
